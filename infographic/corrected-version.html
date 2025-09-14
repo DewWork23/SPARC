@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARC Hub and Spoke Partnership Model - Corrected</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 1500px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        /* COMPACT HEADER */
+        .header {
+            background: linear-gradient(90deg, #000000 0%, #333333 50%, #ffd700 100%);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 18px;
+            border: 2px solid #ffd700;
+        }
+        
+        .header h1 {
+            font-size: 1.6em;
+            margin-bottom: 3px;
+            color: white;
+        }
+        
+        .header p {
+            font-size: 0.85em;
+            color: #ffd700;
+            margin-bottom: 2px;
+        }
+        
+        /* LARGE HUB AREA */
+        .hub-spoke-container {
+            position: relative;
+            width: 100%;
+            height: 800px;
+            margin: 18px 0;
+            overflow: visible;
+        }
+        
+        /* Central Hub */
+        .central-hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .central-hub img {
+            width: 200px;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+        
+        /* Spoke Lines */
+        .spoke {
+            position: absolute;
+            background: #000;
+            height: 4px;
+            transform-origin: left center;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+        }
+        
+        .spoke::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 18px solid #000;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .spoke.developing {
+            background: #000;
+            border: 2px dashed #ffd700;
+            height: 6px;
+            opacity: 0.8;
+        }
+        
+        /* Spoke lengths - Point to card centers, not edges */
+        .spoke-robeson { width: 170px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 300px; transform: rotate(-135deg); }
+        .spoke-richmond { width: 300px; transform: rotate(-45deg); }
+        .spoke-scotland { width: 320px; transform: rotate(45deg); }
+        .spoke-columbus { width: 320px; transform: rotate(135deg); }
+        .spoke-bladen { width: 240px; transform: rotate(90deg); }
+        
+        /* County Cards - LARGER */
+        .county-card {
+            position: absolute;
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            width: 320px;
+            border: 3px solid #000;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .county-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        
+        .county-card.priority {
+            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+            border-color: #ffd700;
+            border-width: 4px;
+        }
+        
+        .county-card.developing {
+            opacity: 0.85;
+            border-style: dashed;
+            border-color: #666;
+        }
+        
+        .county-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .county-seal {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 2px solid #000;
+        }
+        
+        .county-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .county-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-top: 4px;
+            background: #000;
+            border: 2px solid #ffd700;
+        }
+        
+        .county-details {
+            font-size: 0.9em;
+            color: #333;
+            line-height: 1.5;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .county-details li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+        }
+        
+        /* CORRECTED POSITIONING - Cards positioned so arrows point to their centers */
+        .robeson { 
+            top: 80px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+        
+        .cumberland { 
+            top: 50%; 
+            left: 80px; 
+            transform: translateY(-50%); 
+        }
+        
+        .richmond { 
+            top: 50%; 
+            right: 80px; 
+            transform: translateY(-50%); 
+        }
+        
+        .scotland { 
+            bottom: 120px; 
+            right: 100px; 
+        }
+        
+        .columbus { 
+            bottom: 120px; 
+            left: 100px; 
+        }
+        
+        .bladen { 
+            bottom: 80px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+        
+        /* COMPACT BOTTOM PANELS */
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 18px;
+        }
+        
+        .panel {
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #000;
+        }
+        
+        .panel.systems {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+        
+        .panel.outcomes {
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            border-color: #ffd700;
+        }
+        
+        .panel h3 {
+            margin-bottom: 10px;
+            color: #000;
+            font-size: 1.1em;
+        }
+        
+        .panel ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .panel li {
+            margin-bottom: 5px;
+            padding-left: 18px;
+            position: relative;
+            color: #000;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+        
+        .panel li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- COMPACT HEADER -->
+        <div class="header">
+            <h1>SPARC Regional Hub & Spoke Partnership Model</h1>
+            <p>Southeastern Prevention and Addiction Recovery Resource Center</p>
+            <p>University of North Carolina at Pembroke • Systems Change Through Evidence-Based Partnerships</p>
+        </div>
+        
+        <!-- LARGE HUB AREA -->
+        <div class="hub-spoke-container">
+            <!-- Spoke Lines -->
+            <div class="spoke spoke-robeson"></div>
+            <div class="spoke spoke-cumberland"></div>
+            <div class="spoke spoke-richmond"></div>
+            <div class="spoke spoke-scotland"></div>
+            <div class="spoke spoke-columbus"></div>
+            <div class="spoke spoke-bladen developing"></div>
+            
+            <!-- Central Hub -->
+            <div class="central-hub">
+                <img src="Untitled design (1) (2).png" alt="SPARC Logo">
+            </div>
+            
+            <!-- County Cards - PROPERLY POSITIONED -->
+            <div class="county-card priority robeson">
+                <div class="county-header">
+                    <img src="Robeson.png" alt="Robeson County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Robeson County</div>
+                        <span class="county-badge">ESTABLISHED PARTNER</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>✓ Agency stipend program with measurable impact</li>
+                    <li>✓ Transportation infrastructure development</li>
+                    <li>✓ Strong community partnerships</li>
+                </ul>
+            </div>
+            
+            <div class="county-card cumberland">
+                <div class="county-header">
+                    <img src="Cumberland-County.gif" alt="Cumberland County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Cumberland County</div>
+                        <span class="county-badge">TECHNICAL HUB</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Opioid reporting technical assistance</li>
+                    <li>• Best practices documentation</li>
+                    <li>• Cross-county process improvement</li>
+                    <li style="color: #059669; font-weight: bold;">• Regional training coordination</li>
+                </ul>
+            </div>
+            
+            <div class="county-card richmond">
+                <div class="county-header">
+                    <img src="richmond seal.png" alt="Richmond County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Richmond County</div>
+                        <span class="county-badge">EDUCATION</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• RCC workforce recruitment programs</li>
+                    <li>• Internship capacity building</li>
+                    <li>• BSW/MSW scholarship pathways</li>
+                    <li style="color: #dc2626;">⚠ Master's internship site barriers</li>
+                </ul>
+            </div>
+            
+            <div class="county-card scotland">
+                <div class="county-header">
+                    <img src="scotland.jpg" alt="Scotland County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Scotland County</div>
+                        <span class="county-badge">JUSTICE</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Drug Treatment Court assistance</li>
+                    <li>• Grant writing capacity building</li>
+                    <li>• Intern supervision systems</li>
+                    <li style="color: #dc2626;">⚠ Severe workforce shortage</li>
+                </ul>
+            </div>
+            
+            <div class="county-card columbus">
+                <div class="county-header">
+                    <img src="columbus county nc.jpg" alt="Columbus County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Columbus County</div>
+                        <span class="county-badge">PLANNING</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• 4-Year strategic planning (Active)</li>
+                    <li>• Evidence-based drug court launched</li>
+                    <li>• Prevention programming initiated</li>
+                    <li>• Strategic Narcan distribution</li>
+                </ul>
+            </div>
+            
+            <div class="county-card developing bladen">
+                <div class="county-header">
+                    <img src="bladen.jpg" alt="Bladen County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name" style="color: #666;">Bladen County</div>
+                        <span class="county-badge" style="background: #666; border-color: #999;">DEVELOPING</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Invited to opioid meetings</li>
+                    <li>• Initial stakeholder engagement</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- COMPACT BOTTOM PANELS -->
+        <div class="panels">
+            <div class="panel systems">
+                <h3>Systems Change Model: Core Principles</h3>
+                <ul>
+                    <li>Upstream Focus: Address root causes rather than symptoms</li>
+                    <li>Infrastructure Investment: Build sustainable systems</li>
+                    <li>Evidence-Based Approach: Data-driven decision making</li>
+                    <li>Regional Coordination: Leverage cross-county resources</li>
+                </ul>
+            </div>
+            
+            <div class="panel outcomes">
+                <h3>Partnership Model Outcomes & Metrics</h3>
+                <ul>
+                    <li>6 County Partnerships (5 active, 1 developing)</li>
+                    <li>4+ Evidence-Based Programs Launched</li>
+                    <li>Workforce Development: Scholarships & internships</li>
+                    <li>Cross-County Collaboration & resource sharing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
