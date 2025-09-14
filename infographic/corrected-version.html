@@ -118,14 +118,18 @@
         .spoke.developing::after {
             display: none;
         }
+
+        .spoke-robeson::after {
+            display: none;
+        }
         
-        /* Spoke lengths - Precisely calculated to point to card centers */
-        .spoke-robeson { width: 150px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 300px; transform: rotate(-160deg); }
-        .spoke-richmond { width: 300px; transform: rotate(-20deg); }
-        .spoke-scotland { width: 320px; transform: rotate(45deg); }
-        .spoke-columbus { width: 320px; transform: rotate(135deg); }
-        .spoke-bladen { width: 160px; transform: rotate(90deg); }
+        /* Spoke lengths - All uniform length for consistent appearance */
+        .spoke-robeson { width: 280px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 280px; transform: rotate(-160deg); }
+        .spoke-richmond { width: 280px; transform: rotate(-20deg); }
+        .spoke-scotland { width: 280px; transform: rotate(45deg); }
+        .spoke-columbus { width: 280px; transform: rotate(135deg); }
+        .spoke-bladen { width: 280px; transform: rotate(90deg); }
         
         /* County Cards - LARGER */
         .county-card {
