@@ -15,49 +15,50 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             margin: 0;
-            padding: 5px;
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            min-height: 100vh;
         }
         
         .container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 1200px;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+            max-width: 1400px;
             width: 100%;
-            padding: 20px;
+            padding: 30px;
         }
         
         .header {
             background: linear-gradient(90deg, #000000 0%, #333333 50%, #ffd700 100%);
             color: white;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
-            margin-bottom: 10px;
-            border: 2px solid #ffd700;
+            margin-bottom: 20px;
+            border: 3px solid #ffd700;
         }
         
         .header h1 {
-            font-size: 1.4em;
-            margin-bottom: 3px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .header p {
-            font-size: 0.9em;
+            font-size: 1.1em;
             opacity: 0.95;
             color: #ffd700;
-            margin-bottom: 2px;
+            margin-bottom: 5px;
         }
         
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 350px;
-            margin: 10px 0;
+            height: 650px;
+            margin: 20px 0;
             overflow: visible;
         }
         
@@ -111,21 +112,21 @@
         }
         
         /* Individual spoke rotations and lengths - adjusted for new positions */
-        .spoke-robeson { width: 80px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 200px; transform: rotate(-135deg); }
-        .spoke-richmond { width: 200px; transform: rotate(-45deg); }
-        .spoke-scotland { width: 200px; transform: rotate(45deg); }
-        .spoke-columbus { width: 200px; transform: rotate(135deg); }
-        .spoke-bladen { width: 120px; transform: rotate(90deg); }
+        .spoke-robeson { width: 100px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 250px; transform: rotate(-135deg); }
+        .spoke-richmond { width: 250px; transform: rotate(-45deg); }
+        .spoke-scotland { width: 270px; transform: rotate(45deg); }
+        .spoke-columbus { width: 270px; transform: rotate(135deg); }
+        .spoke-bladen { width: 150px; transform: rotate(90deg); }
         
         /* County Cards */
         .county-card {
             position: absolute;
             background: white;
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            width: 220px;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            width: 280px;
             border: 2px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
@@ -190,9 +191,9 @@
         .badge-developing { background: #666; border-color: #999; }
         
         .county-details {
-            font-size: 0.8em;
+            font-size: 0.9em;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.5;
         }
         
         .county-details li {
@@ -200,37 +201,37 @@
             margin-bottom: 5px;
         }
         
-        /* Position counties in very compact circle around hub */
+        /* Position counties in proper circle around hub */
         .robeson { 
-            top: 5px; 
+            top: 30px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
         
         .cumberland { 
-            top: 40%; 
-            left: 15px; 
+            top: 50%; 
+            left: 50px; 
             transform: translateY(-50%); 
         }
         
         .richmond { 
-            top: 40%; 
-            right: 15px; 
+            top: 50%; 
+            right: 50px; 
             transform: translateY(-50%); 
         }
         
         .scotland { 
-            bottom: 60px; 
-            right: 50px; 
+            bottom: 120px; 
+            right: 100px; 
         }
         
         .columbus { 
-            bottom: 60px; 
-            left: 50px; 
+            bottom: 120px; 
+            left: 100px; 
         }
         
         .bladen { 
-            bottom: 5px; 
+            bottom: 30px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
@@ -239,14 +240,14 @@
         .panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 25px;
+            margin-top: 25px;
         }
         
         .panel {
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             border: 2px solid #000;
         }
         
@@ -260,9 +261,9 @@
         }
         
         .panel h3 {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #000;
-            font-size: 1.1em;
+            font-size: 1.3em;
         }
         
         .panel ul {
@@ -270,11 +271,11 @@
         }
         
         .panel li {
-            margin-bottom: 5px;
-            padding-left: 18px;
+            margin-bottom: 8px;
+            padding-left: 22px;
             position: relative;
             color: #000;
-            font-size: 0.85em;
+            font-size: 0.95em;
         }
         
         .panel li:before {
