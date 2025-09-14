@@ -78,7 +78,7 @@
         }
         
         .central-hub img {
-            width: 200px;
+            width: 250px;
             height: auto;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
@@ -114,6 +114,10 @@
             height: 6px;
             opacity: 0.8;
         }
+
+        .spoke.developing::after {
+            display: none;
+        }
         
         /* Spoke lengths - Precisely calculated to point to card centers */
         .spoke-robeson { width: 150px; transform: rotate(-90deg); }
@@ -121,7 +125,7 @@
         .spoke-richmond { width: 300px; transform: rotate(-20deg); }
         .spoke-scotland { width: 320px; transform: rotate(45deg); }
         .spoke-columbus { width: 320px; transform: rotate(135deg); }
-        .spoke-bladen { width: 190px; transform: rotate(90deg); }
+        .spoke-bladen { width: 160px; transform: rotate(90deg); }
         
         /* County Cards - LARGER */
         .county-card {
