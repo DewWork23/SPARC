@@ -1,0 +1,186 @@
+<svg width="1600" height="1200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <style>
+      .bg-main { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 3; }
+      .hub-circle { fill: url(#hubGradient); stroke: #1e3a8a; stroke-width: 5; filter: drop-shadow(4px 4px 12px rgba(30, 64, 175, 0.3)); }
+      .spoke-line-main { stroke: #2563eb; stroke-width: 5; opacity: 0.9; }
+      .spoke-line-dev { stroke: #94a3b8; stroke-width: 3; opacity: 0.6; stroke-dasharray: 10,5; }
+      .county-card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 3; rx: 15; filter: drop-shadow(3px 3px 8px rgba(0,0,0,0.1)); }
+      .county-card-priority { fill: #fef9e7; stroke: #f59e0b; stroke-width: 4; rx: 15; filter: drop-shadow(4px 4px 12px rgba(245, 158, 11, 0.2)); }
+      .county-card-developing { fill: #f9fafb; stroke: #9ca3af; stroke-width: 2; rx: 15; stroke-dasharray: 8,4; opacity: 0.8; }
+      
+      .title-main { fill: #1f2937; font-family: 'Arial', sans-serif; font-size: 42px; font-weight: bold; text-anchor: middle; }
+      .title-sub { fill: #4b5563; font-family: 'Arial', sans-serif; font-size: 22px; text-anchor: middle; font-style: italic; }
+      .title-detail { fill: #6b7280; font-family: 'Arial', sans-serif; font-size: 16px; text-anchor: middle; }
+      
+      .hub-title { fill: white; font-family: 'Arial', sans-serif; font-size: 32px; font-weight: bold; text-anchor: middle; }
+      .hub-subtitle { fill: #e5e7eb; font-family: 'Arial', sans-serif; font-size: 16px; text-anchor: middle; }
+      
+      .county-name { fill: #1e40af; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; text-anchor: start; }
+      .county-status { font-family: 'Arial', sans-serif; font-size: 12px; font-weight: bold; text-anchor: start; }
+      .status-established { fill: #059669; }
+      .status-education { fill: #7c3aed; }
+      .status-justice { fill: #ea580c; }
+      .status-planning { fill: #0891b2; }
+      .status-technical { fill: #8b5cf6; }
+      .status-developing { fill: #6b7280; }
+      
+      .detail-header { fill: #374151; font-family: 'Arial', sans-serif; font-size: 14px; font-weight: bold; text-anchor: start; }
+      .detail-text { fill: #4b5563; font-family: 'Arial', sans-serif; font-size: 12px; text-anchor: start; }
+      .detail-success { fill: #059669; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: bold; text-anchor: start; }
+      .detail-challenge { fill: #dc2626; font-family: 'Arial', sans-serif; font-size: 12px; font-weight: bold; text-anchor: start; }
+      
+      .legend-title { fill: #1e40af; font-family: 'Arial', sans-serif; font-size: 18px; font-weight: bold; text-anchor: start; }
+      .legend-text { fill: #374151; font-family: 'Arial', sans-serif; font-size: 13px; text-anchor: start; }
+      .systems-title { fill: #92400e; font-family: 'Arial', sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .systems-text { fill: #92400e; font-family: 'Arial', sans-serif; font-size: 13px; text-anchor: start; }
+    </style>
+    
+    <!-- Gradients -->
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="hubGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Arrow markers -->
+    <marker id="arrowMain" markerWidth="15" markerHeight="10" refX="15" refY="5" orient="auto">
+      <polygon points="0 0, 15 5, 0 10" fill="#2563eb" />
+    </marker>
+    
+    <marker id="arrowDev" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#94a3b8" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1600" height="1200" fill="url(#backgroundGradient)"/>
+  
+  <!-- Header Section -->
+  <rect x="100" y="40" width="1400" height="140" fill="#ffffff" stroke="#cbd5e1" stroke-width="3" rx="20" opacity="0.98"/>
+  <rect x="120" y="60" width="1360" height="100" fill="url(#hubGradient)" rx="15"/>
+  <text x="800" y="105" class="title-main" style="fill: white;">SPARC Regional Hub &amp; Spoke Partnership Model</text>
+  <text x="800" y="135" class="title-sub" style="fill: #e5e7eb;">Southeastern Prevention and Addiction Recovery Resource Center</text>
+  <text x="800" y="155" class="title-detail" style="fill: #cbd5e1;">University of North Carolina at Pembroke • Systems Change Through Evidence-Based Partnerships</text>
+  
+  <!-- Central Hub with SPARC Logo -->
+  <circle cx="800" cy="600" r="120" class="hub-circle"/>
+  
+  <!-- SPARC Logo placeholder - you would replace this with the actual logo -->
+  <circle cx="800" cy="570" r="25" fill="white" opacity="0.9"/>
+  <text x="800" y="595" class="hub-title">SPARC</text>
+  <text x="800" y="615" class="hub-subtitle">REGIONAL HUB</text>
+  <text x="800" y="635" class="hub-subtitle">UNC Pembroke</text>
+  
+  <!-- Connection Lines -->
+  <!-- Robeson (top) -->
+  <line x1="800" y1="480" x2="800" y2="360" class="spoke-line-main" marker-end="url(#arrowMain)"/>
+  <!-- Cumberland (left) -->
+  <line x1="680" y1="600" x2="480" y2="600" class="spoke-line-main" marker-end="url(#arrowMain)"/>
+  <!-- Richmond (right) -->
+  <line x1="920" y1="600" x2="1120" y2="600" class="spoke-line-main" marker-end="url(#arrowMain)"/>
+  <!-- Scotland (top-right) -->
+  <line x1="870" y1="530" x2="1040" y2="380" class="spoke-line-main" marker-end="url(#arrowMain)"/>
+  <!-- Columbus (top-left) -->
+  <line x1="730" y1="530" x2="560" y2="380" class="spoke-line-main" marker-end="url(#arrowMain)"/>
+  <!-- Bladen (bottom) - developing connection -->
+  <line x1="800" y1="720" x2="800" y2="860" class="spoke-line-dev" marker-end="url(#arrowDev)"/>
+  
+  <!-- County Partnership Cards -->
+  
+  <!-- Robeson County (Priority Partner) -->
+  <rect x="650" y="220" width="300" height="140" class="county-card-priority"/>
+  <circle cx="680" cy="250" r="22" fill="#059669" stroke="white" stroke-width="2"/>
+  <text x="680" y="257" style="fill: white; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle;">✓</text>
+  <text x="715" y="245" class="county-name">Robeson County</text>
+  <text x="715" y="265" class="county-status status-established">ESTABLISHED PARTNERSHIP • HIGH ENGAGEMENT</text>
+  <text x="715" y="290" class="detail-header">Proven Success Areas:</text>
+  <text x="725" y="310" class="detail-success">• Agency stipend program with measurable impact</text>
+  <text x="725" y="325" class="detail-text">• Transportation infrastructure development</text>
+  <text x="725" y="340" class="detail-text">• Strong community partnerships &amp; engagement</text>
+  
+  <!-- Cumberland County (Technical Assistance Hub) -->
+  <rect x="180" y="520" width="280" height="160" class="county-card"/>
+  <circle cx="210" cy="550" r="22" fill="#8b5cf6" stroke="white" stroke-width="2"/>
+  <text x="210" y="557" style="fill: white; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle;">TA</text>
+  <text x="245" y="545" class="county-name">Cumberland County</text>
+  <text x="245" y="565" class="county-status status-technical">TECHNICAL ASSISTANCE HUB • KNOWLEDGE SHARING</text>
+  <text x="245" y="590" class="detail-header">Core Services:</text>
+  <text x="255" y="610" class="detail-text">• Opioid reporting technical assistance</text>
+  <text x="255" y="625" class="detail-text">• Best practices documentation &amp; sharing</text>
+  <text x="255" y="640" class="detail-text">• Cross-county process improvement consultation</text>
+  <text x="255" y="655" class="detail-success">• Regional training coordination potential</text>
+  <text x="245" y="675" class="detail-text">Partnership Model: Peer-to-peer learning facilitation</text>
+  
+  <!-- Richmond County (Education Partnership) -->
+  <rect x="1140" y="480" width="320" height="200" class="county-card"/>
+  <circle cx="1170" cy="510" r="22" fill="#7c3aed" stroke="white" stroke-width="2"/>
+  <text x="1170" y="517" style="fill: white; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">EDU</text>
+  <text x="1205" y="505" class="county-name">Richmond County</text>
+  <text x="1205" y="525" class="county-status status-education">EDUCATION PARTNERSHIP LEADER • RCC COLLABORATION</text>
+  <text x="1205" y="550" class="detail-header">Richmond Community College Partnership:</text>
+  <text x="1215" y="570" class="detail-success">• Workforce recruitment &amp; retention programs</text>
+  <text x="1215" y="585" class="detail-text">• Internship capacity building initiatives</text>
+  <text x="1215" y="600" class="detail-text">• BSW/MSW scholarship pathways (2-3 annually)</text>
+  <text x="1215" y="615" class="detail-text">• Criteria C professional development tracks</text>
+  <text x="1205" y="640" class="detail-header">Current Challenges:</text>
+  <text x="1215" y="660" class="detail-challenge">• Master's level internship site barriers</text>
+  <text x="1215" y="675" class="detail-challenge">• Opioid committee engagement needed</text>
+  
+  <!-- Scotland County (Justice Integration) -->
+  <rect x="1000" y="240" width="280" height="160" class="county-card"/>
+  <circle cx="1030" cy="270" r="22" fill="#ea580c" stroke="white" stroke-width="2"/>
+  <text x="1030" y="277" style="fill: white; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">JUS</text>
+  <text x="1065" y="265" class="county-name">Scotland County</text>
+  <text x="1065" y="285" class="county-status status-justice">JUSTICE INTEGRATION • DRUG TREATMENT COURT</text>
+  <text x="1065" y="310" class="detail-header">Evidence-Based Court Programs:</text>
+  <text x="1075" y="330" class="detail-text">• Drug Treatment Court technical assistance</text>
+  <text x="1075" y="345" class="detail-text">• Grant writing capacity building support</text>
+  <text x="1075" y="360" class="detail-text">• Intern supervision and support systems</text>
+  <text x="1065" y="385" class="detail-challenge">Critical Challenge: Severe workforce shortage</text>
+  <text x="1075" y="400" class="detail-text">• Provider access barriers affecting service delivery</text>
+  
+  <!-- Columbus County (Strategic Planning) -->
+  <rect x="280" y="240" width="320" height="180" class="county-card"/>
+  <circle cx="310" cy="270" r="22" fill="#0891b2" stroke="white" stroke-width="2"/>
+  <text x="310" y="277" style="fill: white; font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; text-anchor: middle;">PLAN</text>
+  <text x="345" y="265" class="county-name">Columbus County</text>
+  <text x="345" y="285" class="county-status status-planning">STRATEGIC PLANNING LEADER • OPTION B COUNTY</text>
+  <text x="345" y="310" class="detail-header">4-Year Strategic Planning Process (Active):</text>
+  <text x="355" y="330" class="detail-text">Service Framework: Harm Reduction • Prevention • Intervention • Treatment</text>
+  <text x="345" y="355" class="detail-header">Program Highlights:</text>
+  <text x="355" y="375" class="detail-success">• Evidence-based drug court successfully launched</text>
+  <text x="355" y="390" class="detail-text">• Middle/high school prevention programming initiated</text>
+  <text x="355" y="405" class="detail-text">• Strategic Narcan distribution (targeted approach)</text>
+  
+  <!-- Bladen County (Development Phase) -->
+  <rect x="650" y="880" width="300" height="120" class="county-card-developing"/>
+  <circle cx="680" cy="910" r="22" fill="#6b7280" stroke="white" stroke-width="2"/>
+  <text x="680" y="917" style="fill: white; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">DEV</text>
+  <text x="715" y="905" class="county-name" style="fill: #6b7280;">Bladen County</text>
+  <text x="715" y="925" class="county-status status-developing">DEVELOPMENT PHASE • ENGAGEMENT BUILDING</text>
+  <text x="715" y="950" class="detail-header">Current Status:</text>
+  <text x="725" y="970" class="detail-text">• Invited to upcoming opioid meetings (TBD)</text>
+  <text x="725" y="985" class="detail-text">• Initial stakeholder engagement in progress</text>
+  
+  <!-- Systems Change Panel -->
+  <rect x="100" y="1040" width="700" height="130" fill="#fef3c7" stroke="#f59e0b" stroke-width="4" rx="15"/>
+  <text x="450" y="1070" class="systems-title">Systems Change Model: Core Principles</text>
+  <text x="120" y="1095" class="systems-text">✓ Upstream Focus: Address root causes rather than symptoms</text>
+  <text x="120" y="1115" class="systems-text">✓ Infrastructure Investment: Build sustainable systems, not temporary programs</text>
+  <text x="120" y="1135" class="systems-text">✓ Evidence-Based Approach: Data-driven decision making and outcome tracking</text>
+  <text x="120" y="1155" class="systems-text">✓ Regional Coordination: Leverage resources across county boundaries for maximum impact</text>
+  
+  <!-- Outcomes Panel -->
+  <rect x="820" y="1040" width="680" height="130" fill="#e0f2fe" stroke="#0284c7" stroke-width="4" rx="15"/>
+  <text x="1160" y="1070" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle;">Partnership Model Outcomes &amp; Metrics</text>
+  <text x="840" y="1095" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 13px; text-anchor: start;">Regional Impact Indicators:</text>
+  <text x="850" y="1115" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 12px; text-anchor: start;">• 6 County Partnerships (5 active, 1 developing) • 4+ Evidence-Based Programs Launched</text>
+  <text x="850" y="1130" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 12px; text-anchor: start;">• Workforce Development: Annual scholarships, internships, TA engagements</text>
+  <text x="850" y="1145" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 12px; text-anchor: start;">• Systems Integration: Drug courts, prevention programs, workforce initiatives</text>
+  <text x="850" y="1160" style="fill: #0c4a6e; font-family: Arial, sans-serif; font-size: 12px; text-anchor: start;">• Cross-County Collaboration: TA sharing, best practices exchange, resource coordination</text>
+</svg>
