@@ -58,7 +58,7 @@
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 800px;
+            height: 820px;
             margin: 18px 0;
             overflow: visible;
         }
@@ -88,10 +88,12 @@
             position: absolute;
             background: #000;
             height: 4px;
-            transform-origin: left center;
+            transform-origin: 0 50%;
             z-index: 1;
             left: 50%;
             top: 50%;
+            margin-left: -2px;
+            margin-top: -2px;
         }
         
         .spoke::after {
@@ -113,13 +115,13 @@
             opacity: 0.8;
         }
         
-        /* Spoke lengths - Point to card centers, not edges */
-        .spoke-robeson { width: 170px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 300px; transform: rotate(-135deg); }
-        .spoke-richmond { width: 300px; transform: rotate(-45deg); }
-        .spoke-scotland { width: 320px; transform: rotate(45deg); }
-        .spoke-columbus { width: 320px; transform: rotate(135deg); }
-        .spoke-bladen { width: 240px; transform: rotate(90deg); }
+        /* Spoke lengths - Precisely calculated to point to card centers */
+        .spoke-robeson { width: 200px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 260px; transform: rotate(-125deg); }
+        .spoke-richmond { width: 260px; transform: rotate(-55deg); }
+        .spoke-scotland { width: 300px; transform: rotate(45deg); }
+        .spoke-columbus { width: 300px; transform: rotate(135deg); }
+        .spoke-bladen { width: 220px; transform: rotate(90deg); }
         
         /* County Cards - LARGER */
         .county-card {
@@ -198,39 +200,39 @@
             padding-left: 15px;
         }
         
-        /* CORRECTED POSITIONING - Cards positioned so arrows point to their centers */
-        .robeson { 
-            top: 80px; 
-            left: 50%; 
-            transform: translateX(-50%); 
+        /* PRECISION POSITIONING - Cards positioned for perfect arrow alignment */
+        .robeson {
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        
-        .cumberland { 
-            top: 50%; 
-            left: 80px; 
-            transform: translateY(-50%); 
+
+        .cumberland {
+            top: 35%;
+            left: 60px;
+            transform: translateY(-50%);
         }
-        
-        .richmond { 
-            top: 50%; 
-            right: 80px; 
-            transform: translateY(-50%); 
+
+        .richmond {
+            top: 35%;
+            right: 60px;
+            transform: translateY(-50%);
         }
-        
-        .scotland { 
-            bottom: 120px; 
-            right: 100px; 
+
+        .scotland {
+            bottom: 140px;
+            right: 80px;
         }
-        
-        .columbus { 
-            bottom: 120px; 
-            left: 100px; 
+
+        .columbus {
+            bottom: 140px;
+            left: 80px;
         }
-        
-        .bladen { 
-            bottom: 80px; 
-            left: 50%; 
-            transform: translateX(-50%); 
+
+        .bladen {
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         /* COMPACT BOTTOM PANELS */
