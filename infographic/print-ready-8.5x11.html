@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARC Hub and Spoke Partnership Model - Print Ready 8.5x11</title>
+    <style>
+        @media print {
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+                max-width: none !important;
+                width: 8.5in !important;
+                height: 11in !important;
+                margin: 0 !important;
+                padding: 0.3in !important;
+            }
+        }
+
+        @page {
+            size: letter;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            max-width: 8.5in;
+            width: 8.5in;
+            height: 11in;
+            padding: 0.3in;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+        }
+
+        /* COMPACT HEADER */
+        .header {
+            background: linear-gradient(90deg, #000000 0%, #333333 50%, #ffd700 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 2px solid #ffd700;
+        }
+
+        .header h1 {
+            font-size: 1.3em;
+            margin-bottom: 2px;
+            color: white;
+        }
+
+        .header p {
+            font-size: 0.7em;
+            color: #ffd700;
+            margin-bottom: 1px;
+        }
+
+        /* HUB AREA - Scaled for print */
+        .hub-spoke-container {
+            position: relative;
+            width: 100%;
+            height: 7.5in;
+            margin: 8px 0;
+            overflow: visible;
+        }
+
+        /* Central Hub */
+        .central-hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .central-hub img {
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* Spoke Lines */
+        .spoke {
+            position: absolute;
+            background: #000;
+            height: 3px;
+            transform-origin: 0 50%;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            margin-left: -1.5px;
+            margin-top: -1.5px;
+        }
+
+        .spoke::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: -6px;
+            width: 0;
+            height: 0;
+            border-left: 14px solid #000;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .spoke.developing {
+            background: #000;
+            border: 2px dashed #ffd700;
+            height: 4px;
+            opacity: 0.8;
+        }
+
+        .spoke.developing::after {
+            display: none;
+        }
+
+        .spoke-robeson::after {
+            display: none;
+        }
+
+        /* Spoke lengths - Scaled for print */
+        .spoke-robeson { width: 180px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 220px; transform: rotate(-160deg); }
+        .spoke-richmond { width: 220px; transform: rotate(-20deg); }
+        .spoke-scotland { width: 220px; transform: rotate(45deg); }
+        .spoke-columbus { width: 220px; transform: rotate(135deg); }
+        .spoke-bladen { width: 160px; transform: rotate(90deg); }
+
+        /* County Cards - Scaled for print */
+        .county-card {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 240px;
+            border: 2px solid #000;
+            z-index: 10;
+            font-size: 0.8em;
+        }
+
+        .county-card.priority {
+            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+            border-color: #ffd700;
+            border-width: 3px;
+        }
+
+        .county-card.developing {
+            opacity: 0.85;
+            border-style: dashed;
+            border-color: #666;
+        }
+
+        .county-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .county-seal {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+            border: 1px solid #000;
+        }
+
+        .county-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .county-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.6em;
+            font-weight: bold;
+            margin-top: 2px;
+            background: #000;
+            border: 1px solid #ffd700;
+        }
+
+        .county-details {
+            font-size: 0.75em;
+            color: #333;
+            line-height: 1.3;
+            list-style: none;
+            padding: 0;
+        }
+
+        .county-details li {
+            margin-bottom: 3px;
+            padding-left: 10px;
+        }
+
+        /* POSITIONING - Scaled for print */
+        .robeson {
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cumberland {
+            top: 42%;
+            left: 60px;
+            transform: translateY(-50%);
+        }
+
+        .richmond {
+            top: 42%;
+            right: 60px;
+            transform: translateY(-50%);
+        }
+
+        .scotland {
+            bottom: 120px;
+            right: 70px;
+        }
+
+        .columbus {
+            bottom: 120px;
+            left: 70px;
+        }
+
+        .bladen {
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* BOTTOM PANELS - Scaled for print */
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .panel {
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border: 2px solid #000;
+        }
+
+        .panel.systems {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .panel.outcomes {
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            border-color: #ffd700;
+        }
+
+        .panel h3 {
+            margin-bottom: 6px;
+            color: #000;
+            font-size: 0.9em;
+        }
+
+        .panel ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .panel li {
+            margin-bottom: 3px;
+            padding-left: 12px;
+            position: relative;
+            color: #000;
+            font-size: 0.7em;
+            line-height: 1.2;
+        }
+
+        .panel li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-size: 0.6em;
+        }
+
+        /* Print button for screen viewing */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            color: #000;
+            border: 2px solid #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">Print to PDF</button>
+
+    <div class="container">
+        <!-- COMPACT HEADER -->
+        <div class="header">
+            <h1>SPARC Regional Hub & Spoke Partnership Model</h1>
+            <p>Southeastern Prevention and Addiction Recovery Resource Center</p>
+            <p>University of North Carolina at Pembroke • Systems Change Through Evidence-Based Partnerships</p>
+        </div>
+
+        <!-- HUB AREA -->
+        <div class="hub-spoke-container">
+            <!-- Spoke Lines -->
+            <div class="spoke spoke-robeson"></div>
+            <div class="spoke spoke-cumberland"></div>
+            <div class="spoke spoke-richmond"></div>
+            <div class="spoke spoke-scotland"></div>
+            <div class="spoke spoke-columbus"></div>
+            <div class="spoke spoke-bladen developing"></div>
+
+            <!-- Central Hub -->
+            <div class="central-hub">
+                <img src="Untitled design (1) (2).png" alt="SPARC Logo">
+            </div>
+
+            <!-- County Cards -->
+            <div class="county-card priority robeson">
+                <div class="county-header">
+                    <img src="Robeson.png" alt="Robeson County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Robeson County</div>
+                        <span class="county-badge">ESTABLISHED PARTNER</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>✓ Agency stipend program with measurable impact</li>
+                    <li>✓ Transportation infrastructure development</li>
+                    <li>✓ Strong community partnerships</li>
+                </ul>
+            </div>
+
+            <div class="county-card cumberland">
+                <div class="county-header">
+                    <img src="Cumberland-County.gif" alt="Cumberland County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Cumberland County</div>
+                        <span class="county-badge">TECHNICAL HUB</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Opioid reporting technical assistance</li>
+                    <li>• Best practices documentation</li>
+                    <li>• Cross-county process improvement</li>
+                    <li style="color: #059669; font-weight: bold;">• Regional training coordination</li>
+                </ul>
+            </div>
+
+            <div class="county-card richmond">
+                <div class="county-header">
+                    <img src="richmond seal.png" alt="Richmond County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Richmond County</div>
+                        <span class="county-badge">EDUCATION</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• RCC workforce recruitment programs</li>
+                    <li>• Internship capacity building</li>
+                    <li>• BSW/MSW scholarship pathways</li>
+                    <li style="color: #dc2626;">⚠ Master's internship site barriers</li>
+                </ul>
+            </div>
+
+            <div class="county-card scotland">
+                <div class="county-header">
+                    <img src="scotland.jpg" alt="Scotland County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Scotland County</div>
+                        <span class="county-badge">JUSTICE</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Drug Treatment Court assistance</li>
+                    <li>• Grant writing capacity building</li>
+                    <li>• Intern supervision systems</li>
+                    <li style="color: #dc2626;">⚠ Severe workforce shortage</li>
+                </ul>
+            </div>
+
+            <div class="county-card columbus">
+                <div class="county-header">
+                    <img src="columbus county nc.jpg" alt="Columbus County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name">Columbus County</div>
+                        <span class="county-badge">PLANNING</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• 4-Year strategic planning (Active)</li>
+                    <li>• Evidence-based drug court launched</li>
+                    <li>• Prevention programming initiated</li>
+                    <li>• Strategic Narcan distribution</li>
+                </ul>
+            </div>
+
+            <div class="county-card developing bladen">
+                <div class="county-header">
+                    <img src="bladen.jpg" alt="Bladen County Seal" class="county-seal">
+                    <div>
+                        <div class="county-name" style="color: #666;">Bladen County</div>
+                        <span class="county-badge" style="background: #666; border-color: #999;">DEVELOPING</span>
+                    </div>
+                </div>
+                <ul class="county-details">
+                    <li>• Invited to opioid meetings</li>
+                    <li>• Initial stakeholder engagement</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- BOTTOM PANELS -->
+        <div class="panels">
+            <div class="panel systems">
+                <h3>Systems Change Model: Core Principles</h3>
+                <ul>
+                    <li>Upstream Focus: Address root causes rather than symptoms</li>
+                    <li>Infrastructure Investment: Build sustainable systems</li>
+                    <li>Evidence-Based Approach: Data-driven decision making</li>
+                    <li>Regional Coordination: Leverage cross-county resources</li>
+                </ul>
+            </div>
+
+            <div class="panel outcomes">
+                <h3>Partnership Model Outcomes & Metrics</h3>
+                <ul>
+                    <li>6 County Partnerships (5 active, 1 developing)</li>
+                    <li>4+ Evidence-Based Programs Launched</li>
+                    <li>Workforce Development: Scholarships & internships</li>
+                    <li>Cross-County Collaboration & resource sharing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
