@@ -55,33 +55,29 @@
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 800px;
+            height: 900px;
             margin: 40px 0;
+            overflow: visible;
         }
         
-        /* Central Hub */
+        /* Central Hub - No circle, just logo */
         .central-hub {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, #ffd700 0%, #ffb700 30%, #000000 100%);
-            border-radius: 50%;
+            width: 240px;
+            height: 240px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
             z-index: 100;
-            border: 5px solid #000;
         }
         
         .central-hub img {
-            width: 220px;
+            width: 240px;
             height: auto;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
         }
         
         /* Spoke Lines */
@@ -108,17 +104,18 @@
         }
         
         .spoke.developing {
-            background: repeating-linear-gradient(90deg, #ffd700 0px, #ffd700 8px, transparent 8px, transparent 16px);
-            opacity: 0.6;
+            background: repeating-linear-gradient(90deg, #ffd700 0px, #ffd700 10px, #666 10px, #666 20px);
+            opacity: 0.9;
+            height: 4px;
         }
         
-        /* Individual spoke rotations and lengths */
-        .spoke-robeson { width: 250px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 280px; transform: rotate(-150deg); }
-        .spoke-richmond { width: 280px; transform: rotate(-30deg); }
-        .spoke-scotland { width: 320px; transform: rotate(30deg); }
-        .spoke-columbus { width: 320px; transform: rotate(150deg); }
-        .spoke-bladen { width: 250px; transform: rotate(90deg); }
+        /* Individual spoke rotations and lengths - adjusted for new positions */
+        .spoke-robeson { width: 280px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 350px; transform: rotate(-135deg); }
+        .spoke-richmond { width: 350px; transform: rotate(-45deg); }
+        .spoke-scotland { width: 350px; transform: rotate(45deg); }
+        .spoke-columbus { width: 350px; transform: rotate(135deg); }
+        .spoke-bladen { width: 280px; transform: rotate(90deg); }
         
         /* County Cards */
         .county-card {
@@ -201,35 +198,35 @@
             margin-bottom: 5px;
         }
         
-        /* Position counties in circle around hub */
+        /* Position counties in proper circle around hub - no overlaps */
         .robeson { 
-            top: 50px; 
+            top: 20px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
         
         .cumberland { 
-            top: 180px; 
-            left: 80px; 
+            top: 150px; 
+            left: 20px; 
         }
         
         .richmond { 
-            top: 180px; 
-            right: 80px; 
+            top: 150px; 
+            right: 20px; 
         }
         
         .scotland { 
-            bottom: 180px; 
-            right: 80px; 
+            bottom: 150px; 
+            right: 20px; 
         }
         
         .columbus { 
-            bottom: 180px; 
-            left: 80px; 
+            bottom: 150px; 
+            left: 20px; 
         }
         
         .bladen { 
-            bottom: 50px; 
+            bottom: 20px; 
             left: 50%; 
             transform: translateX(-50%); 
         }
