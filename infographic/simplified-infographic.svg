@@ -85,8 +85,8 @@
     <image x="675" y="475" width="50" height="50" xlink:href="bladen.jpg" />
     <text x="700" y="550" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Bladen County</text>
 
-    <!-- Central Hub (SPARC) - New logo without white background -->
-    <image x="450" y="200" width="500" height="250" xlink:href="Screenshot 2025-09-15 192149.png" />
+    <!-- Central Hub (SPARC) - Properly sized new logo -->
+    <image x="580" y="280" width="240" height="120" xlink:href="Screenshot 2025-09-15 192149.png" />
   </g>
 
   <!-- Bottom Information Panels - Smaller -->
