@@ -27,7 +27,7 @@
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
             height: calc(100vh - 10px);
             padding: 15px;
@@ -83,7 +83,7 @@
         }
 
         .central-hub img {
-            width: 180px;
+            width: 150px;
             height: auto;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
@@ -103,22 +103,22 @@
 
         /* No arrows on any spokes */
 
-        /* Spoke lengths - Extended to reach card borders */
-        .spoke-robeson { width: 180px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 220px; transform: rotate(-160deg); }
-        .spoke-richmond { width: 220px; transform: rotate(-20deg); }
-        .spoke-scotland { width: 220px; transform: rotate(45deg); }
-        .spoke-columbus { width: 220px; transform: rotate(135deg); }
-        .spoke-bladen { width: 180px; transform: rotate(90deg); }
+        /* Spoke lengths - Adjusted to reach cards */
+        .spoke-robeson { width: 150px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 250px; transform: rotate(-150deg); }
+        .spoke-richmond { width: 250px; transform: rotate(-30deg); }
+        .spoke-scotland { width: 250px; transform: rotate(30deg); }
+        .spoke-columbus { width: 250px; transform: rotate(150deg); }
+        .spoke-bladen { width: 150px; transform: rotate(90deg); }
 
         /* County Cards - SIMPLIFIED */
         .county-card {
             position: absolute;
             background: white;
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            width: 200px;
+            width: 180px;
             border: 3px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
@@ -148,51 +148,51 @@
         }
 
         .county-seal {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border: 2px solid #000;
         }
 
         .county-name {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             color: #000;
         }
 
-        /* PRECISION POSITIONING - Cards positioned to avoid overlap */
+        /* PRECISION POSITIONING - Cards in hexagonal layout */
         .robeson {
-            top: 10px;
+            top: 5%;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 40%;
-            left: 20px;
+            top: 35%;
+            left: 10%;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 40%;
-            right: 20px;
+            top: 35%;
+            right: 10%;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 80px;
-            right: 40px;
+            bottom: 25%;
+            right: 10%;
         }
 
         .columbus {
-            bottom: 80px;
-            left: 40px;
+            bottom: 25%;
+            left: 10%;
         }
 
         .bladen {
-            bottom: 10px;
+            bottom: 5%;
             left: 50%;
             transform: translateX(-50%);
         }
