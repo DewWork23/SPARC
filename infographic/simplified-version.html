@@ -30,7 +30,7 @@
             max-width: 1400px;
             width: 100%;
             min-height: calc(100vh - 10px);
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
         }
@@ -62,8 +62,8 @@
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 500px;
-            margin: 10px 0;
+            height: 480px;
+            margin: 15px 0;
             overflow: visible;
         }
 
@@ -101,21 +101,21 @@
         /* No arrows on any spokes */
 
         /* Spoke lengths - Calculated to stop at card edges */
-        .spoke-robeson { width: 165px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 265px; transform: rotate(-145deg); }
-        .spoke-richmond { width: 265px; transform: rotate(-35deg); }
-        .spoke-scotland { width: 265px; transform: rotate(35deg); }
-        .spoke-columbus { width: 265px; transform: rotate(145deg); }
-        .spoke-bladen { width: 165px; transform: rotate(90deg); }
+        .spoke-robeson { width: 155px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 250px; transform: rotate(-140deg); }
+        .spoke-richmond { width: 250px; transform: rotate(-40deg); }
+        .spoke-scotland { width: 250px; transform: rotate(40deg); }
+        .spoke-columbus { width: 250px; transform: rotate(140deg); }
+        .spoke-bladen { width: 155px; transform: rotate(90deg); }
 
         /* County Cards - SIMPLIFIED */
         .county-card {
             position: absolute;
             background: white;
             border-radius: 12px;
-            padding: 10px;
+            padding: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            width: 180px;
+            width: 190px;
             border: 3px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
@@ -161,35 +161,35 @@
 
         /* PRECISION POSITIONING - Cards in fixed positions */
         .robeson {
-            top: 20px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
             top: 50%;
-            left: 50px;
+            left: 40px;
             transform: translateY(-50%);
         }
 
         .richmond {
             top: 50%;
-            right: 50px;
+            right: 40px;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 140px;
-            right: 120px;
+            bottom: 130px;
+            right: 100px;
         }
 
         .columbus {
-            bottom: 140px;
-            left: 120px;
+            bottom: 130px;
+            left: 100px;
         }
 
         .bladen {
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
         }
