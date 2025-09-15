@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1400" height="800" viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="1400" height="720" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <!-- Background -->
-  <rect width="1400" height="800" fill="white"/>
+  <rect width="1400" height="720" fill="white"/>
 
   <!-- Header -->
   <defs>
@@ -85,43 +85,42 @@
     <image x="675" y="475" width="50" height="50" xlink:href="bladen.jpg" />
     <text x="700" y="550" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">Bladen County</text>
 
-    <!-- Central Hub (SPARC) - Original size with zoomed logo -->
-    <rect x="595" y="295" width="210" height="120" rx="12" fill="white" stroke="black" stroke-width="3"/>
-    <image x="580" y="280" width="240" height="150" xlink:href="Untitled design (1) (2).png" />
+    <!-- Central Hub (SPARC) - Large standalone logo -->
+    <image x="520" y="260" width="360" height="190" xlink:href="Untitled design (1) (2).png" />
   </g>
 
-  <!-- Bottom Information Panels - Compact -->
+  <!-- Bottom Information Panels - Smaller -->
   <!-- Systems Change Model Panel -->
-  <rect x="40" y="580" width="650" height="120" rx="10" fill="#ffd700" stroke="black" stroke-width="2"/>
-  <text x="365" y="600" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Systems Change Model: Core Principles</text>
+  <rect x="40" y="600" width="650" height="90" rx="8" fill="#ffd700" stroke="black" stroke-width="2"/>
+  <text x="365" y="618" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Systems Change Model: Core Principles</text>
 
-  <text x="60" y="620" font-family="Arial, sans-serif" font-size="12">
+  <text x="60" y="635" font-family="Arial, sans-serif" font-size="11">
     ▶ Upstream Focus: Address root causes rather than symptoms
   </text>
-  <text x="60" y="637" font-family="Arial, sans-serif" font-size="12">
+  <text x="60" y="648" font-family="Arial, sans-serif" font-size="11">
     ▶ Infrastructure Investment: Build sustainable systems
   </text>
-  <text x="60" y="654" font-family="Arial, sans-serif" font-size="12">
+  <text x="60" y="661" font-family="Arial, sans-serif" font-size="11">
     ▶ Evidence-Based Approach: Data-driven decision making
   </text>
-  <text x="60" y="671" font-family="Arial, sans-serif" font-size="12">
+  <text x="60" y="674" font-family="Arial, sans-serif" font-size="11">
     ▶ Regional Coordination: Leverage cross-county resources
   </text>
 
   <!-- Partnership Model Outcomes Panel -->
-  <rect x="710" y="580" width="650" height="120" rx="10" fill="white" stroke="#ffd700" stroke-width="2"/>
-  <text x="1035" y="600" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">Partnership Model Outcomes &amp; Metrics</text>
+  <rect x="710" y="600" width="650" height="90" rx="8" fill="white" stroke="#ffd700" stroke-width="2"/>
+  <text x="1035" y="618" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Partnership Model Outcomes &amp; Metrics</text>
 
-  <text x="730" y="620" font-family="Arial, sans-serif" font-size="12">
+  <text x="730" y="635" font-family="Arial, sans-serif" font-size="11">
     ▶ 6 County Partnerships (5 active, 1 developing)
   </text>
-  <text x="730" y="637" font-family="Arial, sans-serif" font-size="12">
+  <text x="730" y="648" font-family="Arial, sans-serif" font-size="11">
     ▶ 4+ Evidence-Based Programs Launched
   </text>
-  <text x="730" y="654" font-family="Arial, sans-serif" font-size="12">
+  <text x="730" y="661" font-family="Arial, sans-serif" font-size="11">
     ▶ Workforce Development: Scholarships &amp; internships
   </text>
-  <text x="730" y="671" font-family="Arial, sans-serif" font-size="12">
+  <text x="730" y="674" font-family="Arial, sans-serif" font-size="11">
     ▶ Cross-County Collaboration &amp; resource sharing
   </text>
 </svg>
