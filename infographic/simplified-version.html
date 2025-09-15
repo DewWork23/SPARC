@@ -65,7 +65,7 @@
             flex: 1;
             margin: 10px 0;
             overflow: visible;
-            min-height: 400px;
+            min-height: 450px;
         }
 
         /* Central Hub */
@@ -103,13 +103,13 @@
 
         /* No arrows on any spokes */
 
-        /* Spoke lengths - Adjusted to reach cards */
-        .spoke-robeson { width: 150px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 250px; transform: rotate(-150deg); }
-        .spoke-richmond { width: 250px; transform: rotate(-30deg); }
-        .spoke-scotland { width: 250px; transform: rotate(30deg); }
-        .spoke-columbus { width: 250px; transform: rotate(150deg); }
-        .spoke-bladen { width: 150px; transform: rotate(90deg); }
+        /* Spoke lengths - Extended to properly reach cards */
+        .spoke-robeson { width: 200px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 320px; transform: rotate(-145deg); }
+        .spoke-richmond { width: 320px; transform: rotate(-35deg); }
+        .spoke-scotland { width: 320px; transform: rotate(35deg); }
+        .spoke-columbus { width: 320px; transform: rotate(145deg); }
+        .spoke-bladen { width: 200px; transform: rotate(90deg); }
 
         /* County Cards - SIMPLIFIED */
         .county-card {
@@ -162,37 +162,39 @@
             color: #000;
         }
 
-        /* PRECISION POSITIONING - Cards in hexagonal layout */
+        /* PRECISION POSITIONING - Cards in balanced hexagonal layout */
         .robeson {
-            top: 5%;
+            top: 8%;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 35%;
-            left: 10%;
+            top: 32%;
+            left: 8%;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 35%;
-            right: 10%;
+            top: 32%;
+            right: 8%;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 25%;
-            right: 10%;
+            bottom: 32%;
+            right: 8%;
+            transform: translateY(50%);
         }
 
         .columbus {
-            bottom: 25%;
-            left: 10%;
+            bottom: 32%;
+            left: 8%;
+            transform: translateY(50%);
         }
 
         .bladen {
-            bottom: 5%;
+            bottom: 8%;
             left: 50%;
             transform: translateX(-50%);
         }
