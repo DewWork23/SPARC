@@ -19,17 +19,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
         .container {
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 1600px;
+            max-width: 1400px;
             width: 100%;
-            height: calc(100vh - 10px);
+            min-height: calc(100vh - 10px);
             padding: 15px;
             display: flex;
             flex-direction: column;
@@ -62,10 +62,9 @@
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            flex: 1;
+            height: 500px;
             margin: 10px 0;
             overflow: visible;
-            min-height: 450px;
         }
 
         /* Central Hub */
@@ -92,24 +91,22 @@
         .spoke {
             position: absolute;
             background: #000;
-            height: 4px;
+            height: 3px;
             transform-origin: 0 50%;
             z-index: 1;
             left: 50%;
             top: 50%;
-            margin-left: -2px;
-            margin-top: -2px;
         }
 
         /* No arrows on any spokes */
 
-        /* Spoke lengths - Extended to properly reach cards */
-        .spoke-robeson { width: 200px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 320px; transform: rotate(-145deg); }
-        .spoke-richmond { width: 320px; transform: rotate(-35deg); }
-        .spoke-scotland { width: 320px; transform: rotate(35deg); }
-        .spoke-columbus { width: 320px; transform: rotate(145deg); }
-        .spoke-bladen { width: 200px; transform: rotate(90deg); }
+        /* Spoke lengths - Calculated to stop at card edges */
+        .spoke-robeson { width: 165px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 265px; transform: rotate(-145deg); }
+        .spoke-richmond { width: 265px; transform: rotate(-35deg); }
+        .spoke-scotland { width: 265px; transform: rotate(35deg); }
+        .spoke-columbus { width: 265px; transform: rotate(145deg); }
+        .spoke-bladen { width: 165px; transform: rotate(90deg); }
 
         /* County Cards - SIMPLIFIED */
         .county-card {
@@ -162,39 +159,37 @@
             color: #000;
         }
 
-        /* PRECISION POSITIONING - Cards in balanced hexagonal layout */
+        /* PRECISION POSITIONING - Cards in fixed positions */
         .robeson {
-            top: 8%;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 32%;
-            left: 8%;
+            top: 50%;
+            left: 50px;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 32%;
-            right: 8%;
+            top: 50%;
+            right: 50px;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 32%;
-            right: 8%;
-            transform: translateY(50%);
+            bottom: 140px;
+            right: 120px;
         }
 
         .columbus {
-            bottom: 32%;
-            left: 8%;
-            transform: translateY(50%);
+            bottom: 140px;
+            left: 120px;
         }
 
         .bladen {
-            bottom: 8%;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
         }
