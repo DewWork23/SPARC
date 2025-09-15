@@ -116,9 +116,9 @@
             position: absolute;
             background: white;
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            width: 240px;
+            width: 200px;
             border: 3px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
@@ -133,7 +133,11 @@
             border-color: #ffd700;
         }
 
-        /* All cards have the same white background */
+        .county-card.priority {
+            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+            border-color: #ffd700;
+            border-width: 4px;
+        }
 
         .county-header {
             display: flex;
@@ -158,37 +162,37 @@
             color: #000;
         }
 
-        /* PRECISION POSITIONING - Cards positioned for perfect alignment */
+        /* PRECISION POSITIONING - Cards positioned to avoid overlap */
         .robeson {
-            top: 20px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 50%;
-            left: 60px;
+            top: 40%;
+            left: 20px;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 50%;
-            right: 60px;
+            top: 40%;
+            right: 20px;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 120px;
-            right: 80px;
+            bottom: 80px;
+            right: 40px;
         }
 
         .columbus {
-            bottom: 120px;
-            left: 80px;
+            bottom: 80px;
+            left: 40px;
         }
 
         .bladen {
-            bottom: 20px;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -271,7 +275,7 @@
             </div>
 
             <!-- County Cards - SIMPLIFIED WITH ONLY LOGOS AND NAMES -->
-            <div class="county-card robeson">
+            <div class="county-card priority robeson">
                 <div class="county-header">
                     <img src="Robeson.png" alt="Robeson County Seal" class="county-seal">
                     <div class="county-name">Robeson County</div>
