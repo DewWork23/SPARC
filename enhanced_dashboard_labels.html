@@ -566,6 +566,9 @@
             const selectedCounty = document.getElementById('countySelect').value;
             const data = overdoseData[selectedCounty];
 
+            console.log('updateCountyChart called for:', selectedCounty);
+            console.log('countyDetails element:', document.getElementById('countyDetails'));
+
             // Update title
             document.getElementById('countyChartTitle').textContent = `${selectedCounty} County - Detailed Analysis`;
 
@@ -577,6 +580,7 @@
         }
 
         function createCountyDetails(county, data) {
+            console.log('createCountyDetails called for:', county, data);
             const total = data.reduce((sum, d) => sum + d.deaths, 0);
             const latest = data[data.length - 1];
             const earliest = data[0];
@@ -632,7 +636,11 @@
                 </div>
             `;
 
-            document.getElementById('countyDetails').innerHTML = cardHtml;
+            console.log('Setting innerHTML to:', cardHtml);
+            const element = document.getElementById('countyDetails');
+            console.log('Target element found:', element);
+            element.innerHTML = cardHtml;
+            console.log('innerHTML set, element now contains:', element.innerHTML);
         }
 
         function createIndividualCountyChart(county, data) {
