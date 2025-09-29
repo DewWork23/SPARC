@@ -436,7 +436,7 @@
         const countyColors = {
             'Cumberland': '#e74c3c',
             'Robeson': '#3498db',
-            'Richmond': '#2ecc71',
+            'Richmond': '#e67e22',
             'Columbus': '#f39c12',
             'Bladen': '#9b59b6',
             'Scotland': '#1abc9c'
@@ -576,6 +576,24 @@
             }
         }
 
+        // Helper function to determine appropriate colors based on context
+        function getTrendColor(change, county, latest) {
+            // For high-rate counties (Richmond), use more cautious colors
+            const isHighRateCounty = latest.rate > 40; // Richmond is around 45-90 rate
+
+            if (change > 0) {
+                return { bg: '#fee', color: '#c53030' }; // Red for increases
+            } else if (change < 0) {
+                if (isHighRateCounty) {
+                    return { bg: '#fef3cd', color: '#856404' }; // Orange/yellow for decreases in high-rate counties
+                } else {
+                    return { bg: '#efe', color: '#38a169' }; // Green for decreases in lower-rate counties
+                }
+            } else {
+                return { bg: '#fef', color: '#805ad5' }; // Purple for no change
+            }
+        }
+
         // County-specific analysis
         function updateCountyChart() {
             const selectedCounty = document.getElementById('countySelect').value;
@@ -606,6 +624,10 @@
             const longTermText = `Since 2011: ${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}%`;
             const recentText = `From 2023: ${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}%`;
 
+            // Get appropriate colors based on context
+            const longTermColors = getTrendColor(longTermChange, county, latest);
+            const recentColors = getTrendColor(recentChange, county, latest);
+
             const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
@@ -625,20 +647,20 @@
 
                         <!-- Second Row -->
                         <div style="text-align: center;">
-                            <div style="background-color: ${longTermChange > 0 ? '#fee' : longTermChange < 0 ? '#efe' : '#fef'}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${longTermChange > 0 ? '#c53030' : longTermChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 120px;">
+                            <div style="background-color: ${longTermColors.bg}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${longTermColors.color}; display: inline-block; text-align: center; min-width: 120px;">
                                 ${longTermText}
                             </div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="background-color: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 120px;">
+                            <div style="background-color: ${recentColors.bg}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${recentColors.color}; display: inline-block; text-align: center; min-width: 120px;">
                                 ${recentText}
                             </div>
                         </div>
                         <div style="text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center;">
-                            <div style="background-color: ${longTermChange > 0 ? '#fee' : longTermChange < 0 ? '#efe' : '#fef'}; padding: 8px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${longTermChange > 0 ? '#c53030' : longTermChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 110px;">
+                            <div style="background-color: ${longTermColors.bg}; padding: 8px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${longTermColors.color}; display: inline-block; text-align: center; min-width: 110px;">
                                 Since 2011: ${longTermChange > 0 ? '+' : ''}${longTermChange}
                             </div>
-                            <div style="background-color: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; padding: 8px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 110px;">
+                            <div style="background-color: ${recentColors.bg}; padding: 8px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${recentColors.color}; display: inline-block; text-align: center; min-width: 110px;">
                                 From 2023: ${recentChange > 0 ? '+' : ''}${recentChange}
                             </div>
                         </div>
