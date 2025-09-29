@@ -537,6 +537,8 @@
 
         // Tab functionality
         function showTab(tabName) {
+            console.log('showTab called with:', tabName);
+
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -551,6 +553,7 @@
 
             // Initialize tab-specific content
             if (tabName === 'individual') {
+                console.log('Calling updateCountyChart from showTab');
                 updateCountyChart();
             } else if (tabName === 'trends') {
                 createYOYChangeChart();
