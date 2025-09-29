@@ -588,8 +588,8 @@
             const longTermIcon = longTermChange > 5 ? '↗' : longTermChange < -5 ? '↘' : '→';
             const recentIcon = recentChange > 0 ? '↗' : recentChange < 0 ? '↘' : '→';
 
-            const longTermText = `${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}% since 2011`;
-            const recentText = `${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}% from 2023`;
+            const longTermText = `Since 2011: ${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}%`;
+            const recentText = `From 2023: ${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}%`;
 
             const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
