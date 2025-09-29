@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPARC Counties - Enhanced Overdose Analytics Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <!-- Temporarily removing CDN libraries to test basic JS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script> -->
     <style>
         * {
             margin: 0;
@@ -424,9 +425,9 @@
     <script>
         console.log('JavaScript is loading...');
 
-        // Register the plugin
-        Chart.register(ChartDataLabels);
-        console.log('Chart.js plugin registered');
+        // Register the plugin (commented out for testing)
+        // Chart.register(ChartDataLabels);
+        console.log('Basic script section reached');
 
         // County color scheme
         const countyColors = {
