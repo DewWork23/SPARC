@@ -358,7 +358,7 @@
                 </div>
 
                 <div class="chart-section">
-                    <h2 class="chart-title" id="countyChartTitle">Cumberland County - Detailed Analysis</h2>
+                    <h2 class="chart-title" id="countyChartTitle" style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 30px;">Cumberland County - Detailed Analysis</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div>
                             <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Number of Deaths</h3>
@@ -593,25 +593,22 @@
 
             const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
-                    <div class="county-header">
-                        <div class="county-name">${county}</div>
-                        <div style="text-align: right;">
-                            <div style="background-color: #e8f4fd; padding: 6px 12px; margin: 3px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: #1976d2; display: inline-block;">
-                                ${longTermText}
-                            </div><br>
-                            <div style="background-color: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; padding: 6px 12px; margin: 3px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block;">
-                                ${recentText}
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; align-items: start;">
+                        <div style="text-align: center;">
                             <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
                             <div style="font-size: 0.9rem; color: #666;">2024 Deaths</div>
                         </div>
-                        <div>
+                        <div style="text-align: center;">
                             <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.rate.toFixed(1)}</div>
                             <div style="font-size: 0.9rem; color: #666;">Rate per 100k</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                            <div style="background-color: #e8f4fd; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: #1976d2; display: inline-block; text-align: center; min-width: 140px;">
+                                ${longTermText}
+                            </div>
+                            <div style="background-color: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 140px;">
+                                ${recentText}
+                            </div>
                         </div>
                     </div>
                     <div style="font-size: 0.9rem; color: #666;">
