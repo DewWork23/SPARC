@@ -610,7 +610,7 @@
 
                         <!-- Second Row -->
                         <div style="text-align: center;">
-                            <div style="background-color: #e8f4fd; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: #1976d2; display: inline-block; text-align: center; min-width: 120px;">
+                            <div style="background-color: ${longTermChange > 0 ? '#fee' : longTermChange < 0 ? '#efe' : '#fef'}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${longTermChange > 0 ? '#c53030' : longTermChange < 0 ? '#38a169' : '#805ad5'}; display: inline-block; text-align: center; min-width: 120px;">
                                 ${longTermText}
                             </div>
                         </div>
