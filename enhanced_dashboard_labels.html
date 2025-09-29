@@ -591,7 +591,7 @@
             const longTermText = `${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}% since 2011`;
             const recentText = `${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}% from 2023`;
 
-            const detailsHtml = `
+            const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
                     <div class="county-header">
                         <div class="county-name">${county}</div>
@@ -618,7 +618,7 @@
                 </div>
             `;
 
-            document.getElementById('countyDetails').innerHTML = detailsHtml;
+            document.getElementById('countyDetails').innerHTML = cardHtml;
         }
 
         function createIndividualCountyChart(county, data) {
