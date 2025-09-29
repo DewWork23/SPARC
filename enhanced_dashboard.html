@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARC Counties - Enhanced Overdose Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            white-space: nowrap;
+            font-size: 1rem;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charts-container {
+            padding: 30px;
+        }
+
+        .chart-section {
+            margin-bottom: 50px;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .chart-container.large {
+            height: 500px;
+        }
+
+        .chart-container.medium {
+            height: 350px;
+        }
+
+        .insights {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .insights h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .insights ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+
+        .insights li {
+            margin-bottom: 8px;
+        }
+
+        .county-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .county-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+        }
+
+        .county-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .county-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .county-rate {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .trend-up {
+            background: #fee;
+            color: #c53030;
+        }
+
+        .trend-down {
+            background: #efe;
+            color: #38a169;
+        }
+
+        .trend-stable {
+            background: #fef;
+            color: #805ad5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .county-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SPARC Counties Overdose Crisis</h1>
+            <p>Enhanced Analytics Dashboard (2011-2024)</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="showTab('individual')">County Deep-Dive</button>
+            <button class="nav-tab" onclick="showTab('trends')">Trend Analysis</button>
+            <button class="nav-tab" onclick="showTab('comparisons')">Comparisons</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">3,018</div>
+                    <div class="stat-label">Total Deaths</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89.8</div>
+                    <div class="stat-label">Highest Rate (Richmond)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">+281</div>
+                    <div class="stat-label">Total Increase (2011-2024)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Counties Analyzed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">+216</div>
+                    <div class="stat-label">Avg Annual Deaths</div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <!-- Overview Charts -->
+                <div class="chart-section">
+                    <h2 class="chart-title">Overdose Death Trends Over Time</h2>
+                    <div class="chart-container large">
+                        <canvas id="overviewTrendsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">2024 Current Situation</h2>
+                    <div class="chart-container">
+                        <canvas id="overviewRatesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual County Tab -->
+        <div id="individual" class="tab-content">
+            <div class="charts-container">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="countySelect">Select County:</label>
+                        <select id="countySelect" onchange="updateCountyChart()">
+                            <option value="Cumberland">Cumberland County</option>
+                            <option value="Robeson">Robeson County</option>
+                            <option value="Richmond">Richmond County</option>
+                            <option value="Columbus">Columbus County</option>
+                            <option value="Bladen">Bladen County</option>
+                            <option value="Scotland">Scotland County</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="countyDetails">
+                    <!-- Dynamic county content will be inserted here -->
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title" id="countyChartTitle">Cumberland County - Detailed Analysis</h2>
+                    <div class="chart-container large">
+                        <canvas id="individualCountyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trend Analysis Tab -->
+        <div id="trends" class="tab-content">
+            <div class="charts-container">
+                <div class="chart-section">
+                    <h2 class="chart-title">Year-over-Year Change Analysis</h2>
+                    <div class="chart-container large">
+                        <canvas id="yoyChangeChart"></canvas>
+                    </div>
+                    <div class="insights">
+                        <h3>Change Pattern Insights:</h3>
+                        <ul>
+                            <li><strong>2017 Surge:</strong> Most counties saw significant increases starting in 2017</li>
+                            <li><strong>2020-2021 Crisis:</strong> Pandemic years showed unprecedented spikes</li>
+                            <li><strong>2022+ Variation:</strong> Mixed patterns with some counties stabilizing, others continuing to rise</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">Rate vs. Deaths Correlation</h2>
+                    <div class="chart-container">
+                        <canvas id="rateVsDeathsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparisons Tab -->
+        <div id="comparisons" class="tab-content">
+            <div class="charts-container">
+                <div class="county-grid" id="countyComparisonGrid">
+                    <!-- County comparison cards will be generated here -->
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">Relative Performance: Deaths per 100k Population</h2>
+                    <div class="chart-container large">
+                        <canvas id="heatmapChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // County color scheme
+        const countyColors = {
+            'Cumberland': '#e74c3c',
+            'Robeson': '#3498db',
+            'Richmond': '#2ecc71',
+            'Columbus': '#f39c12',
+            'Bladen': '#9b59b6',
+            'Scotland': '#1abc9c'
+        };
+
+        // Data from the CSV analysis
+        const overdoseData = {
+            'Cumberland': [
+                {year: 2011, deaths: 45, rate: 13.6},
+                {year: 2012, deaths: 45, rate: 13.6},
+                {year: 2013, deaths: 41, rate: 12.3},
+                {year: 2014, deaths: 43, rate: 12.9},
+                {year: 2015, deaths: 54, rate: 16.3},
+                {year: 2016, deaths: 62, rate: 18.6},
+                {year: 2017, deaths: 106, rate: 32.0},
+                {year: 2018, deaths: 88, rate: 26.4},
+                {year: 2019, deaths: 97, rate: 28.9},
+                {year: 2020, deaths: 163, rate: 48.6},
+                {year: 2021, deaths: 214, rate: 63.3},
+                {year: 2022, deaths: 186, rate: 55.2},
+                {year: 2023, deaths: 190, rate: 56.2},
+                {year: 2024, deaths: 141, rate: 41.5}
+            ],
+            'Robeson': [
+                {year: 2011, deaths: 22, rate: 16.3},
+                {year: 2012, deaths: 31, rate: 23.0},
+                {year: 2013, deaths: 42, rate: 31.2},
+                {year: 2014, deaths: 37, rate: 27.5},
+                {year: 2015, deaths: 44, rate: 32.7},
+                {year: 2016, deaths: 50, rate: 37.2},
+                {year: 2017, deaths: 71, rate: 53.0},
+                {year: 2018, deaths: 63, rate: 47.1},
+                {year: 2019, deaths: 58, rate: 43.4},
+                {year: 2020, deaths: 75, rate: 56.3},
+                {year: 2021, deaths: 89, rate: 67.0},
+                {year: 2022, deaths: 76, rate: 57.4},
+                {year: 2023, deaths: 70, rate: 59.2},
+                {year: 2024, deaths: 53, rate: 44.8}
+            ],
+            'Richmond': [
+                {year: 2011, deaths: 11, rate: 23.6},
+                {year: 2012, deaths: 12, rate: 25.8},
+                {year: 2013, deaths: 8, rate: 17.2},
+                {year: 2014, deaths: 15, rate: 32.3},
+                {year: 2015, deaths: 18, rate: 38.8},
+                {year: 2016, deaths: 14, rate: 30.2},
+                {year: 2017, deaths: 20, rate: 43.2},
+                {year: 2018, deaths: 18, rate: 39.0},
+                {year: 2019, deaths: 19, rate: 41.2},
+                {year: 2020, deaths: 25, rate: 54.2},
+                {year: 2021, deaths: 32, rate: 69.5},
+                {year: 2022, deaths: 29, rate: 63.0},
+                {year: 2023, deaths: 38, rate: 82.6},
+                {year: 2024, deaths: 38, rate: 89.8}
+            ],
+            'Columbus': [
+                {year: 2011, deaths: 13, rate: 22.5},
+                {year: 2012, deaths: 11, rate: 19.1},
+                {year: 2013, deaths: 16, rate: 27.8},
+                {year: 2014, deaths: 12, rate: 20.9},
+                {year: 2015, deaths: 21, rate: 36.6},
+                {year: 2016, deaths: 17, rate: 29.6},
+                {year: 2017, deaths: 19, rate: 33.1},
+                {year: 2018, deaths: 15, rate: 26.2},
+                {year: 2019, deaths: 22, rate: 38.5},
+                {year: 2020, deaths: 18, rate: 31.5},
+                {year: 2021, deaths: 26, rate: 45.5},
+                {year: 2022, deaths: 22, rate: 38.5},
+                {year: 2023, deaths: 20, rate: 35.0},
+                {year: 2024, deaths: 17, rate: 34.2}
+            ],
+            'Bladen': [
+                {year: 2011, deaths: 3, rate: 8.6},
+                {year: 2012, deaths: 7, rate: 20.1},
+                {year: 2013, deaths: 6, rate: 17.2},
+                {year: 2014, deaths: 9, rate: 25.9},
+                {year: 2015, deaths: 8, rate: 23.0},
+                {year: 2016, deaths: 9, rate: 25.9},
+                {year: 2017, deaths: 14, rate: 40.3},
+                {year: 2018, deaths: 10, rate: 28.8},
+                {year: 2019, deaths: 12, rate: 34.6},
+                {year: 2020, deaths: 18, rate: 52.0},
+                {year: 2021, deaths: 20, rate: 57.8},
+                {year: 2022, deaths: 17, rate: 49.2},
+                {year: 2023, deaths: 12, rate: 34.7},
+                {year: 2024, deaths: 15, rate: 51.8}
+            ],
+            'Scotland': [
+                {year: 2011, deaths: 3, rate: 8.3},
+                {year: 2012, deaths: 7, rate: 19.4},
+                {year: 2013, deaths: 5, rate: 13.9},
+                {year: 2014, deaths: 8, rate: 22.2},
+                {year: 2015, deaths: 9, rate: 25.0},
+                {year: 2016, deaths: 11, rate: 30.6},
+                {year: 2017, deaths: 14, rate: 39.0},
+                {year: 2018, deaths: 12, rate: 33.4},
+                {year: 2019, deaths: 10, rate: 27.9},
+                {year: 2020, deaths: 13, rate: 36.3},
+                {year: 2021, deaths: 16, rate: 44.7},
+                {year: 2022, deaths: 15, rate: 41.9},
+                {year: 2023, deaths: 14, rate: 39.1},
+                {year: 2024, deaths: 17, rate: 50.6}
+            ]
+        };
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Initialize tab-specific content
+            if (tabName === 'individual') {
+                updateCountyChart();
+            } else if (tabName === 'trends') {
+                createYOYChangeChart();
+                createRateVsDeathsChart();
+            } else if (tabName === 'comparisons') {
+                createCountyComparisonCards();
+                createHeatmapChart();
+            }
+        }
+
+        // County-specific analysis
+        function updateCountyChart() {
+            const selectedCounty = document.getElementById('countySelect').value;
+            const data = overdoseData[selectedCounty];
+
+            // Update title
+            document.getElementById('countyChartTitle').textContent = `${selectedCounty} County - Detailed Analysis`;
+
+            // Create county details
+            createCountyDetails(selectedCounty, data);
+
+            // Update chart
+            createIndividualCountyChart(selectedCounty, data);
+        }
+
+        function createCountyDetails(county, data) {
+            const total = data.reduce((sum, d) => sum + d.deaths, 0);
+            const avgRate = (data.reduce((sum, d) => sum + d.rate, 0) / data.length).toFixed(1);
+            const latest = data[data.length - 1];
+            const earliest = data[0];
+            const change = latest.deaths - earliest.deaths;
+
+            const detailsHtml = `
+                <div class="county-card" style="border-top-color: ${countyColors[county]}">
+                    <div class="county-header">
+                        <div class="county-name">${county} County</div>
+                        <div class="county-rate" style="background: ${countyColors[county]}">${latest.rate} per 100k</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${total}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Total Deaths (2011-2024)</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${avgRate}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Average Rate per 100k</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: ${change > 0 ? '#e74c3c' : '#27ae60'}">${change > 0 ? '+' : ''}${change}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Change (2011-2024)</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
+                            <div style="font-size: 0.9rem; color: #666;">2024 Deaths</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('countyDetails').innerHTML = detailsHtml;
+        }
+
+        function createIndividualCountyChart(county, data) {
+            const ctx = document.getElementById('individualCountyChart').getContext('2d');
+
+            // Destroy existing chart if it exists
+            if (window.individualChart) {
+                window.individualChart.destroy();
+            }
+
+            window.individualChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.year),
+                    datasets: [
+                        {
+                            label: 'Deaths',
+                            data: data.map(d => d.deaths),
+                            borderColor: countyColors[county],
+                            backgroundColor: countyColors[county] + '20',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Rate per 100k',
+                            data: data.map(d => d.rate),
+                            borderColor: countyColors[county] + '80',
+                            backgroundColor: countyColors[county] + '10',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Number of Deaths'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Rate per 100,000'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createYOYChangeChart() {
+            if (window.yoyChart) return; // Already created
+
+            const ctx = document.getElementById('yoyChangeChart').getContext('2d');
+
+            // Calculate year-over-year changes
+            const datasets = Object.keys(overdoseData).map(county => {
+                const data = overdoseData[county];
+                const changes = [];
+                for (let i = 1; i < data.length; i++) {
+                    changes.push(data[i].deaths - data[i-1].deaths);
+                }
+                return {
+                    label: county + ' County',
+                    data: changes,
+                    borderColor: countyColors[county],
+                    backgroundColor: countyColors[county] + '40',
+                    borderWidth: 2,
+                    tension: 0.4
+                };
+            });
+
+            window.yoyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Year-over-Year Change in Deaths'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRateVsDeathsChart() {
+            if (window.rateVsDeathsChart) return; // Already created
+
+            const ctx = document.getElementById('rateVsDeathsChart').getContext('2d');
+
+            // Get 2024 data for each county
+            const scatterData = Object.keys(overdoseData).map(county => {
+                const latest = overdoseData[county][overdoseData[county].length - 1];
+                return {
+                    x: latest.deaths,
+                    y: latest.rate,
+                    county: county
+                };
+            });
+
+            window.rateVsDeathsChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: '2024 Data',
+                        data: scatterData,
+                        backgroundColor: scatterData.map(d => countyColors[d.county]),
+                        borderColor: scatterData.map(d => countyColors[d.county]),
+                        borderWidth: 2,
+                        pointRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const point = context.raw;
+                                    return `${scatterData[context.dataIndex].county}: ${point.x} deaths, ${point.y} per 100k`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Number of Deaths (2024)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Rate per 100,000 (2024)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCountyComparisonCards() {
+            const grid = document.getElementById('countyComparisonGrid');
+            if (grid.children.length > 0) return; // Already created
+
+            Object.keys(overdoseData).forEach(county => {
+                const data = overdoseData[county];
+                const total = data.reduce((sum, d) => sum + d.deaths, 0);
+                const latest = data[data.length - 1];
+                const earliest = data[0];
+                const change = latest.deaths - earliest.deaths;
+                const trendClass = change > 10 ? 'trend-up' : change < -5 ? 'trend-down' : 'trend-stable';
+                const trendText = change > 10 ? '↗ Rising' : change < -5 ? '↘ Declining' : '→ Stable';
+
+                const cardHtml = `
+                    <div class="county-card" style="border-top-color: ${countyColors[county]}">
+                        <div class="county-header">
+                            <div class="county-name">${county}</div>
+                            <div class="trend-indicator ${trendClass}">${trendText}</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
+                                <div style="font-size: 0.9rem; color: #666;">2024 Deaths</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.rate}</div>
+                                <div style="font-size: 0.9rem; color: #666;">Rate per 100k</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666;">
+                            Total 2011-2024: <strong>${total} deaths</strong><br>
+                            Change: <strong style="color: ${change > 0 ? '#e74c3c' : '#27ae60'}">${change > 0 ? '+' : ''}${change}</strong>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHtml;
+            });
+        }
+
+        function createHeatmapChart() {
+            if (window.heatmapChart) return; // Already created
+
+            // For simplicity, we'll create a bar chart showing rates by year
+            // A true heatmap would require additional libraries
+            const ctx = document.getElementById('heatmapChart').getContext('2d');
+
+            const years = [2011, 2015, 2020, 2024]; // Sample years
+            const datasets = years.map((year, index) => ({
+                label: year.toString(),
+                data: Object.keys(overdoseData).map(county => {
+                    const yearData = overdoseData[county].find(d => d.year === year);
+                    return yearData ? yearData.rate : 0;
+                }),
+                backgroundColor: `hsla(${index * 60}, 70%, 50%, 0.7)`,
+                borderColor: `hsla(${index * 60}, 70%, 40%, 1)`,
+                borderWidth: 1
+            }));
+
+            window.heatmapChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(overdoseData).map(county => county + ' County'),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Deaths per 100,000'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize overview charts on page load
+        window.addEventListener('load', function() {
+            // Create overview trends chart
+            const overviewTrendsCtx = document.getElementById('overviewTrendsChart').getContext('2d');
+            new Chart(overviewTrendsCtx, {
+                type: 'line',
+                data: {
+                    labels: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                    datasets: Object.keys(overdoseData).map(county => ({
+                        label: county + ' County',
+                        data: overdoseData[county].map(d => d.deaths),
+                        borderColor: countyColors[county],
+                        backgroundColor: countyColors[county] + '20',
+                        borderWidth: 3,
+                        tension: 0.4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Deaths'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Create overview rates chart
+            const overviewRatesCtx = document.getElementById('overviewRatesChart').getContext('2d');
+            const currentRates = Object.keys(overdoseData).map(county => ({
+                county: county,
+                rate: overdoseData[county][overdoseData[county].length - 1].rate
+            })).sort((a, b) => b.rate - a.rate);
+
+            new Chart(overviewRatesCtx, {
+                type: 'bar',
+                data: {
+                    labels: currentRates.map(d => d.county + ' County'),
+                    datasets: [{
+                        label: 'Deaths per 100,000',
+                        data: currentRates.map(d => d.rate),
+                        backgroundColor: currentRates.map(d => countyColors[d.county] + '80'),
+                        borderColor: currentRates.map(d => countyColors[d.county]),
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Deaths per 100,000 Population'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
