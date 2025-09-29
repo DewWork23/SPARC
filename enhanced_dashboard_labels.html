@@ -595,9 +595,13 @@
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
                     <div class="county-header">
                         <div class="county-name">${county}</div>
-                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem;">
-                            <div class="trend-indicator trend-up" style="background: #e8f4fd; color: #1976d2;">${longTermText}</div>
-                            <div class="trend-indicator ${recentChange > 0 ? 'trend-up' : recentChange < 0 ? 'trend-down' : 'trend-stable'}">${recentText}</div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; padding: 4px 8px; border-radius: 15px; font-weight: bold; background: #e8f4fd; color: #1976d2;">
+                                ${longTermText}
+                            </div>
+                            <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; padding: 4px 8px; border-radius: 15px; font-weight: bold; background: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'};">
+                                ${recentText}
+                            </div>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -606,7 +610,7 @@
                             <div style="font-size: 0.9rem; color: #666;">2024 Deaths</div>
                         </div>
                         <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.rate}</div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.rate.toFixed(1)}</div>
                             <div style="font-size: 0.9rem; color: #666;">Rate per 100k</div>
                         </div>
                     </div>
