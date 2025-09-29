@@ -591,17 +591,27 @@
             const longTermText = `${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}% since 2011`;
             const recentText = `${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}% from 2023`;
 
+            console.log('Debug for', county, ':', {
+                longTermChange,
+                longTermPercent,
+                recentChange,
+                recentPercent,
+                longTermText,
+                recentText
+            });
+
             const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
                     <div class="county-header">
                         <div class="county-name">${county}</div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; padding: 4px 8px; border-radius: 15px; font-weight: bold; background: #e8f4fd; color: #1976d2;">
-                                ${longTermText}
+                        <div style="text-align: right; min-height: 60px; border: 1px solid red;">
+                            <div style="background-color: lightblue; padding: 5px 10px; margin: 2px; border-radius: 12px; font-size: 11px; font-weight: bold; color: #1976d2; display: inline-block; border: 1px solid blue;">
+                                Long-term: ${longTermText}
+                            </div><br>
+                            <div style="background-color: ${recentChange > 0 ? 'lightcoral' : recentChange < 0 ? 'lightgreen' : 'plum'}; padding: 5px 10px; margin: 2px; border-radius: 12px; font-size: 11px; font-weight: bold; color: ${recentChange > 0 ? 'darkred' : recentChange < 0 ? 'darkgreen' : 'purple'}; display: inline-block; border: 1px solid green;">
+                                Recent: ${recentText}
                             </div>
-                            <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.9rem; padding: 4px 8px; border-radius: 15px; font-weight: bold; background: ${recentChange > 0 ? '#fee' : recentChange < 0 ? '#efe' : '#fef'}; color: ${recentChange > 0 ? '#c53030' : recentChange < 0 ? '#38a169' : '#805ad5'};">
-                                ${recentText}
-                            </div>
+                            <div style="color: red; font-size: 10px;">DEBUG: Change=${recentChange}, Percent=${recentPercent}</div>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
