@@ -287,10 +287,10 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
-            <button class="nav-tab" onclick="showTab('individual')">County Deep-Dive</button>
-            <button class="nav-tab" onclick="showTab('trends')">Trend Analysis</button>
-            <button class="nav-tab" onclick="showTab('comparisons')">Comparisons</button>
+            <button class="nav-tab active" onclick="console.log('Overview clicked'); showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="console.log('County Deep-Dive clicked'); showTab('individual')">County Deep-Dive</button>
+            <button class="nav-tab" onclick="console.log('Trend Analysis clicked'); showTab('trends')">Trend Analysis</button>
+            <button class="nav-tab" onclick="console.log('Comparisons clicked'); showTab('comparisons')">Comparisons</button>
         </div>
 
         <!-- Overview Tab -->
@@ -422,8 +422,11 @@
     </div>
 
     <script>
+        console.log('JavaScript is loading...');
+
         // Register the plugin
         Chart.register(ChartDataLabels);
+        console.log('Chart.js plugin registered');
 
         // County color scheme
         const countyColors = {
@@ -1011,7 +1014,9 @@
         }
 
         // Initialize overview charts on page load
+        console.log('Setting up page load listener...');
         window.addEventListener('load', function() {
+            console.log('Page loaded! Initializing charts...');
             // Create overview trends chart
             const overviewTrendsCtx = document.getElementById('overviewTrendsChart').getContext('2d');
             new Chart(overviewTrendsCtx, {
