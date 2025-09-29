@@ -260,6 +260,11 @@
             color: #805ad5;
         }
 
+        /* Hide elements for screenshots */
+        .hide-for-screenshots {
+            display: none !important;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -340,9 +345,10 @@
         <div id="individual" class="tab-content">
             <div class="charts-container">
                 <div class="filter-controls">
+                    <button onclick="toggleScreenshotMode()" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-right: 15px; cursor: pointer;">📸 Screenshot Mode</button>
                     <div class="filter-group">
-                        <label for="countySelect">Select County:</label>
-                        <select id="countySelect" onchange="updateCountyChart()">
+                        <label for="countySelect" class="screenshot-hide">Select County:</label>
+                        <select id="countySelect" class="screenshot-hide" onchange="updateCountyChart()">
                             <option value="Cumberland">Cumberland County</option>
                             <option value="Robeson">Robeson County</option>
                             <option value="Richmond">Richmond County</option>
@@ -535,6 +541,14 @@
                 {year: 2024, deaths: 17, rate: 50.6}
             ]
         };
+
+        // Screenshot mode toggle
+        function toggleScreenshotMode() {
+            const elements = document.querySelectorAll('.screenshot-hide');
+            elements.forEach(element => {
+                element.classList.toggle('hide-for-screenshots');
+            });
+        }
 
         // Tab functionality
         function showTab(tabName) {
