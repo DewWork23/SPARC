@@ -321,6 +321,18 @@
                     <div class="stat-number">+216</div>
                     <div class="stat-label">Avg Annual Deaths</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number">10,843</div>
+                    <div class="stat-label">Total ED Visits (2016-2024)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">642.8</div>
+                    <div class="stat-label">Peak ED Rate (Robeson 2021)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">-29%</div>
+                    <div class="stat-label">Avg ED Visit Change (2024)</div>
+                </div>
             </div>
 
             <div class="charts-container">
@@ -366,17 +378,31 @@
                 </div>
 
                 <div class="chart-section">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Number of Deaths</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">📊 Overdose Deaths</h3>
                             <div class="chart-container medium">
                                 <canvas id="individualDeathsChart"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Rate per 100,000</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">📊 Death Rate per 100,000</h3>
                             <div class="chart-container medium">
                                 <canvas id="individualRatesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">🏥 ED Visits</h3>
+                            <div class="chart-container medium">
+                                <canvas id="individualEDVisitsChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">🏥 ED Visit Rate per 100,000</h3>
+                            <div class="chart-container medium">
+                                <canvas id="individualEDRatesChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -542,6 +568,76 @@
             ]
         };
 
+        // ED Visits Data from 2016-2024
+        const edVisitsData = {
+            'Cumberland': [
+                {year: 2016, visits: 500, rate: 150.1},
+                {year: 2017, visits: 506, rate: 152.9},
+                {year: 2018, visits: 677, rate: 203.0},
+                {year: 2019, visits: 523, rate: 155.9},
+                {year: 2020, visits: 591, rate: 175.3},
+                {year: 2021, visits: 669, rate: 197.0},
+                {year: 2022, visits: 687, rate: 202.6},
+                {year: 2023, visits: 637, rate: 188.2},
+                {year: 2024, visits: 453, rate: 133.9}
+            ],
+            'Robeson': [
+                {year: 2016, visits: 199, rate: 149.2},
+                {year: 2017, visits: 190, rate: 143.3},
+                {year: 2018, visits: 303, rate: 229.7},
+                {year: 2019, visits: 355, rate: 271.8},
+                {year: 2020, visits: 644, rate: 555.3},
+                {year: 2021, visits: 745, rate: 642.8},
+                {year: 2022, visits: 609, rate: 523.6},
+                {year: 2023, visits: 373, rate: 316.9},
+                {year: 2024, visits: 265, rate: 223.4}
+            ],
+            'Richmond': [
+                {year: 2016, visits: 72, rate: 160.0},
+                {year: 2017, visits: 98, rate: 218.6},
+                {year: 2018, visits: 78, rate: 173.8},
+                {year: 2019, visits: 110, rate: 245.4},
+                {year: 2020, visits: 153, rate: 358.1},
+                {year: 2021, visits: 178, rate: 417.4},
+                {year: 2022, visits: 210, rate: 495.8},
+                {year: 2023, visits: 224, rate: 533.3},
+                {year: 2024, visits: 152, rate: 362.0}
+            ],
+            'Columbus': [
+                {year: 2016, visits: 91, rate: 161.7},
+                {year: 2017, visits: 30, rate: 53.5},
+                {year: 2018, visits: 40, rate: 71.7},
+                {year: 2019, visits: 42, rate: 75.7},
+                {year: 2020, visits: 119, rate: 235.8},
+                {year: 2021, visits: 114, rate: 228.0},
+                {year: 2022, visits: 93, rate: 185.9},
+                {year: 2023, visits: 75, rate: 149.6},
+                {year: 2024, visits: 28, rate: 55.9}
+            ],
+            'Bladen': [
+                {year: 2016, visits: 40, rate: 118.9},
+                {year: 2017, visits: 39, rate: 116.6},
+                {year: 2018, visits: 51, rate: 153.8},
+                {year: 2019, visits: 38, rate: 116.1},
+                {year: 2020, visits: 46, rate: 155.2},
+                {year: 2021, visits: 49, rate: 165.8},
+                {year: 2022, visits: 78, rate: 265.6},
+                {year: 2023, visits: 69, rate: 233.9},
+                {year: 2024, visits: 44, rate: 147.8}
+            ],
+            'Scotland': [
+                {year: 2016, visits: 16, rate: 45.3},
+                {year: 2017, visits: 27, rate: 76.8},
+                {year: 2018, visits: 45, rate: 129.5},
+                {year: 2019, visits: 82, rate: 235.5},
+                {year: 2020, visits: 115, rate: 344.1},
+                {year: 2021, visits: 97, rate: 290.2},
+                {year: 2022, visits: 137, rate: 408.4},
+                {year: 2023, visits: 113, rate: 335.7},
+                {year: 2024, visits: 124, rate: 365.8}
+            ]
+        };
+
         // Screenshot mode toggle
         function toggleScreenshotMode() {
             const elements = document.querySelectorAll('.screenshot-hide');
@@ -618,6 +714,14 @@
             const recentChange = latest.deaths - data[data.length - 2].deaths;
             const recentPercent = Math.round((recentChange / data[data.length - 2].deaths) * 100);
 
+            // ED Visits data
+            const edData = edVisitsData[county];
+            const edLatest = edData[edData.length - 1];
+            const edEarliest = edData[0];
+            const edTotal = edData.reduce((sum, d) => sum + d.visits, 0);
+            const edLongTermChange = edLatest.visits - edEarliest.visits;
+            const edRecentChange = edLatest.visits - edData[edData.length - 2].visits;
+
             const longTermIcon = longTermChange > 5 ? '↗' : longTermChange < -5 ? '↘' : '→';
             const recentIcon = recentChange > 0 ? '↗' : recentChange < 0 ? '↘' : '→';
 
@@ -628,9 +732,15 @@
             const longTermColors = getTrendColor(longTermChange, county, latest);
             const recentColors = getTrendColor(recentChange, county, latest);
 
+            // Get ED colors
+            const edLongTermColors = getTrendColor(edLongTermChange, county, edLatest);
+            const edRecentColors = getTrendColor(edRecentChange, county, edLatest);
+
             const cardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <!-- Deaths Section -->
+                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center;">📊 Overdose Deaths</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                         <!-- First Row -->
                         <div style="text-align: center;">
                             <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
@@ -662,6 +772,41 @@
                             </div>
                             <div style="background-color: ${recentColors.bg}; padding: 8px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: ${recentColors.color}; display: inline-block; text-align: center; min-width: 110px;">
                                 From 2023: ${recentChange > 0 ? '+' : ''}${recentChange}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ED Visits Section -->
+                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center;">🏥 Emergency Department Visits</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                        <!-- First Row -->
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${edLatest.visits}</div>
+                            <div style="font-size: 0.9rem; color: #666;">2024 ED Visits</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${edLatest.rate.toFixed(1)}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Rate per 100k</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${edTotal}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Total ED Visits (2016-2024)</div>
+                        </div>
+
+                        <!-- Second Row -->
+                        <div style="text-align: center;">
+                            <div style="background-color: ${edLongTermColors.bg}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${edLongTermColors.color}; display: inline-block; text-align: center; min-width: 120px;">
+                                Since 2016: ${edLongTermChange > 0 ? '+' : ''}${edLongTermChange}
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="background-color: ${edRecentColors.bg}; padding: 10px 16px; border-radius: 18px; font-size: 1rem; font-weight: bold; color: ${edRecentColors.color}; display: inline-block; text-align: center; min-width: 120px;">
+                                From 2023: ${edRecentChange > 0 ? '+' : ''}${edRecentChange}
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1rem; color: #666; font-style: italic;">
+                                ED visits show non-fatal overdoses requiring emergency care
                             </div>
                         </div>
                     </div>
@@ -787,6 +932,131 @@
                             title: {
                                 display: true,
                                 text: 'Deaths per 100,000',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Create ED Visits Chart
+            const edData = edVisitsData[county];
+            const edVisitsCtx = document.getElementById('individualEDVisitsChart').getContext('2d');
+            if (window.individualEDVisitsChart && typeof window.individualEDVisitsChart.destroy === 'function') {
+                window.individualEDVisitsChart.destroy();
+            }
+
+            window.individualEDVisitsChart = new Chart(edVisitsCtx, {
+                type: 'line',
+                data: {
+                    labels: edData.map(d => d.year),
+                    datasets: [{
+                        label: 'ED Visits',
+                        data: edData.map(d => d.visits),
+                        borderColor: countyColors[county],
+                        backgroundColor: countyColors[county] + '20',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: countyColors[county],
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            display: function(context) {
+                                // Show labels for key years
+                                const index = context.dataIndex;
+                                const year = edData[index].year;
+                                return [2016, 2018, 2020, 2022, 2024].includes(year);
+                            },
+                            align: 'top',
+                            offset: 8,
+                            color: countyColors[county],
+                            font: { weight: 'bold', size: 12 },
+                            formatter: function(value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of ED Visits',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Create ED Rates Chart
+            const edRatesCtx = document.getElementById('individualEDRatesChart').getContext('2d');
+            if (window.individualEDRatesChart && typeof window.individualEDRatesChart.destroy === 'function') {
+                window.individualEDRatesChart.destroy();
+            }
+
+            window.individualEDRatesChart = new Chart(edRatesCtx, {
+                type: 'line',
+                data: {
+                    labels: edData.map(d => d.year),
+                    datasets: [{
+                        label: 'ED Visit Rate',
+                        data: edData.map(d => d.rate),
+                        borderColor: countyColors[county],
+                        backgroundColor: countyColors[county] + '20',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: countyColors[county],
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            display: function(context) {
+                                // Show labels for key years
+                                const index = context.dataIndex;
+                                const year = edData[index].year;
+                                return [2016, 2018, 2020, 2022, 2024].includes(year);
+                            },
+                            align: 'top',
+                            offset: 8,
+                            color: countyColors[county],
+                            font: { weight: 'bold', size: 12 },
+                            formatter: function(value) {
+                                return value.toFixed(1);
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'ED Visits per 100,000',
                                 font: { weight: 'bold' }
                             },
                             grid: { color: 'rgba(0,0,0,0.1)' }
