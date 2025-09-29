@@ -358,8 +358,19 @@
 
                 <div class="chart-section">
                     <h2 class="chart-title" id="countyChartTitle">Cumberland County - Detailed Analysis</h2>
-                    <div class="chart-container large">
-                        <canvas id="individualCountyChart"></canvas>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Number of Deaths</h3>
+                            <div class="chart-container medium">
+                                <canvas id="individualDeathsChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Rate per 100,000</h3>
+                            <div class="chart-container medium">
+                                <canvas id="individualRatesChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -599,68 +610,95 @@
         }
 
         function createIndividualCountyChart(county, data) {
-            const ctx = document.getElementById('individualCountyChart').getContext('2d');
-
-            // Destroy existing chart if it exists
-            if (window.individualChart) {
-                window.individualChart.destroy();
+            // Create Deaths Chart
+            const deathsCtx = document.getElementById('individualDeathsChart').getContext('2d');
+            if (window.individualDeathsChart) {
+                window.individualDeathsChart.destroy();
             }
 
-            window.individualChart = new Chart(ctx, {
+            window.individualDeathsChart = new Chart(deathsCtx, {
                 type: 'line',
                 data: {
                     labels: data.map(d => d.year),
-                    datasets: [
-                        {
-                            label: 'Deaths',
-                            data: data.map(d => d.deaths),
-                            borderColor: countyColors[county],
-                            backgroundColor: countyColors[county] + '20',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Rate per 100k',
-                            data: data.map(d => d.rate),
-                            borderColor: countyColors[county] + '80',
-                            backgroundColor: countyColors[county] + '10',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
-                    ]
+                    datasets: [{
+                        label: 'Deaths',
+                        data: data.map(d => d.deaths),
+                        borderColor: countyColors[county],
+                        backgroundColor: countyColors[county] + '20',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: countyColors[county],
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        fill: true
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'top'
-                        }
+                        legend: { display: false }
                     },
                     scales: {
                         y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
+                            beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Number of Deaths'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: 'Rate per 100,000'
+                                text: 'Number of Deaths',
+                                font: { weight: 'bold' }
                             },
-                            grid: {
-                                drawOnChartArea: false
-                            }
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Create Rates Chart
+            const ratesCtx = document.getElementById('individualRatesChart').getContext('2d');
+            if (window.individualRatesChart) {
+                window.individualRatesChart.destroy();
+            }
+
+            window.individualRatesChart = new Chart(ratesCtx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.year),
+                    datasets: [{
+                        label: 'Rate per 100k',
+                        data: data.map(d => d.rate),
+                        borderColor: countyColors[county],
+                        backgroundColor: countyColors[county] + '20',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: countyColors[county],
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Deaths per 100,000',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.1)' }
                         }
                     }
                 }
