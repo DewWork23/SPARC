@@ -612,7 +612,7 @@
         function createIndividualCountyChart(county, data) {
             // Create Deaths Chart
             const deathsCtx = document.getElementById('individualDeathsChart').getContext('2d');
-            if (window.individualDeathsChart) {
+            if (window.individualDeathsChart && typeof window.individualDeathsChart.destroy === 'function') {
                 window.individualDeathsChart.destroy();
             }
 
@@ -659,7 +659,7 @@
 
             // Create Rates Chart
             const ratesCtx = document.getElementById('individualRatesChart').getContext('2d');
-            if (window.individualRatesChart) {
+            if (window.individualRatesChart && typeof window.individualRatesChart.destroy === 'function') {
                 window.individualRatesChart.destroy();
             }
 
