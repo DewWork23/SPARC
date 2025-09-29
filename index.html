@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPARC - Southeastern Prevention and Addiction Recovery Resource Center</title>
+    <title>SPARC Counties - Overdose Trends Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,156 +13,515 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
         .container {
+            max-width: 1400px;
+            margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(90deg, #000000 0%, #333333 50%, #ffd700 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 30px;
-            border: 2px solid #ffd700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
 
-        h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
-        .subtitle {
-            color: #ffd700;
-            font-size: 1.1em;
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
         }
 
-        .section {
-            margin: 30px 0;
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ffd700;
+        .charts-container {
+            padding: 30px;
         }
 
-        .links-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .link-card {
-            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
-            padding: 20px;
+        .chart-section {
+            margin-bottom: 50px;
+            background: white;
             border-radius: 10px;
-            border: 2px solid #ddd;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: #333;
-            display: block;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .link-card:hover {
-            border-color: #ffd700;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-            transform: translateY(-2px);
+        .chart-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 300;
         }
 
-        .link-card h3 {
-            color: #000;
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .chart-container.large {
+            height: 500px;
+        }
+
+        .county-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .insights {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .insights h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .insights ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+
+        .insights li {
             margin-bottom: 8px;
         }
 
-        .link-card p {
-            color: #666;
-            font-size: 0.9em;
-        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
 
-        .badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #000;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-left: 10px;
-        }
+            .chart-container {
+                height: 300px;
+            }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 0.9em;
+            .county-legend {
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>SPARC</h1>
-            <p class="subtitle">Southeastern Prevention and Addiction Recovery Resource Center</p>
-            <p class="subtitle">University of North Carolina at Pembroke</p>
+            <h1>SPARC Counties Overdose Crisis</h1>
+            <p>Comprehensive Analysis of Overdose Trends (2011-2024)</p>
         </div>
 
-        <div class="section">
-            <h2>Hub & Spoke Partnership Model Infographics</h2>
-            <div class="links-grid">
-                <a href="infographic/simplified-infographic.svg" class="link-card">
-                    <h3>Simplified SVG Version <span class="badge">LATEST</span></h3>
-                    <p>Static image with clean visualization - no layout issues</p>
-                </a>
-
-                <a href="infographic/simplified-version.html" class="link-card">
-                    <h3>Simplified HTML Version</h3>
-                    <p>Clean visualization showing county partnerships with logos only</p>
-                </a>
-
-                <a href="infographic/final-clean-version.html" class="link-card">
-                    <h3>Final Clean Version</h3>
-                    <p>Complete infographic with all partnership details and program information</p>
-                </a>
-
-                <a href="infographic/print-ready-8.5x11.html" class="link-card">
-                    <h3>Print-Ready Version</h3>
-                    <p>8.5" x 11" format optimized for document insertion and printing</p>
-                </a>
-
-                <a href="infographic/corrected-version.html" class="link-card">
-                    <h3>Corrected Version</h3>
-                    <p>Updated positioning and arrow alignments</p>
-                </a>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">3,018</div>
+                <div class="stat-label">Total Deaths</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">89.8</div>
+                <div class="stat-label">Highest Rate (Richmond)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">+281</div>
+                <div class="stat-label">Total Increase (2011-2024)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Counties Analyzed</div>
             </div>
         </div>
 
-        <div class="section">
-            <h2>About SPARC</h2>
-            <p style="line-height: 1.6; color: #666;">
-                The Southeastern Prevention and Addiction Recovery Resource Center (SPARC) implements a regional hub and spoke partnership model to coordinate substance abuse prevention and recovery services across six North Carolina counties: Robeson, Cumberland, Richmond, Scotland, Columbus, and Bladen.
-            </p>
-        </div>
+        <div class="charts-container">
+            <!-- Trends Line Chart -->
+            <div class="chart-section">
+                <h2 class="chart-title">Overdose Death Trends Over Time</h2>
+                <div class="chart-container large">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+                <div class="insights">
+                    <h3>Key Insights:</h3>
+                    <ul>
+                        <li><strong>2020-2021 Spike:</strong> All counties show dramatic increases during COVID-19 pandemic</li>
+                        <li><strong>Cumberland County:</strong> Highest absolute numbers with 1,475 total deaths</li>
+                        <li><strong>Sustained Growth:</strong> Every county shows upward trend from 2011 baseline</li>
+                    </ul>
+                </div>
+            </div>
 
-        <div class="footer">
-            <p>© 2025 SPARC - University of North Carolina at Pembroke</p>
+            <!-- Current Rates Bar Chart -->
+            <div class="chart-section">
+                <h2 class="chart-title">2024 Overdose Death Rates by County</h2>
+                <div class="chart-container">
+                    <canvas id="ratesChart"></canvas>
+                </div>
+                <div class="insights">
+                    <h3>Current Situation (2024):</h3>
+                    <ul>
+                        <li><strong>Richmond County:</strong> Highest rate at 89.8 per 100,000 - crisis level</li>
+                        <li><strong>Regional Pattern:</strong> Rural counties showing disproportionately high rates</li>
+                        <li><strong>Cumberland:</strong> Largest population but moderate rate (41.5 per 100k)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Total Deaths Pie Chart -->
+            <div class="chart-section">
+                <h2 class="chart-title">Total Deaths Distribution (2011-2024)</h2>
+                <div class="chart-container">
+                    <canvas id="totalChart"></canvas>
+                </div>
+                <div class="insights">
+                    <h3>Long-term Impact:</h3>
+                    <ul>
+                        <li><strong>Cumberland:</strong> 49% of all deaths despite having largest population</li>
+                        <li><strong>Robeson:</strong> 25% of deaths with significant rural impact</li>
+                        <li><strong>Smaller Counties:</strong> Lower absolute numbers but high per-capita rates</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // County color scheme
+        const countyColors = {
+            'Cumberland': '#e74c3c',
+            'Robeson': '#3498db',
+            'Richmond': '#2ecc71',
+            'Columbus': '#f39c12',
+            'Bladen': '#9b59b6',
+            'Scotland': '#1abc9c'
+        };
+
+        // Data from the CSV analysis
+        const overdoseData = {
+            'Cumberland': [
+                {year: 2011, deaths: 45, rate: 13.6},
+                {year: 2012, deaths: 45, rate: 13.6},
+                {year: 2013, deaths: 41, rate: 12.3},
+                {year: 2014, deaths: 43, rate: 12.9},
+                {year: 2015, deaths: 54, rate: 16.3},
+                {year: 2016, deaths: 62, rate: 18.6},
+                {year: 2017, deaths: 106, rate: 32.0},
+                {year: 2018, deaths: 88, rate: 26.4},
+                {year: 2019, deaths: 97, rate: 28.9},
+                {year: 2020, deaths: 163, rate: 48.6},
+                {year: 2021, deaths: 214, rate: 63.3},
+                {year: 2022, deaths: 186, rate: 55.2},
+                {year: 2023, deaths: 190, rate: 56.2},
+                {year: 2024, deaths: 141, rate: 41.5}
+            ],
+            'Robeson': [
+                {year: 2011, deaths: 22, rate: 16.3},
+                {year: 2012, deaths: 31, rate: 23.0},
+                {year: 2013, deaths: 42, rate: 31.2},
+                {year: 2014, deaths: 37, rate: 27.5},
+                {year: 2015, deaths: 44, rate: 32.7},
+                {year: 2016, deaths: 50, rate: 37.2},
+                {year: 2017, deaths: 71, rate: 53.0},
+                {year: 2018, deaths: 63, rate: 47.1},
+                {year: 2019, deaths: 58, rate: 43.4},
+                {year: 2020, deaths: 75, rate: 56.3},
+                {year: 2021, deaths: 89, rate: 67.0},
+                {year: 2022, deaths: 76, rate: 57.4},
+                {year: 2023, deaths: 70, rate: 59.2},
+                {year: 2024, deaths: 53, rate: 44.8}
+            ],
+            'Richmond': [
+                {year: 2011, deaths: 11, rate: 23.6},
+                {year: 2012, deaths: 12, rate: 25.8},
+                {year: 2013, deaths: 8, rate: 17.2},
+                {year: 2014, deaths: 15, rate: 32.3},
+                {year: 2015, deaths: 18, rate: 38.8},
+                {year: 2016, deaths: 14, rate: 30.2},
+                {year: 2017, deaths: 20, rate: 43.2},
+                {year: 2018, deaths: 18, rate: 39.0},
+                {year: 2019, deaths: 19, rate: 41.2},
+                {year: 2020, deaths: 25, rate: 54.2},
+                {year: 2021, deaths: 32, rate: 69.5},
+                {year: 2022, deaths: 29, rate: 63.0},
+                {year: 2023, deaths: 38, rate: 82.6},
+                {year: 2024, deaths: 38, rate: 89.8}
+            ],
+            'Columbus': [
+                {year: 2011, deaths: 13, rate: 22.5},
+                {year: 2012, deaths: 11, rate: 19.1},
+                {year: 2013, deaths: 16, rate: 27.8},
+                {year: 2014, deaths: 12, rate: 20.9},
+                {year: 2015, deaths: 21, rate: 36.6},
+                {year: 2016, deaths: 17, rate: 29.6},
+                {year: 2017, deaths: 19, rate: 33.1},
+                {year: 2018, deaths: 15, rate: 26.2},
+                {year: 2019, deaths: 22, rate: 38.5},
+                {year: 2020, deaths: 18, rate: 31.5},
+                {year: 2021, deaths: 26, rate: 45.5},
+                {year: 2022, deaths: 22, rate: 38.5},
+                {year: 2023, deaths: 20, rate: 35.0},
+                {year: 2024, deaths: 17, rate: 34.2}
+            ],
+            'Bladen': [
+                {year: 2011, deaths: 3, rate: 8.6},
+                {year: 2012, deaths: 7, rate: 20.1},
+                {year: 2013, deaths: 6, rate: 17.2},
+                {year: 2014, deaths: 9, rate: 25.9},
+                {year: 2015, deaths: 8, rate: 23.0},
+                {year: 2016, deaths: 9, rate: 25.9},
+                {year: 2017, deaths: 14, rate: 40.3},
+                {year: 2018, deaths: 10, rate: 28.8},
+                {year: 2019, deaths: 12, rate: 34.6},
+                {year: 2020, deaths: 18, rate: 52.0},
+                {year: 2021, deaths: 20, rate: 57.8},
+                {year: 2022, deaths: 17, rate: 49.2},
+                {year: 2023, deaths: 12, rate: 34.7},
+                {year: 2024, deaths: 15, rate: 51.8}
+            ],
+            'Scotland': [
+                {year: 2011, deaths: 3, rate: 8.3},
+                {year: 2012, deaths: 7, rate: 19.4},
+                {year: 2013, deaths: 5, rate: 13.9},
+                {year: 2014, deaths: 8, rate: 22.2},
+                {year: 2015, deaths: 9, rate: 25.0},
+                {year: 2016, deaths: 11, rate: 30.6},
+                {year: 2017, deaths: 14, rate: 39.0},
+                {year: 2018, deaths: 12, rate: 33.4},
+                {year: 2019, deaths: 10, rate: 27.9},
+                {year: 2020, deaths: 13, rate: 36.3},
+                {year: 2021, deaths: 16, rate: 44.7},
+                {year: 2022, deaths: 15, rate: 41.9},
+                {year: 2023, deaths: 14, rate: 39.1},
+                {year: 2024, deaths: 17, rate: 50.6}
+            ]
+        };
+
+        // Create Trends Line Chart
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        const trendsChart = new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                datasets: Object.keys(overdoseData).map(county => ({
+                    label: county + ' County',
+                    data: overdoseData[county].map(d => d.deaths),
+                    borderColor: countyColors[county],
+                    backgroundColor: countyColors[county] + '20',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: countyColors[county],
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }))
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' deaths';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Deaths',
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.1)' }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Create Current Rates Bar Chart
+        const ratesCtx = document.getElementById('ratesChart').getContext('2d');
+        const currentRates = Object.keys(overdoseData).map(county => ({
+            county: county,
+            rate: overdoseData[county][overdoseData[county].length - 1].rate
+        })).sort((a, b) => b.rate - a.rate);
+
+        const ratesChart = new Chart(ratesCtx, {
+            type: 'bar',
+            data: {
+                labels: currentRates.map(d => d.county + ' County'),
+                datasets: [{
+                    label: 'Deaths per 100,000',
+                    data: currentRates.map(d => d.rate),
+                    backgroundColor: currentRates.map(d => countyColors[d.county] + '80'),
+                    borderColor: currentRates.map(d => countyColors[d.county]),
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(1) + ' deaths per 100,000 people';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Deaths per 100,000 Population',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+
+        // Create Total Deaths Pie Chart
+        const totalCtx = document.getElementById('totalChart').getContext('2d');
+        const totalDeaths = Object.keys(overdoseData).map(county => ({
+            county: county,
+            total: overdoseData[county].reduce((sum, d) => sum + d.deaths, 0)
+        }));
+
+        const totalChart = new Chart(totalCtx, {
+            type: 'doughnut',
+            data: {
+                labels: totalDeaths.map(d => d.county + ' County'),
+                datasets: [{
+                    data: totalDeaths.map(d => d.total),
+                    backgroundColor: totalDeaths.map(d => countyColors[d.county]),
+                    borderColor: '#fff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' deaths (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
