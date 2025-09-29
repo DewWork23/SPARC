@@ -578,34 +578,42 @@
 
         function createCountyDetails(county, data) {
             const total = data.reduce((sum, d) => sum + d.deaths, 0);
-            const avgRate = (data.reduce((sum, d) => sum + d.rate, 0) / data.length).toFixed(1);
             const latest = data[data.length - 1];
             const earliest = data[0];
-            const change = latest.deaths - earliest.deaths;
+            const longTermChange = latest.deaths - earliest.deaths;
+            const longTermPercent = Math.round((longTermChange / earliest.deaths) * 100);
+            const recentChange = latest.deaths - data[data.length - 2].deaths;
+            const recentPercent = Math.round((recentChange / data[data.length - 2].deaths) * 100);
+
+            const longTermIcon = longTermChange > 5 ? '↗' : longTermChange < -5 ? '↘' : '→';
+            const recentIcon = recentChange > 0 ? '↗' : recentChange < 0 ? '↘' : '→';
+
+            const longTermText = `${longTermIcon} ${longTermPercent > 0 ? '+' : ''}${longTermPercent}% since 2011`;
+            const recentText = `${recentIcon} ${recentPercent > 0 ? '+' : ''}${recentPercent}% from 2023`;
 
             const detailsHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
                     <div class="county-header">
-                        <div class="county-name">${county} County</div>
-                        <div class="county-rate" style="background: ${countyColors[county]}">${latest.rate} per 100k</div>
+                        <div class="county-name">${county}</div>
+                        <div style="display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem;">
+                            <div class="trend-indicator trend-up" style="background: #e8f4fd; color: #1976d2;">${longTermText}</div>
+                            <div class="trend-indicator ${recentChange > 0 ? 'trend-up' : recentChange < 0 ? 'trend-down' : 'trend-stable'}">${recentText}</div>
+                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${total}</div>
-                            <div style="font-size: 0.9rem; color: #666;">Total Deaths (2011-2024)</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${avgRate}</div>
-                            <div style="font-size: 0.9rem; color: #666;">Average Rate per 100k</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: ${change > 0 ? '#e74c3c' : '#27ae60'}">${change > 0 ? '+' : ''}${change}</div>
-                            <div style="font-size: 0.9rem; color: #666;">Change (2011-2024)</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
                             <div style="font-size: 0.9rem; color: #666;">2024 Deaths</div>
                         </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.rate}</div>
+                            <div style="font-size: 0.9rem; color: #666;">Rate per 100k</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        Total 2011-2024: <strong>${total} deaths</strong><br>
+                        Long-term: <strong style="color: ${longTermChange > 0 ? '#e74c3c' : '#27ae60'}">${longTermChange > 0 ? '+' : ''}${longTermChange} deaths</strong><br>
+                        Recent: <strong style="color: ${recentChange > 0 ? '#e74c3c' : '#27ae60'}">${recentChange > 0 ? '+' : ''}${recentChange} deaths</strong>
                     </div>
                 </div>
             `;
