@@ -1472,12 +1472,12 @@
             new Chart(overviewRatesCtx, {
                 type: 'bar',
                 data: {
-                    labels: [...currentRates.map(d => d.county + ' County'), 'NC Average'],
+                    labels: currentRates.map(d => d.county + ' County'),
                     datasets: [{
                         label: 'Deaths per 100,000',
-                        data: [...currentRates.map(d => d.rate), latest2024NCRate],
-                        backgroundColor: [...currentRates.map(d => countyColors[d.county] + '80'), 'rgba(52, 152, 219, 0.3)'],
-                        borderColor: [...currentRates.map(d => countyColors[d.county]), '#3498db'],
+                        data: currentRates.map(d => d.rate),
+                        backgroundColor: currentRates.map(d => countyColors[d.county] + '80'),
+                        borderColor: currentRates.map(d => countyColors[d.county]),
                         borderWidth: 2,
                         borderRadius: 8
                     }]
@@ -1487,6 +1487,29 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
+                        annotation: {
+                            annotations: {
+                                ncLine: {
+                                    type: 'line',
+                                    yMin: latest2024NCRate,
+                                    yMax: latest2024NCRate,
+                                    borderColor: '#3498db',
+                                    borderWidth: 3,
+                                    borderDash: [10, 5],
+                                    label: {
+                                        content: 'NC Average (41.0)',
+                                        enabled: true,
+                                        position: 'end',
+                                        backgroundColor: '#3498db',
+                                        color: 'white',
+                                        font: {
+                                            weight: 'bold',
+                                            size: 11
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         datalabels: {
                             display: true,
                             anchor: 'end',
@@ -1497,9 +1520,6 @@
                                 size: 12
                             },
                             color: function(context) {
-                                if (context.dataIndex === currentRates.length) {
-                                    return '#3498db'; // NC Average color
-                                }
                                 return countyColors[currentRates[context.dataIndex].county];
                             },
                             formatter: function(value, context) {
