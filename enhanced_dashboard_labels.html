@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPARC Counties - Enhanced Overdose Analytics Dashboard</title>
+    <title>Focus Region Counties - Enhanced Overdose Analytics Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -287,7 +287,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>SPARC Counties Overdose Crisis</h1>
+            <h1>Focus Region Overdose Analytics</h1>
             <p>Enhanced Analytics Dashboard with Data Labels (2011-2024)</p>
         </div>
 
@@ -352,16 +352,16 @@
                 </div>
 
                 <div class="chart-section">
-                    <h2 class="chart-title">SPARC Region vs. North Carolina Statewide Trends</h2>
+                    <h2 class="chart-title">Focus Region vs. North Carolina Statewide Trends</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">2024 Death Rates: SPARC Counties vs NC Average</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">2024 Death Rates: Focus Counties vs NC Average</h3>
                             <div class="chart-container medium">
                                 <canvas id="countyVsStateDeathRates"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">SPARC Region Share of NC Total Deaths</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Focus Region Share of NC Total Deaths</h3>
                             <div class="chart-container medium">
                                 <canvas id="sparcPercentageChart"></canvas>
                             </div>
@@ -369,13 +369,13 @@
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rates per 100k: SPARC vs NC</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rates per 100k: Focus Region vs NC</h3>
                             <div class="chart-container medium">
                                 <canvas id="stateDeathRatesChart"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visit Rates per 100k: SPARC vs NC</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visit Rates per 100k: Focus Region vs NC</h3>
                             <div class="chart-container medium">
                                 <canvas id="stateEDRatesChart"></canvas>
                             </div>
@@ -1603,7 +1603,7 @@
                 data: {
                     labels: countyLabels,
                     datasets: [{
-                        label: 'SPARC County (2024)',
+                        label: 'Focus County (2024)',
                         data: countyRatesData,
                         backgroundColor: county2024Rates.map(d =>
                             d.rate > latest2023NCRate ? 'rgba(231, 76, 60, 0.7)' : 'rgba(46, 204, 113, 0.7)'
@@ -1659,7 +1659,7 @@
                 }
             });
 
-            // SPARC Region Share of NC Total Deaths
+            // Focus Region Share of NC Total Deaths
             const sparcPercentageCtx = document.getElementById('sparcPercentageChart').getContext('2d');
             const stateYears = years.filter(year => year >= 2011 && year <= 2023);
             const sparcPercentages = stateYears.map(year => {
@@ -1742,7 +1742,7 @@
                         fill: true
                     },
                     {
-                        label: 'SPARC Region Average',
+                        label: 'Focus Region Average',
                         data: sparcDeathRates,
                         borderColor: '#e74c3c',
                         backgroundColor: 'rgba(231, 76, 60, 0.1)',
@@ -1794,7 +1794,7 @@
                         fill: true
                     },
                     {
-                        label: 'SPARC Region Average',
+                        label: 'Focus Region Average',
                         data: sparcEDRates,
                         borderColor: '#e74c3c',
                         backgroundColor: 'rgba(231, 76, 60, 0.1)',
