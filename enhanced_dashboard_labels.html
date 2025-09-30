@@ -1467,15 +1467,17 @@
                 deaths: overdoseData[county][overdoseData[county].length - 1].deaths
             })).sort((a, b) => b.rate - a.rate);
 
+            const latest2024NCRate = 41.0; // NC 2023 rate (latest available)
+
             new Chart(overviewRatesCtx, {
                 type: 'bar',
                 data: {
-                    labels: currentRates.map(d => d.county + ' County'),
+                    labels: [...currentRates.map(d => d.county + ' County'), 'NC Average'],
                     datasets: [{
                         label: 'Deaths per 100,000',
-                        data: currentRates.map(d => d.rate),
-                        backgroundColor: currentRates.map(d => countyColors[d.county] + '80'),
-                        borderColor: currentRates.map(d => countyColors[d.county]),
+                        data: [...currentRates.map(d => d.rate), latest2024NCRate],
+                        backgroundColor: [...currentRates.map(d => countyColors[d.county] + '80'), 'rgba(52, 152, 219, 0.3)'],
+                        borderColor: [...currentRates.map(d => countyColors[d.county]), '#3498db'],
                         borderWidth: 2,
                         borderRadius: 8
                     }]
@@ -1495,6 +1497,9 @@
                                 size: 12
                             },
                             color: function(context) {
+                                if (context.dataIndex === currentRates.length) {
+                                    return '#3498db'; // NC Average color
+                                }
                                 return countyColors[currentRates[context.dataIndex].county];
                             },
                             formatter: function(value, context) {
