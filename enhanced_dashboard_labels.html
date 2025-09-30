@@ -338,7 +338,7 @@
             <div class="charts-container">
                 <!-- Overview Charts -->
                 <div class="chart-section">
-                    <h2 class="chart-title">Overdose Death Trends Over Time</h2>
+                    <h2 class="chart-title">Focus Region: Overdose Death Trends Over Time</h2>
                     <div class="chart-container large">
                         <canvas id="overviewTrendsChart"></canvas>
                     </div>
@@ -1430,8 +1430,10 @@
                         data: overdoseData[county].map(d => d.deaths),
                         borderColor: countyColors[county],
                         backgroundColor: countyColors[county] + '20',
-                        borderWidth: 3,
-                        tension: 0.4
+                        borderWidth: 4,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }))
                 },
                 options: {
