@@ -1422,20 +1422,40 @@
         window.addEventListener('load', function() {
             // Create overview trends chart
             const overviewTrendsCtx = document.getElementById('overviewTrendsChart').getContext('2d');
+            // Prepare NC average data for trend line
+            const ncRatesForTrend = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024].map(year => {
+                const ncData = ncStateDeathData.find(d => d.year === year);
+                return ncData ? ncData.rate : null;
+            });
+
             new Chart(overviewTrendsCtx, {
                 type: 'line',
                 data: {
                     labels: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
-                    datasets: Object.keys(overdoseData).map(county => ({
-                        label: county + ' County',
-                        data: overdoseData[county].map(d => d.rate),
-                        borderColor: countyColors[county],
-                        backgroundColor: countyColors[county] + '20',
-                        borderWidth: 4,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
-                    }))
+                    datasets: [
+                        ...Object.keys(overdoseData).map(county => ({
+                            label: county + ' County',
+                            data: overdoseData[county].map(d => d.rate),
+                            borderColor: countyColors[county],
+                            backgroundColor: countyColors[county] + '20',
+                            borderWidth: 4,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        })),
+                        {
+                            label: 'NC Average',
+                            data: ncRatesForTrend,
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 4,
+                            borderDash: [10, 5],
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointStyle: 'rect'
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -1443,31 +1463,6 @@
                     plugins: {
                         legend: {
                             position: 'bottom'
-                        },
-                        annotation: {
-                            annotations: {
-                                ncLine: {
-                                    type: 'line',
-                                    yMin: 41.0,
-                                    yMax: 41.0,
-                                    borderColor: '#3498db',
-                                    borderWidth: 3,
-                                    borderDash: [10, 5],
-                                    label: {
-                                        display: true,
-                                        content: 'NC Average (2023)',
-                                        position: 'start',
-                                        xAdjust: 100,
-                                        backgroundColor: '#3498db',
-                                        color: 'white',
-                                        font: {
-                                            weight: 'bold',
-                                            size: 11
-                                        },
-                                        padding: 4
-                                    }
-                                }
-                            }
                         },
                         datalabels: {
                             display: false
