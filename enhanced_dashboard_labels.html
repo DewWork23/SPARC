@@ -1444,21 +1444,7 @@
                             position: 'bottom'
                         },
                         datalabels: {
-                            display: function(context) {
-                                // Only show labels for key years
-                                const year = 2011 + context.dataIndex;
-                                return [2011, 2017, 2020, 2021, 2024].includes(year);
-                            },
-                            align: function(context) {
-                                const value = context.dataset.data[context.dataIndex];
-                                return value > 100 ? 'bottom' : 'top';
-                            },
-                            offset: 4,
-                            font: {
-                                weight: 'bold',
-                                size: 9
-                            },
-                            formatter: (value) => value
+                            display: false
                         }
                     },
                     scales: {
