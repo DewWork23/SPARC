@@ -1444,6 +1444,31 @@
                         legend: {
                             position: 'bottom'
                         },
+                        annotation: {
+                            annotations: {
+                                ncLine: {
+                                    type: 'line',
+                                    yMin: 41.0,
+                                    yMax: 41.0,
+                                    borderColor: '#3498db',
+                                    borderWidth: 3,
+                                    borderDash: [10, 5],
+                                    label: {
+                                        display: true,
+                                        content: 'NC Average (2023)',
+                                        position: 'start',
+                                        xAdjust: 100,
+                                        backgroundColor: '#3498db',
+                                        color: 'white',
+                                        font: {
+                                            weight: 'bold',
+                                            size: 11
+                                        },
+                                        padding: 4
+                                    }
+                                }
+                            }
+                        },
                         datalabels: {
                             display: false
                         }
