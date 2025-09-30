@@ -371,38 +371,57 @@
                     </div>
                 </div>
 
-                <h2 class="chart-title" id="countyChartTitle" style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 30px; text-align: center;">Cumberland County - Detailed Analysis</h2>
+                <h2 class="chart-title" id="countyChartTitle" style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 20px; text-align: center;">Cumberland County - Detailed Analysis</h2>
 
-                <div id="countyDetails">
-                    <!-- Dynamic county content will be inserted here -->
+                <!-- Sub-tabs for Deaths vs ED Visits -->
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;">
+                    <button onclick="switchMetricView('deaths')" id="deathsViewBtn" style="background: #e74c3c; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">📊 Overdose Deaths</button>
+                    <button onclick="switchMetricView('ed')" id="edViewBtn" style="background: #95a5a6; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold;">🏥 ED Visits</button>
                 </div>
 
-                <div class="chart-section">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
-                        <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">📊 Overdose Deaths</h3>
-                            <div class="chart-container medium">
-                                <canvas id="individualDeathsChart"></canvas>
+                <!-- Deaths View -->
+                <div id="deathsView" class="metric-view">
+                    <div id="countyDetailsDeaths">
+                        <!-- Dynamic county death details will be inserted here -->
+                    </div>
+
+                    <div class="chart-section">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            <div>
+                                <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Number of Deaths</h3>
+                                <div class="chart-container medium">
+                                    <canvas id="individualDeathsChart"></canvas>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">📊 Death Rate per 100,000</h3>
-                            <div class="chart-container medium">
-                                <canvas id="individualRatesChart"></canvas>
+                            <div>
+                                <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rate per 100,000</h3>
+                                <div class="chart-container medium">
+                                    <canvas id="individualRatesChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                        <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">🏥 ED Visits</h3>
-                            <div class="chart-container medium">
-                                <canvas id="individualEDVisitsChart"></canvas>
+                </div>
+
+                <!-- ED Visits View -->
+                <div id="edView" class="metric-view" style="display: none;">
+                    <div id="countyDetailsED">
+                        <!-- Dynamic county ED details will be inserted here -->
+                    </div>
+
+                    <div class="chart-section">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            <div>
+                                <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Number of ED Visits</h3>
+                                <div class="chart-container medium">
+                                    <canvas id="individualEDVisitsChart"></canvas>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">🏥 ED Visit Rate per 100,000</h3>
-                            <div class="chart-container medium">
-                                <canvas id="individualEDRatesChart"></canvas>
+                            <div>
+                                <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visit Rate per 100,000</h3>
+                                <div class="chart-container medium">
+                                    <canvas id="individualEDRatesChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -646,6 +665,30 @@
             });
         }
 
+        // Switch between Deaths and ED Visits views
+        function switchMetricView(view) {
+            const deathsView = document.getElementById('deathsView');
+            const edView = document.getElementById('edView');
+            const deathsBtn = document.getElementById('deathsViewBtn');
+            const edBtn = document.getElementById('edViewBtn');
+
+            if (view === 'deaths') {
+                deathsView.style.display = 'block';
+                edView.style.display = 'none';
+                deathsBtn.style.background = '#e74c3c';
+                deathsBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                edBtn.style.background = '#95a5a6';
+                edBtn.style.boxShadow = 'none';
+            } else {
+                deathsView.style.display = 'none';
+                edView.style.display = 'block';
+                deathsBtn.style.background = '#95a5a6';
+                deathsBtn.style.boxShadow = 'none';
+                edBtn.style.background = '#16a085';
+                edBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+            }
+        }
+
         // Tab functionality
         function showTab(tabName) {
             // Hide all tabs
@@ -736,11 +779,11 @@
             const edLongTermColors = getTrendColor(edLongTermChange, county, edLatest);
             const edRecentColors = getTrendColor(edRecentChange, county, edLatest);
 
-            const cardHtml = `
+            // Create Deaths Card
+            const deathsCardHtml = `
                 <div class="county-card" style="border-top-color: ${countyColors[county]}">
-                    <!-- Deaths Section -->
-                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center;">📊 Overdose Deaths</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center; font-size: 1.3rem;">📊 Overdose Deaths Summary</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
                         <!-- First Row -->
                         <div style="text-align: center;">
                             <div style="font-size: 1.8rem; font-weight: bold; color: ${countyColors[county]}">${latest.deaths}</div>
@@ -775,9 +818,13 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            `;
 
-                    <!-- ED Visits Section -->
-                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center;">🏥 Emergency Department Visits</h4>
+            // Create ED Visits Card
+            const edCardHtml = `
+                <div class="county-card" style="border-top-color: ${countyColors[county]}">
+                    <h4 style="margin-bottom: 15px; color: #2c3e50; text-align: center; font-size: 1.3rem;">🏥 Emergency Department Visits Summary</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
                         <!-- First Row -->
                         <div style="text-align: center;">
@@ -805,15 +852,17 @@
                             </div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 1rem; color: #666; font-style: italic;">
-                                ED visits show non-fatal overdoses requiring emergency care
+                            <div style="font-size: 0.95rem; color: #666; font-style: italic; padding: 10px;">
+                                Non-fatal overdoses requiring emergency care
                             </div>
                         </div>
                     </div>
                 </div>
             `;
 
-            document.getElementById('countyDetails').innerHTML = cardHtml;
+            // Populate separate sections
+            document.getElementById('countyDetailsDeaths').innerHTML = deathsCardHtml;
+            document.getElementById('countyDetailsED').innerHTML = edCardHtml;
         }
 
         function createIndividualCountyChart(county, data) {
