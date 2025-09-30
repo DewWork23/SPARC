@@ -352,18 +352,32 @@
                 </div>
 
                 <div class="chart-section">
-                    <h2 class="chart-title">SPARC Region Aggregate Trends</h2>
+                    <h2 class="chart-title">SPARC Region vs. North Carolina Statewide Trends</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Total Regional Deaths</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Overdose Deaths Comparison</h3>
                             <div class="chart-container medium">
-                                <canvas id="regionalDeathsChart"></canvas>
+                                <canvas id="stateDeathsComparisonChart"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Total Regional ED Visits</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visits Comparison</h3>
                             <div class="chart-container medium">
-                                <canvas id="regionalEDChart"></canvas>
+                                <canvas id="stateEDComparisonChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rates per 100k Comparison</h3>
+                            <div class="chart-container medium">
+                                <canvas id="stateDeathRatesChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visit Rates per 100k Comparison</h3>
+                            <div class="chart-container medium">
+                                <canvas id="stateEDRatesChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -674,6 +688,35 @@
                 {year: 2024, visits: 124, rate: 365.8}
             ]
         };
+
+        // North Carolina Statewide Data
+        const ncStateDeathData = [
+            {year: 2011, deaths: 1222, rate: 12.7},
+            {year: 2012, deaths: 1278, rate: 13.1},
+            {year: 2013, deaths: 1229, rate: 12.5},
+            {year: 2014, deaths: 1355, rate: 13.6},
+            {year: 2015, deaths: 1566, rate: 15.6},
+            {year: 2016, deaths: 1965, rate: 19.4},
+            {year: 2017, deaths: 2474, rate: 24.1},
+            {year: 2018, deaths: 2301, rate: 22.2},
+            {year: 2019, deaths: 2352, rate: 22.4},
+            {year: 2020, deaths: 3304, rate: 31.6},
+            {year: 2021, deaths: 4041, rate: 38.2},
+            {year: 2022, deaths: 4339, rate: 40.6},
+            {year: 2023, deaths: 4442, rate: 41.0}
+        ];
+
+        const ncStateEDData = [
+            {year: 2016, visits: 10726, rate: 105.6},
+            {year: 2017, visits: 13041, rate: 127.0},
+            {year: 2018, visits: 12020, rate: 115.8},
+            {year: 2019, visits: 12193, rate: 116.3},
+            {year: 2020, visits: 14938, rate: 143.0},
+            {year: 2021, visits: 16731, rate: 158.4},
+            {year: 2022, visits: 16981, rate: 158.5},
+            {year: 2023, visits: 17532, rate: 161.1},
+            {year: 2024, visits: 12405, rate: 112.3}
+        ];
 
         // Screenshot mode toggle
         function toggleScreenshotMode() {
@@ -1487,42 +1530,82 @@
                 }
             });
 
-            // Create SPARC Regional Aggregate Charts
-            // Calculate aggregate deaths by year
+            // Create SPARC vs NC State Comparison Charts
+            // Calculate SPARC regional aggregates
             const years = overdoseData['Cumberland'].map(d => d.year);
-            const regionalDeaths = years.map(year => {
+            const sparcDeaths = years.map(year => {
                 return Object.keys(overdoseData).reduce((sum, county) => {
                     const yearData = overdoseData[county].find(d => d.year === year);
                     return sum + (yearData ? yearData.deaths : 0);
                 }, 0);
             });
 
-            // Calculate aggregate ED visits by year (starting from 2016)
+            // Calculate SPARC regional population (approximate based on death rates)
+            const sparcPopulation = years.map((year, idx) => {
+                const totalDeaths = sparcDeaths[idx];
+                // Average rate across counties
+                let totalRate = 0;
+                let countCount = 0;
+                Object.keys(overdoseData).forEach(county => {
+                    const yearData = overdoseData[county].find(d => d.year === year);
+                    if (yearData) {
+                        totalRate += yearData.rate;
+                        countCount++;
+                    }
+                });
+                const avgRate = totalRate / countCount;
+                return (totalDeaths / avgRate) * 100000;
+            });
+
+            // Calculate SPARC death rates
+            const sparcDeathRates = years.map((year, idx) => {
+                return (sparcDeaths[idx] / sparcPopulation[idx]) * 100000;
+            });
+
+            // ED visits aggregates
             const edYears = edVisitsData['Cumberland'].map(d => d.year);
-            const regionalEDVisits = edYears.map(year => {
+            const sparcEDVisits = edYears.map(year => {
                 return Object.keys(edVisitsData).reduce((sum, county) => {
                     const yearData = edVisitsData[county].find(d => d.year === year);
                     return sum + (yearData ? yearData.visits : 0);
                 }, 0);
             });
 
-            // Regional Deaths Chart
-            const regionalDeathsCtx = document.getElementById('regionalDeathsChart').getContext('2d');
-            new Chart(regionalDeathsCtx, {
+            // Calculate SPARC ED rates
+            const sparcEDRates = edYears.map((year, idx) => {
+                const yearIndex = years.indexOf(year);
+                if (yearIndex >= 0) {
+                    return (sparcEDVisits[idx] / sparcPopulation[yearIndex]) * 100000;
+                }
+                return 0;
+            });
+
+            // State Deaths Comparison Chart
+            const stateDeathsCtx = document.getElementById('stateDeathsComparisonChart').getContext('2d');
+            new Chart(stateDeathsCtx, {
                 type: 'line',
                 data: {
                     labels: years,
                     datasets: [{
-                        label: 'Total SPARC Region Deaths',
-                        data: regionalDeaths,
+                        label: 'NC Statewide',
+                        data: ncStateDeathData.map(d => d.deaths),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3498db',
+                        pointRadius: 4,
+                        fill: true
+                    },
+                    {
+                        label: 'SPARC Region (6 Counties)',
+                        data: sparcDeaths,
                         borderColor: '#e74c3c',
                         backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                        borderWidth: 4,
+                        borderWidth: 3,
                         tension: 0.4,
                         pointBackgroundColor: '#e74c3c',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6,
+                        pointRadius: 4,
                         fill: true
                     }]
                 },
@@ -1530,57 +1613,51 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            display: function(context) {
-                                const year = years[context.dataIndex];
-                                return [2011, 2015, 2020, 2023, 2024].includes(year);
-                            },
-                            align: 'top',
-                            offset: 8,
-                            color: '#e74c3c',
-                            font: { weight: 'bold', size: 13 },
-                            formatter: function(value) {
-                                return value + ' deaths';
-                            }
-                        }
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: { display: false }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Total Deaths Across All 6 Counties',
+                                text: 'Number of Deaths',
                                 font: { weight: 'bold' }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Year'
                             }
                         }
                     }
                 }
             });
 
-            // Regional ED Visits Chart
-            const regionalEDCtx = document.getElementById('regionalEDChart').getContext('2d');
-            new Chart(regionalEDCtx, {
+            // State ED Visits Comparison Chart
+            const stateEDCtx = document.getElementById('stateEDComparisonChart').getContext('2d');
+            new Chart(stateEDCtx, {
                 type: 'line',
                 data: {
                     labels: edYears,
                     datasets: [{
-                        label: 'Total SPARC Region ED Visits',
-                        data: regionalEDVisits,
+                        label: 'NC Statewide',
+                        data: ncStateEDData.map(d => d.visits),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3498db',
+                        pointRadius: 4,
+                        fill: true
+                    },
+                    {
+                        label: 'SPARC Region (6 Counties)',
+                        data: sparcEDVisits,
                         borderColor: '#16a085',
                         backgroundColor: 'rgba(22, 160, 133, 0.1)',
-                        borderWidth: 4,
+                        borderWidth: 3,
                         tension: 0.4,
                         pointBackgroundColor: '#16a085',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6,
+                        pointRadius: 4,
                         fill: true
                     }]
                 },
@@ -1588,34 +1665,123 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            display: function(context) {
-                                const year = edYears[context.dataIndex];
-                                return [2016, 2018, 2020, 2022, 2024].includes(year);
-                            },
-                            align: 'top',
-                            offset: 8,
-                            color: '#16a085',
-                            font: { weight: 'bold', size: 13 },
-                            formatter: function(value) {
-                                return value + ' visits';
-                            }
-                        }
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: { display: false }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Total ED Visits Across All 6 Counties',
+                                text: 'Number of ED Visits',
                                 font: { weight: 'bold' }
                             }
+                        }
+                    }
+                }
+            });
+
+            // Death Rates Comparison Chart
+            const stateDeathRatesCtx = document.getElementById('stateDeathRatesChart').getContext('2d');
+            new Chart(stateDeathRatesCtx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'NC Statewide',
+                        data: ncStateDeathData.map(d => d.rate),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3498db',
+                        pointRadius: 4,
+                        fill: true
+                    },
+                    {
+                        label: 'SPARC Region Average',
+                        data: sparcDeathRates,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e74c3c',
+                        pointRadius: 4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
                         },
-                        x: {
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Year'
+                                text: 'Deaths per 100,000 Population',
+                                font: { weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ED Visit Rates Comparison Chart
+            const stateEDRatesCtx = document.getElementById('stateEDRatesChart').getContext('2d');
+            new Chart(stateEDRatesCtx, {
+                type: 'line',
+                data: {
+                    labels: edYears,
+                    datasets: [{
+                        label: 'NC Statewide',
+                        data: ncStateEDData.map(d => d.rate),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3498db',
+                        pointRadius: 4,
+                        fill: true
+                    },
+                    {
+                        label: 'SPARC Region Average',
+                        data: sparcEDRates,
+                        borderColor: '#16a085',
+                        backgroundColor: 'rgba(22, 160, 133, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#16a085',
+                        pointRadius: 4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'ED Visits per 100,000 Population',
+                                font: { weight: 'bold' }
                             }
                         }
                     }
