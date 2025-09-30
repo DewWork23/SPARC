@@ -350,6 +350,24 @@
                         <canvas id="overviewRatesChart"></canvas>
                     </div>
                 </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">SPARC Region Aggregate Trends</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Total Regional Deaths</h3>
+                            <div class="chart-container medium">
+                                <canvas id="regionalDeathsChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Total Regional ED Visits</h3>
+                            <div class="chart-container medium">
+                                <canvas id="regionalEDChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1438,10 +1456,13 @@
                             display: true,
                             anchor: 'end',
                             align: 'top',
-                            offset: 4,
+                            offset: 6,
                             font: {
                                 weight: 'bold',
-                                size: 11
+                                size: 12
+                            },
+                            color: function(context) {
+                                return countyColors[currentRates[context.dataIndex].county];
                             },
                             formatter: function(value, context) {
                                 const deaths = currentRates[context.dataIndex].deaths;
@@ -1452,9 +1473,149 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            max: function(context) {
+                                // Add 20% padding to the top to ensure labels fit
+                                const maxValue = Math.max(...currentRates.map(d => d.rate));
+                                return maxValue * 1.2;
+                            },
                             title: {
                                 display: true,
                                 text: 'Deaths per 100,000 Population'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Create SPARC Regional Aggregate Charts
+            // Calculate aggregate deaths by year
+            const years = overdoseData['Cumberland'].map(d => d.year);
+            const regionalDeaths = years.map(year => {
+                return Object.keys(overdoseData).reduce((sum, county) => {
+                    const yearData = overdoseData[county].find(d => d.year === year);
+                    return sum + (yearData ? yearData.deaths : 0);
+                }, 0);
+            });
+
+            // Calculate aggregate ED visits by year (starting from 2016)
+            const edYears = edVisitsData['Cumberland'].map(d => d.year);
+            const regionalEDVisits = edYears.map(year => {
+                return Object.keys(edVisitsData).reduce((sum, county) => {
+                    const yearData = edVisitsData[county].find(d => d.year === year);
+                    return sum + (yearData ? yearData.visits : 0);
+                }, 0);
+            });
+
+            // Regional Deaths Chart
+            const regionalDeathsCtx = document.getElementById('regionalDeathsChart').getContext('2d');
+            new Chart(regionalDeathsCtx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Total SPARC Region Deaths',
+                        data: regionalDeaths,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 4,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e74c3c',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            display: function(context) {
+                                const year = years[context.dataIndex];
+                                return [2011, 2015, 2020, 2023, 2024].includes(year);
+                            },
+                            align: 'top',
+                            offset: 8,
+                            color: '#e74c3c',
+                            font: { weight: 'bold', size: 13 },
+                            formatter: function(value) {
+                                return value + ' deaths';
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Deaths Across All 6 Counties',
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Regional ED Visits Chart
+            const regionalEDCtx = document.getElementById('regionalEDChart').getContext('2d');
+            new Chart(regionalEDCtx, {
+                type: 'line',
+                data: {
+                    labels: edYears,
+                    datasets: [{
+                        label: 'Total SPARC Region ED Visits',
+                        data: regionalEDVisits,
+                        borderColor: '#16a085',
+                        backgroundColor: 'rgba(22, 160, 133, 0.1)',
+                        borderWidth: 4,
+                        tension: 0.4,
+                        pointBackgroundColor: '#16a085',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            display: function(context) {
+                                const year = edYears[context.dataIndex];
+                                return [2016, 2018, 2020, 2022, 2024].includes(year);
+                            },
+                            align: 'top',
+                            offset: 8,
+                            color: '#16a085',
+                            font: { weight: 'bold', size: 13 },
+                            formatter: function(value) {
+                                return value + ' visits';
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total ED Visits Across All 6 Counties',
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
                             }
                         }
                     }
