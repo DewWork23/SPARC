@@ -1510,11 +1510,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: function(context) {
-                                // Add 20% padding to the top to ensure labels fit
-                                const maxValue = Math.max(...currentRates.map(d => d.rate), latest2024NCRate);
-                                return maxValue * 1.2;
-                            },
+                            max: 100,
                             title: {
                                 display: true,
                                 text: 'Deaths per 100,000 Population'
