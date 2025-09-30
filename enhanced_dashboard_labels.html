@@ -355,13 +355,13 @@
                     <h2 class="chart-title">SPARC Region vs. North Carolina Statewide Trends</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rates: SPARC Counties vs NC State Average</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">2024 Death Rates: SPARC Counties vs NC State Average</h3>
                             <div class="chart-container medium">
                                 <canvas id="countyVsStateDeathRates"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">SPARC Region % of Total NC Deaths</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Total Deaths Over Time: SPARC vs NC State</h3>
                             <div class="chart-container medium">
                                 <canvas id="sparcPercentageChart"></canvas>
                             </div>
@@ -1580,9 +1580,9 @@
                 return 0;
             });
 
-            // County vs State Average Death Rates (2024)
+            // County vs State Average Death Rates - showing both as bars
             const countyVsStateCtx = document.getElementById('countyVsStateDeathRates').getContext('2d');
-            const latest2024StateRate = 41.0; // 2023 is latest we have
+            const latest2023StateRate = 41.0; // 2023 is latest state data we have
             const county2024Rates = Object.keys(overdoseData).map(county => {
                 const latest = overdoseData[county][overdoseData[county].length - 1];
                 return {
@@ -1591,44 +1591,54 @@
                 };
             }).sort((a, b) => b.rate - a.rate);
 
+            // Create arrays for county and state data
+            const countyLabels = county2024Rates.map(d => d.county);
+            const countyRatesData = county2024Rates.map(d => d.rate);
+            const stateRatesData = countyLabels.map(() => latest2023StateRate);
+
             new Chart(countyVsStateCtx, {
                 type: 'bar',
                 data: {
-                    labels: county2024Rates.map(d => d.county),
+                    labels: countyLabels,
                     datasets: [{
-                        label: 'County Rate',
-                        data: county2024Rates.map(d => d.rate),
+                        label: 'SPARC County (2024)',
+                        data: countyRatesData,
                         backgroundColor: county2024Rates.map(d =>
-                            d.rate > latest2024StateRate ? 'rgba(231, 76, 60, 0.7)' : 'rgba(46, 204, 113, 0.7)'
+                            d.rate > latest2023StateRate ? 'rgba(231, 76, 60, 0.7)' : 'rgba(46, 204, 113, 0.7)'
                         ),
                         borderColor: county2024Rates.map(d =>
-                            d.rate > latest2024StateRate ? '#e74c3c' : '#2ecc71'
+                            d.rate > latest2023StateRate ? '#e74c3c' : '#2ecc71'
                         ),
                         borderWidth: 2
+                    },
+                    {
+                        label: 'NC State Avg (2023)',
+                        data: stateRatesData,
+                        backgroundColor: 'rgba(52, 152, 219, 0.3)',
+                        borderColor: '#3498db',
+                        borderWidth: 2,
+                        borderDash: [5, 5]
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
-                        datalabels: { display: false },
-                        annotation: {
-                            annotations: {
-                                line1: {
-                                    type: 'line',
-                                    yMin: latest2024StateRate,
-                                    yMax: latest2024StateRate,
-                                    borderColor: '#3498db',
-                                    borderWidth: 3,
-                                    borderDash: [10, 5],
-                                    label: {
-                                        content: 'NC State Avg: 41.0',
-                                        enabled: true,
-                                        position: 'end'
-                                    }
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: {
+                            display: true,
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: function(value, context) {
+                                if (context.datasetIndex === 0) {
+                                    return value.toFixed(1);
                                 }
-                            }
+                                return null; // Don't show labels for state baseline
+                            },
+                            font: { size: 10, weight: 'bold' }
                         }
                     },
                     scales: {
@@ -1636,7 +1646,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: '2024 Death Rate per 100k',
+                                text: 'Death Rate per 100k Population',
                                 font: { weight: 'bold' }
                             }
                         }
@@ -1644,62 +1654,85 @@
                 }
             });
 
-            // SPARC Region % of State Total Over Time
+            // SPARC vs State: Total Deaths Over Time Comparison
             const sparcPercentageCtx = document.getElementById('sparcPercentageChart').getContext('2d');
-            const sparcPercentages = years.filter(year => year >= 2011 && year <= 2023).map(year => {
-                const stateData = ncStateDeathData.find(d => d.year === year);
-                const sparcTotal = sparcDeaths[years.indexOf(year)];
-                return stateData ? (sparcTotal / stateData.deaths * 100) : 0;
-            });
+            const stateYears = years.filter(year => year >= 2011 && year <= 2023);
 
             new Chart(sparcPercentageCtx, {
                 type: 'line',
                 data: {
-                    labels: years.filter(year => year >= 2011 && year <= 2023),
+                    labels: stateYears,
                     datasets: [{
-                        label: 'SPARC % of NC Total',
-                        data: sparcPercentages,
-                        borderColor: '#9b59b6',
-                        backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                        label: 'NC Statewide Total',
+                        data: ncStateDeathData.filter(d => d.year >= 2011 && d.year <= 2023).map(d => d.deaths),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
                         borderWidth: 3,
                         tension: 0.4,
-                        pointBackgroundColor: '#9b59b6',
-                        pointRadius: 5,
-                        fill: true
+                        pointBackgroundColor: '#3498db',
+                        pointRadius: 4,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'SPARC Region Total',
+                        data: sparcDeaths.filter((d, idx) => years[idx] >= 2011 && years[idx] <= 2023),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e74c3c',
+                        pointRadius: 4,
+                        fill: true,
+                        yAxisID: 'y1'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            display: function(context) {
-                                const year = years.filter(y => y >= 2011 && y <= 2023)[context.dataIndex];
-                                return [2011, 2015, 2020, 2023].includes(year);
-                            },
-                            align: 'top',
-                            offset: 8,
-                            color: '#9b59b6',
-                            font: { weight: 'bold', size: 12 },
-                            formatter: function(value) {
-                                return value.toFixed(1) + '%';
-                            }
-                        }
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: { display: false }
                     },
                     scales: {
                         y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
                             beginAtZero: true,
-                            max: 15,
                             title: {
                                 display: true,
-                                text: 'SPARC Deaths as % of NC Total',
-                                font: { weight: 'bold' }
+                                text: 'NC State Deaths',
+                                font: { weight: 'bold' },
+                                color: '#3498db'
                             },
                             ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                }
+                                color: '#3498db'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'SPARC Region Deaths',
+                                font: { weight: 'bold' },
+                                color: '#e74c3c'
+                            },
+                            ticks: {
+                                color: '#e74c3c'
+                            },
+                            grid: {
+                                drawOnChartArea: false
                             }
                         }
                     }
