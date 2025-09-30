@@ -1498,8 +1498,7 @@
                                 return countyColors[currentRates[context.dataIndex].county];
                             },
                             formatter: function(value, context) {
-                                const deaths = currentRates[context.dataIndex].deaths;
-                                return value.toFixed(1) + '\n(' + deaths + ' deaths)';
+                                return value.toFixed(1);
                             }
                         }
                     },
