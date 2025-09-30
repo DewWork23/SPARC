@@ -134,7 +134,7 @@
             color: #2c3e50;
             margin-bottom: 20px;
             text-align: center;
-            font-weight: 300;
+            font-weight: bold;
         }
 
         .chart-container {
@@ -356,13 +356,13 @@
                     <h2 class="chart-title">Focus Region vs. North Carolina Statewide Trends</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">2024 Death Rates: Focus Counties vs NC Average</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666; font-weight: bold;">2024 Death Rates: Focus Counties vs NC Average</h3>
                             <div class="chart-container medium">
                                 <canvas id="countyVsStateDeathRates"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Focus Region Share of NC Total Deaths</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666; font-weight: bold;">Focus Region Share of NC Total Deaths</h3>
                             <div class="chart-container medium">
                                 <canvas id="sparcPercentageChart"></canvas>
                             </div>
@@ -370,13 +370,13 @@
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">Death Rates per 100k: Focus Region vs NC</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666; font-weight: bold;">Death Rates per 100k: Focus Region vs NC</h3>
                             <div class="chart-container medium">
                                 <canvas id="stateDeathRatesChart"></canvas>
                             </div>
                         </div>
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 15px; color: #666;">ED Visit Rates per 100k: Focus Region vs NC</h3>
+                            <h3 style="text-align: center; margin-bottom: 15px; color: #666; font-weight: bold;">ED Visit Rates per 100k: Focus Region vs NC</h3>
                             <div class="chart-container medium">
                                 <canvas id="stateEDRatesChart"></canvas>
                             </div>
@@ -980,11 +980,17 @@
                             title: {
                                 display: true,
                                 text: 'Number of Deaths',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         },
                         x: {
+                            ticks: {
+                                font: { size: 12 }
+                            },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         }
                     }
@@ -1043,11 +1049,17 @@
                             title: {
                                 display: true,
                                 text: 'Deaths per 100,000',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         },
                         x: {
+                            ticks: {
+                                font: { size: 12 }
+                            },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         }
                     }
@@ -1107,11 +1119,17 @@
                             title: {
                                 display: true,
                                 text: 'Number of ED Visits',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         },
                         x: {
+                            ticks: {
+                                font: { size: 12 }
+                            },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         }
                     }
@@ -1170,11 +1188,17 @@
                             title: {
                                 display: true,
                                 text: 'ED Visits per 100,000',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         },
                         x: {
+                            ticks: {
+                                font: { size: 12 }
+                            },
                             grid: { color: 'rgba(0,0,0,0.1)' }
                         }
                     }
@@ -1290,13 +1314,21 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Number of Deaths (2024)'
+                                text: 'Number of Deaths (2024)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Rate per 100,000 (2024)'
+                                text: 'Rate per 100,000 (2024)',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1473,7 +1505,16 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Death Rate per 100k Population'
+                                text: 'Death Rate per 100k Population',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1556,7 +1597,16 @@
                             max: 100,
                             title: {
                                 display: true,
-                                text: 'Deaths per 100,000 Population'
+                                text: 'Deaths per 100,000 Population',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1683,7 +1733,15 @@
                             title: {
                                 display: true,
                                 text: 'Death Rate per 100k Population',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1743,12 +1801,18 @@
                             title: {
                                 display: true,
                                 text: 'Percentage of NC Total Deaths',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
                             },
                             ticks: {
+                                font: { size: 12 },
                                 callback: function(value) {
                                     return value + '%';
                                 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1800,7 +1864,15 @@
                             title: {
                                 display: true,
                                 text: 'Deaths per 100,000 Population',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
@@ -1852,7 +1924,15 @@
                             title: {
                                 display: true,
                                 text: 'ED Visits per 100,000 Population',
-                                font: { weight: 'bold' }
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 12 }
                             }
                         }
                     }
