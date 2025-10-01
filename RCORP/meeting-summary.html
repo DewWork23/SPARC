@@ -268,6 +268,100 @@
             margin-bottom: 15px;
             font-size: 1.1em;
         }
+
+        .menu-button {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .menu-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1em;
+            color: #495057;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        .menu-item.active {
+            background: #e7f3ff;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .menu-container {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
@@ -277,15 +371,22 @@
             <div class="date">September 30, 2024</div>
         </div>
 
-        <div class="tab-container">
-            <button class="tab-button active" onclick="openTab(event, 'overview')">Overview</button>
-            <button class="tab-button" onclick="openTab(event, 'history')">History & Growth</button>
-            <button class="tab-button" onclick="openTab(event, 'successes')">Successes</button>
-            <button class="tab-button" onclick="openTab(event, 'challenges')">Challenges</button>
-            <button class="tab-button" onclick="openTab(event, 'future')">Future Vision</button>
-            <button class="tab-button" onclick="openTab(event, 'engagement')">Engagement</button>
-            <button class="tab-button" onclick="openTab(event, 'actions')">Action Items</button>
-            <button class="tab-button" onclick="openTab(event, 'transcript')">Transcript</button>
+        <div class="menu-container">
+            <div class="menu-button">
+                <button class="menu-toggle" onclick="toggleMenu()">
+                    ☰ Menu
+                </button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <button class="menu-item active" onclick="selectMenuItem(event, 'overview')">Overview</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'history')">History & Growth</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'successes')">Successes</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'challenges')">Challenges</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'future')">Future Vision</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'engagement')">Engagement</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'actions')">Action Items</button>
+                    <button class="menu-item" onclick="selectMenuItem(event, 'transcript')">Transcript</button>
+                </div>
+            </div>
         </div>
 
         <div class="content">
@@ -689,36 +790,46 @@
     </div>
 
     <script>
-        function openTab(evt, tabName) {
+        function toggleMenu() {
+            var dropdown = document.getElementById("menuDropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        function selectMenuItem(evt, tabName) {
             // Hide all tab content
             var tabContents = document.getElementsByClassName("tab-content");
             for (var i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.remove("active");
             }
 
-            // Remove active class from all buttons
-            var tabButtons = document.getElementsByClassName("tab-button");
-            for (var i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove("active");
+            // Remove active class from all menu items
+            var menuItems = document.getElementsByClassName("menu-item");
+            for (var i = 0; i < menuItems.length; i++) {
+                menuItems[i].classList.remove("active");
             }
 
-            // Show the selected tab and mark button as active
+            // Show the selected tab and mark menu item as active
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
+
+            // Close the menu
+            document.getElementById("menuDropdown").classList.remove("show");
+
+            // Smooth scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
-        // Add smooth scrolling for better mobile experience
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    if (window.innerWidth < 768) {
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            var menuButton = document.querySelector('.menu-button');
+            var dropdown = document.getElementById("menuDropdown");
+
+            if (menuButton && !menuButton.contains(event.target)) {
+                dropdown.classList.remove("show");
+            }
         });
     </script>
 </body>
