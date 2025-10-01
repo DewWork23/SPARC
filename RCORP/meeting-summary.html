@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCORP Consortium Meeting - September 30, 2024</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .date {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            background: white;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            color: #495057;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: #6c757d;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        .section p {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            color: #495057;
+        }
+
+        .section li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .action-item {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .action-item strong {
+            color: #856404;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .attendees {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .attendee {
+            background: #e7f3ff;
+            color: #0056b3;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-button {
+                padding: 15px 20px;
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .next-steps h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .next-steps ol {
+            margin-left: 20px;
+        }
+
+        .next-steps li {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Substance Use Consortium Strategic Review</h1>
+            <div class="date">September 30, 2024</div>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab-button active" onclick="openTab(event, 'overview')">Overview</button>
+            <button class="tab-button" onclick="openTab(event, 'history')">History & Growth</button>
+            <button class="tab-button" onclick="openTab(event, 'successes')">Successes</button>
+            <button class="tab-button" onclick="openTab(event, 'challenges')">Challenges</button>
+            <button class="tab-button" onclick="openTab(event, 'future')">Future Vision</button>
+            <button class="tab-button" onclick="openTab(event, 'engagement')">Engagement</button>
+            <button class="tab-button" onclick="openTab(event, 'actions')">Action Items</button>
+        </div>
+
+        <div class="content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="section">
+                    <h2>Executive Summary</h2>
+                    <p>This meeting was a strategic review of the substance use consortium, focusing on its history, successes, challenges, and future direction. The discussion, led primarily by Valerie, traced the consortium's significant growth from a small, grant-funded group of four entities in 2019 to a large coalition of over 70 agencies.</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="number">70+</div>
+                            <div class="label">Member Agencies</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">5+</div>
+                            <div class="label">Years Operating</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">77</div>
+                            <div class="label">Beds at Ron Barnes Center</div>
+                        </div>
+                    </div>
+
+                    <h3>Meeting Facilitators</h3>
+                    <div class="attendees">
+                        <span class="attendee">MDC - Hetal</span>
+                        <span class="attendee">Dianna</span>
+                        <span class="attendee">Megan</span>
+                    </div>
+
+                    <h3>Attendees</h3>
+                    <div class="attendees">
+                        <span class="attendee">Valerie</span>
+                        <span class="attendee">Jordan</span>
+                        <span class="attendee">Dr. Jackie</span>
+                        <span class="attendee">Niki</span>
+                        <span class="attendee">Bart</span>
+                        <span class="attendee">Makalya</span>
+                        <span class="attendee">Latasha</span>
+                        <span class="attendee">Janae</span>
+                        <span class="attendee">Shirley</span>
+                        <span class="attendee">Dr. Revels</span>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h3>Key Highlights</h3>
+                        <ul>
+                            <li>Grew from 4 founding entities to over 70 member agencies</li>
+                            <li>Ron Barnes Center opened in July with 77-bed capacity</li>
+                            <li>Successful "March's Madness" training series (4-6 events annually)</li>
+                            <li>Measurable impact on overdose reduction</li>
+                            <li>Progress in addressing stigma through recovery-oriented language</li>
+                            <li>Strong member engagement and collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History & Growth Tab -->
+            <div id="history" class="tab-content">
+                <div class="section">
+                    <h2>Consortium History and Growth</h2>
+
+                    <h3>Origins (2019)</h3>
+                    <p>The consortium began with a HRSA planning grant written with support from UNCP. The initial focus was on implementing grant deliverables with just 4 core partners.</p>
+
+                    <div class="highlight-box">
+                        <h4>Original Partners</h4>
+                        <ul>
+                            <li><span class="badge">UNCP</span> University of North Carolina Pembroke</li>
+                            <li><span class="badge">Robinson Health</span> Healthcare Partner</li>
+                            <li><span class="badge">DFS</span> Department of Family Services</li>
+                            <li><span class="badge">4th Partner</span> Initial Core Member</li>
+                        </ul>
+                    </div>
+
+                    <h3>Evolution Over Time</h3>
+                    <p>The consortium's focus shifted from strict grant deliverables to addressing broader community needs. While other coalitions focused on issues like diabetes, this group took the lead on substance use initiatives.</p>
+
+                    <h4>Key Phases:</h4>
+                    <ul>
+                        <li><strong>2019:</strong> Planning grant phase with initial 4 partners</li>
+                        <li><strong>Implementation Phase:</strong> Expanded to implementation grant with growing membership</li>
+                        <li><strong>Growth Phase:</strong> Membership expanded to 70+ agencies</li>
+                        <li><strong>Sustainability Phase:</strong> Current focus on long-term vision beyond grant requirements</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h4>Vision Evolution</h4>
+                        <p>The consortium is transitioning from "next 3 years" planning to long-term sustainability thinking, moving beyond checking off grant deliverables to creating a member-driven vision independent of grant requirements.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Successes Tab -->
+            <div id="successes" class="tab-content">
+                <div class="section">
+                    <h2>Key Successes, Accomplishments, and Strengths</h2>
+
+                    <h3>Infrastructure & Services</h3>
+                    <ul>
+                        <li><strong>Ron Barnes Center:</strong> 77-bed facility opened in July (currently at 60 beds, targeting full capacity by year-end)</li>
+                        <li><strong>County Relations:</strong> Significantly improved relationship with county government</li>
+                        <li><strong>Access to Care:</strong> Enhanced access to residential housing and treatment options</li>
+                        <li><strong>Transportation:</strong> Exploration of Uber Health to address transportation barriers</li>
+                    </ul>
+
+                    <h3>Membership and Engagement</h3>
+                    <div class="highlight-box">
+                        <h4>Diverse Membership Includes:</h4>
+                        <ul>
+                            <li>Trillium Health Resources</li>
+                            <li>Hospital representatives</li>
+                            <li>Public health officials</li>
+                            <li>Law enforcement and EMS</li>
+                            <li>Sororities and community-based organizations</li>
+                            <li>Family members and people with lived experience</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>High Engagement:</strong> Consistent attendance and active participation at meetings, successfully breaking down silos between organizations and reducing competition among service providers.</p>
+
+                    <h3>Programs and Impact</h3>
+                    <ul>
+                        <li><strong>Training Programs:</strong> "March's Madness" series delivers 4-6 high-quality training events annually</li>
+                        <li><strong>Overdose Reduction:</strong> Measurable impact on reducing overdoses in the community</li>
+                        <li><strong>Stigma Reduction:</strong> Progress in addressing stigma through recovery-oriented language initiatives</li>
+                        <li><strong>Information Hub:</strong> Comprehensive resource and data sharing among members</li>
+                        <li><strong>Grant Support:</strong> Assistance provided for member organizations in grant writing</li>
+                        <li><strong>Events:</strong> Movie Night and other community engagement initiatives</li>
+                    </ul>
+
+                    <h3>Collaborative Strengths</h3>
+                    <div class="highlight-box">
+                        <ul>
+                            <li>Strong collaboration and standardized data systems</li>
+                            <li>Court system implementing SAFER approach</li>
+                            <li>Leadership from law enforcement</li>
+                            <li>EMS expertise enhanced through relationship building</li>
+                            <li>Trillium's integrated approach to treatment and housing</li>
+                            <li>Active advocacy and awareness initiatives</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges Tab -->
+            <div id="challenges" class="tab-content">
+                <div class="section">
+                    <h2>Current Barriers and Challenges</h2>
+
+                    <h3>Stakeholder Engagement</h3>
+                    <div class="highlight-box">
+                        <h4>Difficulty Getting Key Stakeholders to the Table:</h4>
+                        <ul>
+                            <li><strong>EMS:</strong> Limited consistent participation</li>
+                            <li><strong>Elected Officials:</strong> Need stronger representation</li>
+                            <li><strong>Faith-Based Organizations:</strong> Underrepresented at meetings</li>
+                            <li><strong>Health Department:</strong> Engagement remains limited</li>
+                        </ul>
+                    </div>
+                    <p><strong>Overall Trend:</strong> Some signs of declining engagement that need to be addressed.</p>
+
+                    <h3>Funding and Resources</h3>
+                    <ul>
+                        <li><strong>General Funding Constraints:</strong> Limited resources for expanding initiatives</li>
+                        <li><strong>County Competition:</strong> Competition between county and consortium for available funds</li>
+                        <li><strong>Proposal Rejection:</strong> County's rejection of combined proposal creating fragmentation</li>
+                    </ul>
+
+                    <h3>Service Gaps</h3>
+                    <div class="highlight-box">
+                        <h4>Critical Service Needs:</h4>
+                        <ul>
+                            <li><strong>Mental Health Treatment:</strong> Lack of quality mental health treatment, especially for co-occurring disorders</li>
+                            <li><strong>Medicaid Limitations:</strong> Restrictions affecting service delivery and coverage</li>
+                            <li><strong>Transportation:</strong> Remains a persistent community challenge despite progress with Uber Health exploration</li>
+                        </ul>
+                    </div>
+
+                    <h3>Missing Stakeholders</h3>
+                    <h4>Primary Gaps:</h4>
+                    <ul>
+                        <li>Hospitals (need better representation)</li>
+                        <li>RISE organization</li>
+                        <li>Community colleges</li>
+                        <li>More individuals with lived experience in core team roles</li>
+                    </ul>
+
+                    <h4>Communication Gaps:</h4>
+                    <ul>
+                        <li>Community members not fully aware of available resources</li>
+                        <li>Need better information flow between leadership team and member organizations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Future Vision Tab -->
+            <div id="future" class="tab-content">
+                <div class="section">
+                    <h2>Future Vision and Strategic Direction</h2>
+
+                    <h3>Organizational Development</h3>
+                    <div class="action-item">
+                        <strong>501(c)(3) Status:</strong> Pursue nonprofit status through NC Center for Nonprofits to enhance sustainability and funding opportunities
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>Structural Improvements:</h4>
+                        <ul>
+                            <li><strong>Shared Staffing Models:</strong> Explore collaborative staffing for sustainability</li>
+                            <li><strong>Volunteer to Paid Transition:</strong> Move from volunteer-driven to more sustained staffing model</li>
+                            <li><strong>Enhanced Coordinator Support:</strong> Increase support for existing coordinator roles</li>
+                            <li><strong>Meeting Optimization:</strong> Better coordinate voice and action meetings, consider combining when appropriate</li>
+                        </ul>
+                    </div>
+
+                    <h3>Required Strategic Shifts</h3>
+                    <ul>
+                        <li>Goals beyond immediate grant deliverables (12-MAT/SDOH)</li>
+                        <li>Enhanced community counselor role with increased support</li>
+                        <li>Focus on treatment and recovery initiatives beyond compliance</li>
+                    </ul>
+
+                    <h3>Program Strategy</h3>
+                    <div class="highlight-box">
+                        <h4>Key Initiatives:</h4>
+                        <ul>
+                            <li><strong>Ongoing Stigma Campaign:</strong> Launch sustained effort to reduce stigma around substance use</li>
+                            <li><strong>Multiple Pathways to Recovery:</strong> Promote diverse approaches beyond traditional treatment</li>
+                            <li><strong>Participation Incentives:</strong> Create incentive programs to boost member engagement</li>
+                            <li><strong>Information Hub:</strong> Strengthen role as central resource for SDOH and community needs</li>
+                            <li><strong>Back to In-Person:</strong> Focus on rebuilding in-person connections and engagement</li>
+                        </ul>
+                    </div>
+
+                    <h3>Vision for Growth</h3>
+                    <h4>"Regionalization of Robeson"</h4>
+                    <p>Improve perception of Robeson County across the region while strengthening local foundation first. The approach: "Work on our own house before we expand."</p>
+
+                    <div class="highlight-box">
+                        <h4>Growth Priorities:</h4>
+                        <ul>
+                            <li>Continue increasing membership with diverse representation</li>
+                            <li>Enhance participation strategies moving members from passive to active roles</li>
+                            <li>Develop member-driven vision independent of grant requirements</li>
+                            <li>Position consortium as SDOH/social determinant solution hub for community</li>
+                        </ul>
+                    </div>
+
+                    <h3>Collaborative Grant Proposals</h3>
+                    <p>Develop proposals around initiatives showing prevention funding utilization, including prevention, treatment, and recovery components that benefit the broader consortium membership.</p>
+                </div>
+            </div>
+
+            <!-- Engagement Tab -->
+            <div id="engagement" class="tab-content">
+                <div class="section">
+                    <h2>Member Engagement and Leadership</h2>
+
+                    <h3>Leadership Team Assessment</h3>
+
+                    <h4>What's Working Well:</h4>
+                    <div class="highlight-box">
+                        <ul>
+                            <li><strong>Unity & Shared Vision:</strong> Strong alignment on goals and direction</li>
+                            <li><strong>Mutual Respect:</strong> Collaborative and respectful working relationships</li>
+                            <li><strong>Expertise:</strong> Strong leaders including Valerie Bradshaw, Carolyn & Robinson, Trillium</li>
+                            <li><strong>Diversity:</strong> Diverse representation across sectors and communities</li>
+                        </ul>
+                    </div>
+
+                    <h4>Areas Needing Improvement:</h4>
+                    <ul>
+                        <li><strong>Information Flow:</strong> Need clearer decision-making process between leadership team and organizations</li>
+                        <li><strong>Role Coordination:</strong> Better coordination around roles and responsibilities</li>
+                        <li><strong>Lived Experience:</strong> More representation from people with lived experience in core team roles</li>
+                        <li><strong>Law Enforcement:</strong> Enhanced engagement from law enforcement sector</li>
+                    </ul>
+
+                    <h3>Engagement Enhancement Strategies</h3>
+                    <div class="action-item">
+                        <strong>Full Consortium Voting:</strong> Implement voting on new initiatives to give all members a voice in decision-making
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>Proposed Engagement Tactics:</h4>
+                        <ul>
+                            <li><strong>Rotating Facilitation:</strong> Share facilitation responsibilities among member agencies</li>
+                            <li><strong>Member-Driven Agendas:</strong> Involve members in agenda setting and planning</li>
+                            <li><strong>Voice and Action Coordination:</strong> Better integrate people with lived experience into meetings</li>
+                            <li><strong>Active Participation:</strong> Move members from passive attendees to active contributors</li>
+                            <li><strong>Agenda Involvement:</strong> Ask "Who from [organization] can lead this agenda item?"</li>
+                        </ul>
+                    </div>
+
+                    <h3>Missing Stakeholder Outreach</h3>
+                    <div class="action-item">
+                        <strong>Valerie's Action:</strong> Reach out to local hospital contact to encourage participation
+                    </div>
+
+                    <h4>Target Stakeholder Groups:</h4>
+                    <ul>
+                        <li>Hospitals (especially local contacts with familiarity with consortium work)</li>
+                        <li>RISE organization</li>
+                        <li>Community colleges (including Robeson Community College)</li>
+                        <li>Law enforcement and EMS (consistent participation)</li>
+                        <li>Faith-based organizations</li>
+                        <li>Elected officials</li>
+                        <li>Public health representatives</li>
+                    </ul>
+
+                    <h3>Positioning Lived Experience</h3>
+                    <p>Critical shift needed: Move people with lived experience from bottom of agenda to more prominent positioning in both meetings and leadership roles. Their perspective is essential for authentic recovery-oriented approaches.</p>
+                </div>
+            </div>
+
+            <!-- Action Items Tab -->
+            <div id="actions" class="tab-content">
+                <div class="section">
+                    <h2>Key Action Items and Commitments</h2>
+
+                    <h3>Immediate Priorities</h3>
+
+                    <div class="action-item">
+                        <strong>Consortium Leadership:</strong> Explore 501(c)(3) status for the consortium through NC Center for Nonprofits
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Valerie:</strong> Reach out to local hospital contact to encourage participation
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Group:</strong> Develop collaborative grant proposals around initiatives showing prevention funding utilization
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Group:</strong> Consider shared staffing models for sustainability
+                    </div>
+
+                    <h3>Program Development</h3>
+
+                    <div class="action-item">
+                        <strong>Consortium Leadership:</strong> Develop long-term stigma campaign strategy
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Consortium Leadership:</strong> Create participation incentive structure
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Consortium Leadership:</strong> Implement member engagement strategies during meetings, including asking members to be part of agenda setting
+                    </div>
+
+                    <h3>Strategic Planning</h3>
+
+                    <div class="action-item">
+                        <strong>Group:</strong> Explore 501(c)(3) formation with NC Center for Nonprofits consultation
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Group:</strong> Design collaborative grant proposals for prevention, treatment, and recovery
+                    </div>
+
+                    <div class="action-item">
+                        <strong>Group:</strong> Develop targeted outreach plan for missing stakeholder groups
+                    </div>
+
+                    <div class="action-item">
+                        <strong>All Members:</strong> Consider methods for encouraging active participation through rotating facilitation roles
+                    </div>
+
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <ol>
+                            <li>Begin 501(c)(3) exploration process</li>
+                            <li>Draft collaborative grant proposal framework</li>
+                            <li>Design stigma campaign strategy</li>
+                            <li>Schedule follow-up on Ron Barnes Center capacity goals</li>
+                            <li>Develop stakeholder engagement plan for missing partners</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            var tabContents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            // Remove active class from all buttons
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            // Show the selected tab and mark button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Add smooth scrolling for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
