@@ -266,6 +266,135 @@
             display: none !important;
         }
 
+        /* Text content slides */
+        .content-slide {
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-slide h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .content-slide h3 {
+            font-size: 1.8rem;
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .content-slide p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .content-slide ul {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .content-slide li {
+            margin-bottom: 15px;
+        }
+
+        .highlight-stat {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .highlight-stat h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .key-point {
+            background: white;
+            border-left: 5px solid #3498db;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .key-point h4 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .key-point p {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .action-box {
+            background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .action-box h4 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .action-box ul {
+            margin-left: 25px;
+        }
+
+        .action-box li {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .sparc-intro {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .sparc-intro h3 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .sparc-intro p {
+            color: white;
+            font-size: 1.2rem;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -294,9 +423,11 @@
 
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="showTab('context')">Context & Insights</button>
             <button class="nav-tab" onclick="showTab('individual')">County Deep-Dive</button>
             <button class="nav-tab" onclick="showTab('trends')">Trend Analysis</button>
             <button class="nav-tab" onclick="showTab('comparisons')">Comparisons</button>
+            <button class="nav-tab" onclick="showTab('action')">Call to Action</button>
         </div>
 
         <!-- Overview Tab -->
@@ -378,6 +509,70 @@
                     <div class="chart-container">
                         <canvas id="stateEDRatesChart"></canvas>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Context & Insights Tab -->
+        <div id="context" class="tab-content">
+            <div class="content-slide">
+                <h2>Understanding the Regional Crisis</h2>
+
+                <div class="sparc-intro">
+                    <h3>Welcome to SPARC</h3>
+                    <p><strong>Substance use Prevention And Recovery Coalition</strong></p>
+                    <p>SPARC is dedicated to addressing the overdose crisis in our six-county focus region through data-driven interventions, community collaboration, and evidence-based strategies. We work to save lives, support recovery, and build healthier communities.</p>
+                </div>
+
+                <h3>Why This Region Needs Focused Attention</h3>
+                <div class="key-points">
+                    <div class="key-point">
+                        <h4>🔴 Elevated Death Rates</h4>
+                        <p>Richmond County's rate of 89.8 per 100k is more than 2x the state average (41.0), representing one of the highest overdose death rates in North Carolina.</p>
+                    </div>
+                    <div class="key-point">
+                        <h4>📈 Significant Regional Burden</h4>
+                        <p>The six-county Focus Region accounts for approximately 7-8% of all NC overdose deaths, despite representing a smaller portion of the state's population.</p>
+                    </div>
+                    <div class="key-point">
+                        <h4>⚠️ Persistent Crisis</h4>
+                        <p>Total deaths increased by 281 from 2011 to 2024 (97 → 281 deaths), representing a nearly 200% increase over the period.</p>
+                    </div>
+                    <div class="key-point">
+                        <h4>🏥 Emergency Department Strain</h4>
+                        <p>Over 10,800 ED visits for overdoses from 2016-2024, with peak rates exceeding 600 per 100k in some counties.</p>
+                    </div>
+                </div>
+
+                <h3>Key Findings from Regional Trends</h3>
+                <div class="highlight-stat">
+                    <h4>Critical Insights:</h4>
+                    <ul>
+                        <li><strong>Richmond County Crisis:</strong> At 89.8 deaths per 100k, Richmond County has the highest rate in the region and needs immediate, intensive intervention</li>
+                        <li><strong>Mixed Progress:</strong> While Cumberland and Robeson showed improvements in 2024, Richmond and Scotland saw continued increases</li>
+                        <li><strong>Regional Share Growing:</strong> The Focus Region's share of NC total deaths has increased over time, indicating the crisis is disproportionately affecting this area</li>
+                        <li><strong>The 2020-2021 Surge:</strong> The pandemic years saw unprecedented spikes across all counties, with Cumberland reaching 214 deaths in 2021</li>
+                        <li><strong>Recent Stabilization:</strong> Some counties showing signs of stabilization or decline in 2023-2024, but rates remain well above historical norms</li>
+                    </ul>
+                </div>
+
+                <h3>Common Patterns Across All Counties</h3>
+                <ul>
+                    <li><strong>Peak Period (2020-2022):</strong> All six counties experienced their highest death tolls during the pandemic years, with some counties doubling or tripling their historical averages</li>
+                    <li><strong>The 2017 Inflection Point:</strong> Sharp increases began in 2017 across the region, corresponding with the rise of fentanyl in the drug supply</li>
+                    <li><strong>Recent Trends (2023-2024):</strong> Mixed patterns emerging - Cumberland and Robeson declining, while Richmond, Scotland, and Bladen remain elevated or increasing</li>
+                    <li><strong>ED Visit vs. Death Rate Disparities:</strong> Counties with high ED visit rates don't always have proportionally high death rates, suggesting varying intervention effectiveness and healthcare access</li>
+                    <li><strong>Rural Impact:</strong> Smaller counties (Richmond, Scotland, Bladen) often have higher per-capita rates despite lower absolute numbers, indicating disproportionate rural impact</li>
+                </ul>
+
+                <div class="insights">
+                    <h3>What the Data Tells Us:</h3>
+                    <ul>
+                        <li>The crisis is NOT uniform - each county has unique patterns requiring tailored interventions</li>
+                        <li>Recent declines in some counties prove that progress IS possible with sustained effort</li>
+                        <li>ED visits can serve as an early warning system - counties with rising ED rates may see death increases without intervention</li>
+                        <li>The 2024 data shows promise in some areas but highlights urgent need for action in others, particularly Richmond and Scotland counties</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -497,6 +692,102 @@
                     <div class="chart-container large">
                         <canvas id="heatmapChart"></canvas>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Tab -->
+        <div id="action" class="tab-content">
+            <div class="content-slide">
+                <h2>Call to Action: Strategic Recommendations</h2>
+
+                <p>Based on the data analysis and regional trends, we have identified priority interventions, resource allocation recommendations, and collaboration opportunities to address the overdose crisis in our Focus Region.</p>
+
+                <h3>Priority Interventions Needed</h3>
+
+                <div class="action-box">
+                    <h4>🎯 Immediate Priorities (Next 3-6 Months)</h4>
+                    <ul>
+                        <li><strong>Richmond County Intensive Response:</strong> Deploy additional harm reduction resources, expand naloxone distribution, and increase treatment capacity in Richmond County given its 89.8 rate</li>
+                        <li><strong>ED Follow-Up Programs:</strong> Implement or enhance peer recovery specialist programs in emergency departments across all counties to connect overdose survivors with treatment</li>
+                        <li><strong>Fentanyl Testing Strips:</strong> Mass distribution of fentanyl test strips and overdose prevention education, particularly targeting the 18-44 age group</li>
+                        <li><strong>Rural Access Initiatives:</strong> Address transportation barriers and telehealth expansion for rural counties (Richmond, Scotland, Bladen) where geographic isolation compounds the crisis</li>
+                    </ul>
+                </div>
+
+                <div class="action-box" style="background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);">
+                    <h4>📊 Medium-Term Strategies (6-12 Months)</h4>
+                    <ul>
+                        <li><strong>Data-Driven Resource Allocation:</strong> Use ED visit trends as early warning indicators to pre-emptively deploy resources before deaths increase</li>
+                        <li><strong>Treatment Capacity Expansion:</strong> Increase medication-assisted treatment (MAT) availability, particularly in counties showing persistent high rates</li>
+                        <li><strong>Community-Based Prevention:</strong> Expand evidence-based prevention programs targeting youth and young adults before substance use disorder develops</li>
+                        <li><strong>Recovery Support Services:</strong> Build peer support networks and recovery housing options to reduce relapse and support long-term recovery</li>
+                        <li><strong>Cross-Sector Collaboration:</strong> Strengthen partnerships between healthcare, law enforcement, social services, and community organizations</li>
+                    </ul>
+                </div>
+
+                <h3>Resource Allocation Recommendations</h3>
+                <div class="key-points">
+                    <div class="key-point" style="border-left-color: #e74c3c;">
+                        <h4>High Priority Counties</h4>
+                        <p><strong>Richmond & Scotland:</strong> Elevated rates with increasing trends require intensive intervention and additional resources</p>
+                    </div>
+                    <div class="key-point" style="border-left-color: #f39c12;">
+                        <h4>Moderate Priority Counties</h4>
+                        <p><strong>Bladen & Columbus:</strong> Stabilized but elevated rates; maintain current interventions while monitoring trends</p>
+                    </div>
+                    <div class="key-point" style="border-left-color: #27ae60;">
+                        <h4>Sustaining Success Counties</h4>
+                        <p><strong>Cumberland & Robeson:</strong> Recent improvements suggest interventions are working; maintain and document successful strategies for replication</p>
+                    </div>
+                </div>
+
+                <h3>Opioid Settlement Fund Priorities</h3>
+                <ul>
+                    <li><strong>Treatment Infrastructure:</strong> 30-40% of funds toward expanding MAT access and residential treatment capacity</li>
+                    <li><strong>Harm Reduction:</strong> 20-25% for naloxone distribution, syringe services, and fentanyl test strips</li>
+                    <li><strong>Prevention & Education:</strong> 15-20% for evidence-based prevention programs and community education</li>
+                    <li><strong>Recovery Support:</strong> 15-20% for peer support services, recovery housing, and wraparound services</li>
+                    <li><strong>Data & Evaluation:</strong> 10% for ongoing data collection, analysis, and program evaluation</li>
+                </ul>
+
+                <h3>Collaboration Opportunities</h3>
+                <div class="highlight-stat">
+                    <h4>Why Collaboration Matters:</h4>
+                    <ul>
+                        <li><strong>No Single Entity Can Solve This Crisis:</strong> Addressing overdose deaths requires coordinated action across healthcare, public health, law enforcement, social services, education, and community organizations</li>
+                        <li><strong>Shared Data = Better Decisions:</strong> Real-time data sharing across agencies enables rapid response to emerging trends</li>
+                        <li><strong>Resource Efficiency:</strong> Coordinated efforts prevent duplication and maximize impact of limited resources</li>
+                        <li><strong>Community Trust:</strong> Collaborative approaches reduce stigma and increase community engagement in solutions</li>
+                    </ul>
+                </div>
+
+                <h3>Importance of Data Collection & Monitoring</h3>
+                <p>This dashboard demonstrates the power of data to drive action. Moving forward, we must:</p>
+                <ul>
+                    <li><strong>Maintain Real-Time Surveillance:</strong> Continue tracking overdose deaths, ED visits, naloxone administrations, and treatment access metrics</li>
+                    <li><strong>Expand Data Collection:</strong> Add demographics (age, sex, race/ethnicity), substances involved (fentanyl, polysubstance), and geographic hotspot analysis</li>
+                    <li><strong>Measure Intervention Impact:</strong> Track outcomes of specific interventions to identify what works and scale successful programs</li>
+                    <li><strong>Share Transparently:</strong> Regular public reporting builds accountability and community engagement</li>
+                    <li><strong>Use Data for Advocacy:</strong> Evidence-based arguments are essential for securing funding and policy support</li>
+                </ul>
+
+                <div class="sparc-intro" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                    <h3>The Time to Act is NOW</h3>
+                    <p>Every data point in this dashboard represents a life lost, a family devastated, and a community impacted. While recent trends show promise in some counties, Richmond and Scotland counties face escalating crises that demand immediate action.</p>
+                    <p><strong>We have the data. We have the evidence. We have the community commitment. Now we need coordinated action and sustained resources to save lives.</strong></p>
+                </div>
+
+                <h3>Next Steps</h3>
+                <div class="action-box" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);">
+                    <h4>How to Get Involved:</h4>
+                    <ul>
+                        <li>Review county-specific data in the "County Deep-Dive" tab to understand your community's unique challenges</li>
+                        <li>Share this dashboard with local leaders, healthcare providers, and community organizations</li>
+                        <li>Join SPARC coalition meetings to contribute to regional strategy development</li>
+                        <li>Advocate for evidence-based interventions and sustained funding for overdose prevention</li>
+                        <li>Support harm reduction, treatment access, and recovery support services in your community</li>
+                    </ul>
                 </div>
             </div>
         </div>
