@@ -2429,16 +2429,7 @@
                             }
                         },
                         datalabels: {
-                            display: true,
-                            align: 'top',
-                            offset: 10,
-                            font: {
-                                weight: 'bold',
-                                size: 10
-                            },
-                            formatter: (value, context) => {
-                                return scatterData[context.dataIndex].county;
-                            }
+                            display: false
                         }
                     },
                     scales: {
@@ -2554,14 +2545,7 @@
                             position: 'top'
                         },
                         datalabels: {
-                            display: true,
-                            align: 'center',
-                            font: {
-                                weight: 'bold',
-                                size: 9
-                            },
-                            color: 'white',
-                            formatter: (value) => value.toFixed(0)
+                            display: false
                         }
                     },
                     scales: {
