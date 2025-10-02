@@ -397,9 +397,14 @@
             font-size: 1.2rem;
         }
 
+        /* Tablet and mobile responsiveness */
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
             }
 
             .chart-container {
@@ -412,6 +417,95 @@
 
             .nav-tabs {
                 flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .nav-tab {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 140px;
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .stat-card h3 {
+                font-size: 1.8rem;
+            }
+
+            .stat-card p {
+                font-size: 0.85rem;
+            }
+
+            /* Make content boxes more compact on mobile */
+            .key-point {
+                padding: 15px !important;
+            }
+
+            .key-point h4 {
+                font-size: 1.2rem !important;
+            }
+
+            .key-point p {
+                font-size: 1rem !important;
+            }
+
+            /* Adjust grid layouts for mobile */
+            [style*="display: grid"] {
+                gap: 10px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .nav-tab {
+                flex: 1 1 100%;
+                font-size: 0.85rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            /* Make all 2-column grids single column on small phones */
+            [style*="grid-template-columns: repeat(2, 1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Reduce padding in content sections */
+            [style*="padding: 25px"] {
+                padding: 15px !important;
+            }
+
+            [style*="padding: 30px"] {
+                padding: 15px !important;
+            }
+
+            /* Smaller font sizes */
+            h3 {
+                font-size: 1.3rem !important;
+            }
+
+            h4 {
+                font-size: 1.1rem !important;
+            }
+
+            h5 {
+                font-size: 1rem !important;
             }
         }
     </style>
