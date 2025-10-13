@@ -319,11 +319,13 @@
                     </div>
                 </div>
 
+                <!-- Strategies Funded by County - Commented out for now, can be restored later
                 <div class="chart-card full-width">
                     <h2 class="chart-title">Strategies Funded by County</h2>
                     <div id="strategiesTabsContainer"></div>
                     <div id="strategiesChartsContainer" style="position: relative; height: 400px;"></div>
                 </div>
+                -->
 
                 <div class="chart-card full-width">
                     <h2 class="chart-title">County Spending Breakdowns</h2>
@@ -491,7 +493,7 @@
             // Create visualizations
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
-            createStrategiesByCountyChart(strategiesByCounty, strategyLookup);
+            // createStrategiesByCountyChart(strategiesByCounty, strategyLookup); // Commented out for now
             createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, govtLookup);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
             createDetailTable(focusCountyData, strategyLookup, categoryLookup);
