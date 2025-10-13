@@ -124,6 +124,45 @@
             background: #f5f5f5;
         }
 
+        .narrative-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .narrative-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .narrative-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .progress-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .progress-strategy {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .progress-detail {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -176,6 +215,11 @@
                 </div>
 
                 <div class="chart-card full-width">
+                    <h2 class="chart-title">County Narratives & Strategy Progress</h2>
+                    <div id="narrativesContainer"></div>
+                </div>
+
+                <div class="chart-card full-width">
                     <h2 class="chart-title">Detailed Spending Breakdown</h2>
                     <div style="overflow-x: auto;">
                         <table class="data-table" id="detailTable">
@@ -210,11 +254,14 @@
                 // Read relevant sheets
                 const govtsSheet = XLSX.utils.sheet_to_json(workbook.Sheets['govts']);
                 const strategiesSheet = XLSX.utils.sheet_to_json(workbook.Sheets['strategies']);
+                const categoriesSheet = XLSX.utils.sheet_to_json(workbook.Sheets['categories']);
                 const finDetailSheet = XLSX.utils.sheet_to_json(workbook.Sheets['fin_detail']);
                 const paymentsSheet = XLSX.utils.sheet_to_json(workbook.Sheets['payments_detail']);
+                const impactSummarySheet = XLSX.utils.sheet_to_json(workbook.Sheets['impact_summary']);
+                const impactDetailSheet = XLSX.utils.sheet_to_json(workbook.Sheets['impact_detail']);
 
                 // Process data
-                processData(govtsSheet, strategiesSheet, finDetailSheet, paymentsSheet);
+                processData(govtsSheet, strategiesSheet, categoriesSheet, finDetailSheet, paymentsSheet, impactSummarySheet, impactDetailSheet);
 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -225,17 +272,22 @@
             }
         }
 
-        function processData(govts, strategies, finDetail, payments) {
+        function processData(govts, strategies, categories, finDetail, payments, impactSummary, impactDetail) {
             // Filter data for focus counties
             const focusCountyData = finDetail.filter(row => {
                 const govtName = row.govt_name || '';
                 return FOCUS_COUNTIES.some(county => govtName.includes(county));
             });
 
-            // Create strategy lookup
+            // Create lookups
             const strategyLookup = {};
             strategies.forEach(strat => {
                 strategyLookup[strat.strat_id_num] = strat;
+            });
+
+            const categoryLookup = {};
+            categories.forEach(cat => {
+                categoryLookup[cat.strat_cat_letter] = cat.strat_cat_name || cat.strat_cat_letter;
             });
 
             // Aggregate spending by county
@@ -270,11 +322,23 @@
                 }
             });
 
+            // Filter impact data for focus counties
+            const focusImpactSummary = impactSummary.filter(row => {
+                const govtName = row.govt_name || '';
+                return FOCUS_COUNTIES.some(county => govtName.includes(county));
+            });
+
+            const focusImpactDetail = impactDetail.filter(row => {
+                const govtName = row.govt_name || '';
+                return FOCUS_COUNTIES.some(county => govtName.includes(county));
+            });
+
             // Create visualizations
             createSpendingByCountyChart(spendingByCounty);
-            createStrategyCategoryChart(spendingByCategory);
+            createStrategyCategoryChart(spendingByCategory, categoryLookup);
             createStrategiesByCountyChart(strategiesByCounty, strategyLookup);
-            createDetailTable(focusCountyData, strategyLookup);
+            createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
+            createDetailTable(focusCountyData, strategyLookup, categoryLookup);
 
             // Hide loading, show dashboard
             document.getElementById('loading').style.display = 'none';
@@ -336,14 +400,14 @@
             });
         }
 
-        function createStrategyCategoryChart(data) {
+        function createStrategyCategoryChart(data, categoryLookup) {
             const ctx = document.getElementById('strategyCategoryChart').getContext('2d');
             const sortedCategories = Object.keys(data).sort((a, b) => data[b] - data[a]);
 
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: sortedCategories.map(cat => `Category ${cat}`),
+                    labels: sortedCategories.map(cat => categoryLookup[cat] || `Category ${cat}`),
                     datasets: [{
                         data: sortedCategories.map(cat => data[cat]),
                         backgroundColor: [
@@ -428,7 +492,64 @@
             });
         }
 
-        function createDetailTable(data, strategyLookup) {
+        function createNarrativesSection(impactSummary, impactDetail, strategyLookup) {
+            const container = document.getElementById('narrativesContainer');
+
+            // Group by county
+            const countyData = {};
+
+            impactSummary.forEach(row => {
+                const county = extractCountyName(row.govt_name);
+                if (county && !countyData[county]) {
+                    countyData[county] = {
+                        narrative: row.is_impact_narrative || '',
+                        progress: []
+                    };
+                }
+            });
+
+            impactDetail.forEach(row => {
+                const county = extractCountyName(row.govt_name);
+                if (county && countyData[county] && row.id_strat_progress_full) {
+                    const strategy = strategyLookup[row.strat_id_num] || {};
+                    countyData[county].progress.push({
+                        strategy: strategy.strat_exhibit_letter || row.strat_id_num,
+                        progress: row.id_strat_progress_full
+                    });
+                }
+            });
+
+            // Display narratives for each county
+            FOCUS_COUNTIES.forEach(county => {
+                if (countyData[county]) {
+                    const card = document.createElement('div');
+                    card.className = 'narrative-card';
+
+                    let html = `<h3>${county} County</h3>`;
+
+                    if (countyData[county].narrative) {
+                        html += `<div class="narrative-text">${countyData[county].narrative}</div>`;
+                    }
+
+                    if (countyData[county].progress.length > 0) {
+                        html += '<h4 style="margin-top: 15px; margin-bottom: 10px; color: #2c3e50;">Strategy Progress:</h4>';
+                        countyData[county].progress.forEach(item => {
+                            html += `
+                                <div class="progress-item">
+                                    <div class="progress-strategy">Strategy ${item.strategy}</div>
+                                    <div class="progress-detail">${item.progress}</div>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    card.innerHTML = html;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function createDetailTable(data, strategyLookup, categoryLookup) {
             const tbody = document.querySelector('#detailTable tbody');
 
             // Sort by county then amount
@@ -446,11 +567,12 @@
             sortedData.slice(0, 50).forEach(row => {
                 const tr = document.createElement('tr');
                 const strategy = strategyLookup[row.strat_id_num] || {};
+                const categoryName = categoryLookup[strategy.strat_cat_letter] || strategy.strat_cat_letter || 'N/A';
 
                 tr.innerHTML = `
                     <td>${extractCountyName(row.govt_name) || row.govt_name}</td>
                     <td>Strategy ${strategy.strat_exhibit_letter || row.strat_id_num}</td>
-                    <td>Category ${strategy.strat_cat_letter || 'N/A'}</td>
+                    <td>${categoryName}</td>
                     <td>$${(row.fd_strat_funds_applied || 0).toLocaleString()}</td>
                     <td>${row.fy_str || row.fy_int || 'N/A'}</td>
                 `;
