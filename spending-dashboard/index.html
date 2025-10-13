@@ -163,6 +163,83 @@
             font-size: 0.95rem;
         }
 
+        .county-breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .county-breakdown-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+        }
+
+        .county-breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .county-breakdown-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .county-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .county-stat {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .county-stat-number {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .county-stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .strategy-list {
+            margin-top: 15px;
+        }
+
+        .strategy-list-item {
+            padding: 10px;
+            background: #f8f9fa;
+            margin: 6px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .strategy-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .strategy-amount {
+            font-weight: bold;
+            color: #667eea;
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -215,6 +292,11 @@
                 </div>
 
                 <div class="chart-card full-width">
+                    <h2 class="chart-title">County Spending Breakdowns</h2>
+                    <div class="county-breakdown-grid" id="countyBreakdownsContainer"></div>
+                </div>
+
+                <div class="chart-card full-width">
                     <h2 class="chart-title">County Narratives & Strategy Progress</h2>
                     <div id="narrativesContainer"></div>
                 </div>
@@ -243,6 +325,16 @@
     <script>
         // Focus counties
         const FOCUS_COUNTIES = ['Robeson', 'Cumberland', 'Scotland', 'Richmond', 'Bladen', 'Columbus'];
+
+        // County color scheme (consistent with enhanced dashboard)
+        const COUNTY_COLORS = {
+            'Cumberland': '#e74c3c',
+            'Robeson': '#3498db',
+            'Richmond': '#e67e22',
+            'Columbus': '#f39c12',
+            'Bladen': '#9b59b6',
+            'Scotland': '#27ae60'
+        };
 
         // Load and process Excel file
         async function loadData() {
@@ -337,6 +429,7 @@
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
             createStrategiesByCountyChart(strategiesByCounty, strategyLookup);
+            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
             createDetailTable(focusCountyData, strategyLookup, categoryLookup);
 
@@ -366,9 +459,10 @@
                     datasets: [{
                         label: 'Total Spending ($)',
                         data: sortedCounties.map(county => data[county]),
-                        backgroundColor: '#667eea',
-                        borderColor: '#5568d3',
-                        borderWidth: 2
+                        backgroundColor: sortedCounties.map(county => COUNTY_COLORS[county] + '80'),
+                        borderColor: sortedCounties.map(county => COUNTY_COLORS[county]),
+                        borderWidth: 2,
+                        borderRadius: 8
                     }]
                 },
                 options: {
@@ -445,7 +539,7 @@
             });
             const strategies = Array.from(allStrategies).sort();
 
-            const counties = Object.keys(data).sort();
+            const counties = FOCUS_COUNTIES.filter(c => data[c]);
 
             const datasets = strategies.slice(0, 10).map((strategy, index) => ({
                 label: `Strategy ${strategy}`,
@@ -489,6 +583,61 @@
                         }
                     }
                 }
+            });
+        }
+
+        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData) {
+            const container = document.getElementById('countyBreakdownsContainer');
+
+            FOCUS_COUNTIES.forEach(county => {
+                if (!spendingByCounty[county]) return;
+
+                const card = document.createElement('div');
+                card.className = 'county-breakdown-card';
+                card.style.borderTopColor = COUNTY_COLORS[county];
+
+                const totalSpending = spendingByCounty[county];
+                const countyStrategies = strategiesByCounty[county] || {};
+                const strategyCount = Object.keys(countyStrategies).length;
+
+                // Get top strategies
+                const topStrategies = Object.entries(countyStrategies)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+
+                let html = `
+                    <div class="county-breakdown-header">
+                        <div class="county-breakdown-name" style="color: ${COUNTY_COLORS[county]}">${county} County</div>
+                    </div>
+
+                    <div class="county-stat-grid">
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">$${(totalSpending / 1000000).toFixed(2)}M</div>
+                            <div class="county-stat-label">Total Spending</div>
+                        </div>
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${strategyCount}</div>
+                            <div class="county-stat-label">Strategies Funded</div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1.1rem;">Top Strategies:</h4>
+                    <div class="strategy-list">
+                `;
+
+                topStrategies.forEach(([stratLetter, amount]) => {
+                    html += `
+                        <div class="strategy-list-item">
+                            <span class="strategy-name">Strategy ${stratLetter}</span>
+                            <span class="strategy-amount">$${(amount / 1000).toFixed(1)}K</span>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+
+                card.innerHTML = html;
+                container.appendChild(card);
             });
         }
 
