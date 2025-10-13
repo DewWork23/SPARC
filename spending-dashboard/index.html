@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPARC Spending & Strategy Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
@@ -240,6 +241,40 @@
             color: #667eea;
         }
 
+        .narrative-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .narrative-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .narrative-tab:hover {
+            background: #e8e9ea;
+        }
+
+        .narrative-tab.active {
+            color: white;
+            border-color: transparent;
+        }
+
+        .narrative-content {
+            display: none;
+        }
+
+        .narrative-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -457,7 +492,7 @@
                 data: {
                     labels: sortedCounties,
                     datasets: [{
-                        label: 'Total Spending ($)',
+                        label: 'Total Spending',
                         data: sortedCounties.map(county => data[county]),
                         backgroundColor: sortedCounties.map(county => COUNTY_COLORS[county] + '80'),
                         borderColor: sortedCounties.map(county => COUNTY_COLORS[county]),
@@ -473,10 +508,31 @@
                             display: false
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
                             callbacks: {
+                                title: function(context) {
+                                    return context[0].label + ' County';
+                                },
                                 label: function(context) {
-                                    return '$' + context.parsed.y.toLocaleString();
+                                    return 'Total Spending: $' + (context.parsed.y / 1000000).toFixed(2) + 'M';
                                 }
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: function(value) {
+                                return '$' + (value / 1000000).toFixed(2) + 'M';
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 12
+                            },
+                            color: function(context) {
+                                return COUNTY_COLORS[sortedCounties[context.dataIndex]];
                             }
                         }
                     },
@@ -498,6 +554,8 @@
             const ctx = document.getElementById('strategyCategoryChart').getContext('2d');
             const sortedCategories = Object.keys(data).sort((a, b) => data[b] - data[a]);
 
+            const total = sortedCategories.reduce((sum, cat) => sum + data[cat], 0);
+
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -515,13 +573,34 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'right'
+                            position: 'right',
+                            labels: {
+                                font: { size: 12 },
+                                padding: 15
+                            }
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
                             callbacks: {
                                 label: function(context) {
-                                    return context.label + ': $' + context.parsed.toLocaleString();
+                                    const value = context.parsed;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return context.label + ': $' + (value / 1000000).toFixed(2) + 'M (' + percentage + '%)';
                                 }
+                            }
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: {
+                                weight: 'bold',
+                                size: 11
+                            },
+                            formatter: function(value, context) {
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return percentage > 5 ? percentage + '%' : '';
                             }
                         }
                     }
@@ -566,13 +645,28 @@
                     plugins: {
                         legend: {
                             position: 'top',
+                            labels: {
+                                font: { size: 11 },
+                                padding: 10,
+                                usePointStyle: true
+                            }
                         },
                         tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
                             callbacks: {
+                                title: function(context) {
+                                    return context[0].label + ' County';
+                                },
                                 label: function(context) {
-                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                                    return context.dataset.label + ': $' + (context.parsed.y / 1000).toFixed(1) + 'K';
                                 }
                             }
+                        },
+                        datalabels: {
+                            display: false
                         }
                     },
                     scales: {
@@ -619,7 +713,9 @@
 
                     <div class="county-stat-grid">
                         <div class="county-stat">
-                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">$${(totalSpending / 1000000).toFixed(2)}M</div>
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">
+                                $${(totalSpending / 1000000).toFixed(2)}M
+                            </div>
                             <div class="county-stat-label">Total Spending</div>
                         </div>
                         <div class="county-stat">
@@ -683,33 +779,77 @@
                 }
             });
 
-            // Display narratives for each county
-            FOCUS_COUNTIES.forEach(county => {
-                if (countyData[county]) {
-                    const card = document.createElement('div');
-                    card.className = 'narrative-card';
+            // Filter counties that have data
+            const countiesWithData = FOCUS_COUNTIES.filter(county => countyData[county]);
 
-                    let html = `<h3>${county} County</h3>`;
+            if (countiesWithData.length === 0) return;
 
-                    if (countyData[county].narrative) {
-                        html += `<div class="narrative-text">${countyData[county].narrative}</div>`;
-                    }
+            // Create tabs
+            let tabsHtml = '<div class="narrative-tabs">';
+            countiesWithData.forEach((county, index) => {
+                tabsHtml += `
+                    <button class="narrative-tab ${index === 0 ? 'active' : ''}"
+                            style="background-color: ${index === 0 ? COUNTY_COLORS[county] : '#f8f9fa'};"
+                            data-county="${county}">
+                        ${county} County
+                    </button>
+                `;
+            });
+            tabsHtml += '</div>';
 
-                    if (countyData[county].progress.length > 0) {
-                        html += '<h4 style="margin-top: 15px; margin-bottom: 10px; color: #2c3e50;">Strategy Progress:</h4>';
-                        countyData[county].progress.forEach(item => {
-                            html += `
-                                <div class="progress-item">
-                                    <div class="progress-strategy">${item.strategy}</div>
-                                    <div class="progress-detail">${item.progress}</div>
-                                </div>
-                            `;
-                        });
-                    }
+            // Create content for each county
+            let contentHtml = '';
+            countiesWithData.forEach((county, index) => {
+                contentHtml += `
+                    <div class="narrative-content ${index === 0 ? 'active' : ''}" data-county="${county}">
+                        <div class="narrative-card" style="border-left: 5px solid ${COUNTY_COLORS[county]};">
+                            <h3 style="color: ${COUNTY_COLORS[county]};">${county} County</h3>
+                `;
 
-                    card.innerHTML = html;
-                    container.appendChild(card);
+                if (countyData[county].narrative) {
+                    contentHtml += `<div class="narrative-text">${countyData[county].narrative}</div>`;
                 }
+
+                if (countyData[county].progress.length > 0) {
+                    contentHtml += '<h4 style="margin-top: 15px; margin-bottom: 10px; color: #2c3e50;">Strategy Progress:</h4>';
+                    countyData[county].progress.forEach(item => {
+                        contentHtml += `
+                            <div class="progress-item">
+                                <div class="progress-strategy">${item.strategy}</div>
+                                <div class="progress-detail">${item.progress}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                contentHtml += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = tabsHtml + contentHtml;
+
+            // Add click handlers for tabs
+            const tabs = container.querySelectorAll('.narrative-tab');
+            const contents = container.querySelectorAll('.narrative-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const county = tab.dataset.county;
+
+                    // Update tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.style.backgroundColor = '#f8f9fa';
+                    });
+                    tab.classList.add('active');
+                    tab.style.backgroundColor = COUNTY_COLORS[county];
+
+                    // Update content
+                    contents.forEach(c => c.classList.remove('active'));
+                    container.querySelector(`.narrative-content[data-county="${county}"]`).classList.add('active');
+                });
             });
         }
 
