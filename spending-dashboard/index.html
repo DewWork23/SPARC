@@ -321,9 +321,8 @@
 
                 <div class="chart-card full-width">
                     <h2 class="chart-title">Strategies Funded by County</h2>
-                    <div class="chart-container">
-                        <canvas id="strategiesByCountyChart"></canvas>
-                    </div>
+                    <div id="strategiesTabsContainer"></div>
+                    <div id="strategiesChartsContainer" style="position: relative; height: 400px;"></div>
                 </div>
 
                 <div class="chart-card full-width">
@@ -406,6 +405,22 @@
                 return FOCUS_COUNTIES.some(county => govtName.includes(county));
             });
 
+            // Create government lookup for option detection
+            const govtLookup = {};
+            govts.forEach(govt => {
+                const county = extractCountyName(govt.govt_name);
+                if (county && FOCUS_COUNTIES.includes(county)) {
+                    // Look for option field - try multiple possible field names
+                    const option = govt.option || govt.govt_option || govt.settlement_option || govt.opioid_option;
+                    govtLookup[county] = {
+                        ...govt,
+                        detectedOption: option
+                    };
+                }
+            });
+
+            console.log('Government lookup with options:', govtLookup);
+
             // Create lookups
             const strategyLookup = {};
             strategies.forEach(strat => {
@@ -477,7 +492,7 @@
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
             createStrategiesByCountyChart(strategiesByCounty, strategyLookup);
-            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData);
+            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, govtLookup);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
             createDetailTable(focusCountyData, strategyLookup, categoryLookup);
 
@@ -622,99 +637,141 @@
         }
 
         function createStrategiesByCountyChart(data, strategyLookup) {
-            const ctx = document.getElementById('strategiesByCountyChart').getContext('2d');
-
-            // Get all unique strategies
-            const allStrategies = new Set();
-            Object.values(data).forEach(countyStrategies => {
-                Object.keys(countyStrategies).forEach(strat => allStrategies.add(strat));
-            });
-            const strategies = Array.from(allStrategies).sort();
-
-            console.log('Total unique strategies:', strategies.length, strategies);
+            const tabsContainer = document.getElementById('strategiesTabsContainer');
+            const chartsContainer = document.getElementById('strategiesChartsContainer');
 
             const counties = FOCUS_COUNTIES.filter(c => data[c]);
 
-            // Show top 10 strategies by total amount
-            const strategyTotals = {};
-            strategies.forEach(strat => {
-                strategyTotals[strat] = counties.reduce((sum, county) => sum + (data[county][strat] || 0), 0);
+            if (counties.length === 0) return;
+
+            // Create tabs
+            let tabsHtml = '<div class="narrative-tabs">';
+            counties.forEach((county, index) => {
+                tabsHtml += `
+                    <button class="narrative-tab strategy-tab ${index === 0 ? 'active' : ''}"
+                            style="background-color: ${index === 0 ? COUNTY_COLORS[county] : '#f8f9fa'};"
+                            data-county="${county}">
+                        ${county} County
+                    </button>
+                `;
             });
-            const topStrategies = Object.entries(strategyTotals)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10)
-                .map(([strat, total]) => strat);
+            tabsHtml += '</div>';
+            tabsContainer.innerHTML = tabsHtml;
 
-            console.log('Top 10 strategies by amount:', topStrategies);
-
-            const datasets = topStrategies.map((strategy, index) => {
-                // Find the full strategy name
-                const strategyObj = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === strategy);
-                const strategyName = strategyObj?.strat_name || strategyObj?.strat_title || '';
-                const label = strategyName ? `${strategyName} (${strategy})` : `Strategy ${strategy}`;
-
-                return {
-                    label: label,
-                    data: counties.map(county => data[county][strategy] || 0),
-                    backgroundColor: `hsl(${index * 36}, 70%, 60%)`,
-                };
+            // Create canvas for each county
+            let chartsHtml = '';
+            counties.forEach((county, index) => {
+                chartsHtml += `
+                    <canvas id="strategyChart-${county}"
+                            class="strategy-chart-canvas"
+                            style="display: ${index === 0 ? 'block' : 'none'}; position: absolute; left: 0; top: 0; width: 100%; height: 100%;">
+                    </canvas>
+                `;
             });
+            chartsContainer.innerHTML = chartsHtml;
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: counties,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 11 },
-                                padding: 10,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 },
-                            callbacks: {
-                                title: function(context) {
-                                    return context[0].label + ' County';
-                                },
-                                label: function(context) {
-                                    return context.dataset.label + ': $' + (context.parsed.y / 1000).toFixed(1) + 'K';
-                                }
-                            }
-                        },
-                        datalabels: {
-                            display: false
-                        }
+            // Create charts for each county
+            const charts = {};
+            counties.forEach(county => {
+                const countyStrategies = data[county] || {};
+                const sortedStrategies = Object.entries(countyStrategies)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10);
+
+                const labels = sortedStrategies.map(([stratLetter, amount]) => {
+                    const strategyObj = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === stratLetter);
+                    const strategyName = strategyObj?.strat_name || strategyObj?.strat_title || '';
+                    return strategyName ? `${strategyName} (${stratLetter})` : `Strategy ${stratLetter}`;
+                });
+
+                const amounts = sortedStrategies.map(([stratLetter, amount]) => amount);
+
+                const ctx = document.getElementById(`strategyChart-${county}`).getContext('2d');
+                charts[county] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Spending',
+                            data: amounts,
+                            backgroundColor: COUNTY_COLORS[county] + '80',
+                            borderColor: COUNTY_COLORS[county],
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
                     },
-                    scales: {
-                        x: {
-                            stacked: true,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                padding: 12,
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Spending: $' + context.parsed.x.toLocaleString();
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'right',
+                                formatter: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'K';
+                                },
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                },
+                                color: COUNTY_COLORS[county]
+                            }
                         },
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + (value / 1000000).toFixed(1) + 'M';
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + (value / 1000).toFixed(0) + 'K';
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                });
+            });
+
+            // Add click handlers for tabs
+            const tabs = tabsContainer.querySelectorAll('.strategy-tab');
+            const canvases = chartsContainer.querySelectorAll('.strategy-chart-canvas');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const county = tab.dataset.county;
+
+                    // Update tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.style.backgroundColor = '#f8f9fa';
+                    });
+                    tab.classList.add('active');
+                    tab.style.backgroundColor = COUNTY_COLORS[county];
+
+                    // Update canvas visibility
+                    canvases.forEach(canvas => {
+                        canvas.style.display = 'none';
+                    });
+                    document.getElementById(`strategyChart-${county}`).style.display = 'block';
+                });
             });
         }
 
-        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData) {
+        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData, govtLookup) {
             const container = document.getElementById('countyBreakdownsContainer');
 
             FOCUS_COUNTIES.forEach(county => {
@@ -728,14 +785,21 @@
                 const countyStrategies = strategiesByCounty[county] || {};
                 const strategyCount = Object.keys(countyStrategies).length;
 
-                // Determine option (check if strategies include planning strategies from Category C)
-                let option = 'Option B'; // Default assumption
-                const hasCollaborativePlanning = Object.entries(countyStrategies).some(([letter, amount]) => {
-                    const strat = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === letter);
-                    return strat && strat.strat_cat_letter === 'C' && amount > 0;
-                });
-                if (hasCollaborativePlanning) {
-                    option = 'Option B';
+                // Determine option from govtLookup data or infer from spending
+                let option = 'Unknown';
+                if (govtLookup[county] && govtLookup[county].detectedOption) {
+                    option = govtLookup[county].detectedOption;
+                } else {
+                    // Infer from spending patterns
+                    const hasCollaborativePlanning = Object.entries(countyStrategies).some(([letter, amount]) => {
+                        const strat = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === letter);
+                        return strat && strat.strat_cat_letter === 'C' && amount > 0;
+                    });
+                    if (hasCollaborativePlanning) {
+                        option = 'Option B';
+                    } else if (strategyCount > 0) {
+                        option = 'Option A';
+                    }
                 }
 
                 // Get top strategies
