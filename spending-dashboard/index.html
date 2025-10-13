@@ -414,8 +414,21 @@
 
             const categoryLookup = {};
             categories.forEach(cat => {
-                categoryLookup[cat.strat_cat_letter] = cat.strat_cat_name || cat.strat_cat_letter;
+                // Try multiple possible field names for category name
+                const catName = cat.strat_cat_name || cat.strat_category_name || cat.category_name || cat.name;
+                categoryLookup[cat.strat_cat_letter] = catName || cat.strat_cat_letter;
             });
+
+            // Add fallback descriptions if not in data
+            if (!categoryLookup['L'] || categoryLookup['L'] === 'L') {
+                categoryLookup['L'] = 'Core Strategies';
+            }
+            if (!categoryLookup['C'] || categoryLookup['C'] === 'C') {
+                categoryLookup['C'] = 'Collaborative Strategic Planning';
+            }
+            if (!categoryLookup['H'] || categoryLookup['H'] === 'H') {
+                categoryLookup['H'] = 'Other Abatement Strategies';
+            }
 
             // Aggregate spending by county
             const spendingByCounty = {};
@@ -618,9 +631,23 @@
             });
             const strategies = Array.from(allStrategies).sort();
 
+            console.log('Total unique strategies:', strategies.length, strategies);
+
             const counties = FOCUS_COUNTIES.filter(c => data[c]);
 
-            const datasets = strategies.slice(0, 10).map((strategy, index) => {
+            // Show top 10 strategies by total amount
+            const strategyTotals = {};
+            strategies.forEach(strat => {
+                strategyTotals[strat] = counties.reduce((sum, county) => sum + (data[county][strat] || 0), 0);
+            });
+            const topStrategies = Object.entries(strategyTotals)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([strat, total]) => strat);
+
+            console.log('Top 10 strategies by amount:', topStrategies);
+
+            const datasets = topStrategies.map((strategy, index) => {
                 // Find the full strategy name
                 const strategyObj = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === strategy);
                 const strategyName = strategyObj?.strat_name || strategyObj?.strat_title || '';
@@ -701,6 +728,16 @@
                 const countyStrategies = strategiesByCounty[county] || {};
                 const strategyCount = Object.keys(countyStrategies).length;
 
+                // Determine option (check if strategies include planning strategies from Category C)
+                let option = 'Option B'; // Default assumption
+                const hasCollaborativePlanning = Object.entries(countyStrategies).some(([letter, amount]) => {
+                    const strat = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === letter);
+                    return strat && strat.strat_cat_letter === 'C' && amount > 0;
+                });
+                if (hasCollaborativePlanning) {
+                    option = 'Option B';
+                }
+
                 // Get top strategies
                 const topStrategies = Object.entries(countyStrategies)
                     .sort((a, b) => b[1] - a[1])
@@ -709,12 +746,13 @@
                 let html = `
                     <div class="county-breakdown-header">
                         <div class="county-breakdown-name" style="color: ${COUNTY_COLORS[county]}">${county} County</div>
+                        <span style="background: ${COUNTY_COLORS[county]}; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">${option}</span>
                     </div>
 
                     <div class="county-stat-grid">
                         <div class="county-stat">
                             <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">
-                                $${(totalSpending / 1000000).toFixed(2)}M
+                                $${totalSpending.toLocaleString('en-US', { maximumFractionDigits: 0 })}
                             </div>
                             <div class="county-stat-label">Total Spending</div>
                         </div>
