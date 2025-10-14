@@ -1159,7 +1159,37 @@
                 }
 
                 // Richmond & Bladen - high success rates
-                if (county === 'Richmond' || county === 'Bladen') {
+                if (county === 'Richmond') {
+                    if (data.completion_rate || data.employment_rate) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Success Rates (n=30)</h4>
+                            <div class="county-stat-grid">
+                                ${data.completion_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.completion_rate * 100)}%</div>
+                                    <div class="county-stat-label">Completion</div>
+                                </div>` : ''}
+                                ${data.employment_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.employment_rate * 100)}%</div>
+                                    <div class="county-stat-label">Employment</div>
+                                </div>` : ''}
+                                ${data.treatment_adherence_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.treatment_adherence_rate * 100)}%</div>
+                                    <div class="county-stat-label">Treatment Adherence</div>
+                                </div>` : ''}
+                                ${data.after_care_transfer_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.after_care_transfer_rate * 100)}%</div>
+                                    <div class="county-stat-label">Aftercare Transfer</div>
+                                </div>` : ''}
+                            </div>
+                            <div style="padding: 12px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px; margin-top: 10px;">
+                                <p style="color: #856404; font-size: 0.85rem; line-height: 1.5; margin: 0;">
+                                    <strong>Note:</strong> Success rates measured for 30 men who completed Samaritan Colony's 28-day program.
+                                    Rates reflect outcomes at discharge and do not include individuals who dropped out before completion.
+                                </p>
+                            </div>
+                        `);
+                    }
+                } else if (county === 'Bladen') {
                     if (data.completion_rate || data.employment_rate) {
                         sections.push(`
                             <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Success Rates</h4>

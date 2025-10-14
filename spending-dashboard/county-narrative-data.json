@@ -194,9 +194,13 @@
     "Richmond": {
       "people_served": 30,
       "completion_rate": 1.00,
+      "completion_rate_note": "Among program completers (n=30); does not include dropouts",
       "employment_rate": 1.00,
+      "employment_rate_note": "At discharge from 28-day program",
       "treatment_adherence_rate": 1.00,
+      "treatment_adherence_note": "Connected to and adhered during 28-day program",
       "after_care_transfer_rate": 1.00,
+      "after_care_note": "All transferred to aftercare or safe housing at discharge",
       "naloxone_kits": 320,
       "programs": {
         "samaritan_colony": {
@@ -232,9 +236,6 @@
         "max_days": 259
       },
       "opioid_primary_drug": 4,
-      "employment_rate": 1.00,
-      "treatment_adherence_rate": 1.00,
-      "after_care_transfer_rate": 1.00,
       "programs": {
         "strategic_planning": {
           "updated": true,
