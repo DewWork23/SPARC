@@ -478,7 +478,7 @@
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
             // createStrategiesByCountyChart(strategiesByCounty, strategyLookup); // Commented out for now
-            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, focusImpactDetail);
+            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
             createDetailTable(focusCountyData, strategyLookup, categoryLookup);
 
@@ -757,7 +757,7 @@
             });
         }
 
-        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData, impactDetailData) {
+        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData) {
             const container = document.getElementById('countyBreakdownsContainer');
 
             FOCUS_COUNTIES.forEach(county => {
@@ -771,32 +771,25 @@
                 const countyStrategies = strategiesByCounty[county] || {};
                 const strategyCount = Object.keys(countyStrategies).length;
 
-                // Determine option from impact_detail data, prioritizing 2024
+                // Determine option from actual spending data (fin_detail + strategies)
+                // Check which strategy exhibit letters the county is funding
                 let option = 'Unknown';
-                const countyImpactData = impactDetailData.filter(row =>
-                    row.govt_name && row.govt_name.includes(county)
+                const countyFinData = finDetailData.filter(row =>
+                    row.govt_name && row.govt_name.includes(county) && row.fd_strat_funds_applied > 0
                 );
 
-                if (countyImpactData.length > 0) {
-                    // Try to get 2024 data first
-                    let relevantData = countyImpactData.filter(row => row.fy_int === 2024 || row.fy_str === '2024');
-
-                    // If no 2024 data, use most recent year
-                    if (relevantData.length === 0) {
-                        const years = countyImpactData
-                            .map(row => row.fy_int || parseInt(row.fy_str))
-                            .filter(Boolean)
-                            .sort((a, b) => b - a);
-                        if (years.length > 0) {
-                            const mostRecentYear = years[0];
-                            relevantData = countyImpactData.filter(row =>
-                                row.fy_int === mostRecentYear || row.fy_str === mostRecentYear.toString()
-                            );
+                if (countyFinData.length > 0) {
+                    // Get exhibit letters from funded strategies
+                    const exhibitLetters = new Set();
+                    countyFinData.forEach(row => {
+                        const strategy = strategyLookup[row.strat_id_num];
+                        if (strategy && strategy.strat_exhibit_letter) {
+                            exhibitLetters.add(strategy.strat_exhibit_letter);
                         }
-                    }
+                    });
 
-                    // Get unique exhibit letters (options)
-                    const options = [...new Set(relevantData.map(row => row.strat_exhibit_letter).filter(Boolean))].sort();
+                    // Convert to option labels
+                    const options = [...exhibitLetters].sort();
                     if (options.length > 0) {
                         option = options.map(opt => `Option ${opt}`).join(', ');
                     }
