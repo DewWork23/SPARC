@@ -1288,17 +1288,23 @@
                             };
                         }
                     } else if (county === 'Robeson') {
-                        optionStatus.planningStatus = '🔄 In Progress with SPARC/RRCOR';
-                        optionStatus.label = 'High-Impact → Expanding';
+                        optionStatus.badge = 'Option A';
+                        optionStatus.badgeColor = '#ff9800';  // Orange for in-progress
+                        optionStatus.icon = '🔄';
+                        optionStatus.label = 'Preparing for Expansion';
+                        optionStatus.planningStatus = 'Strategic planning with SPARC/RRCOR for FY25';
                     } else if (county === 'Bladen') {
-                        optionStatus.planningStatus = '🔄 Plan Submitted 9/16/24';
-                        optionStatus.label = 'High-Impact → Expanding';
+                        optionStatus.badge = 'Option A';
+                        optionStatus.badgeColor = '#ff9800';  // Orange for submitted
+                        optionStatus.icon = '📋';
+                        optionStatus.label = 'Expansion Plan Submitted';
+                        optionStatus.planningStatus = 'Option B plan submitted 9/16/24, pending approval for FY25';
                     } else if (county === 'Cumberland') {
-                        optionStatus.planningStatus = 'C-FORT Collaborative (8 of 12 strategies used)';
+                        optionStatus.planningStatus = 'C-FORT Collaborative: 8 of 12 Option A strategies';
                     } else if (county === 'Richmond') {
-                        optionStatus.planningStatus = 'DEFT Coordination (3 strategies, 100% success rates)';
+                        optionStatus.planningStatus = 'DEFT Coordination: 3 strategies with 100% success rates';
                     } else if (county === 'Scotland') {
-                        optionStatus.planningStatus = 'Building Infrastructure (Opioid Collaborative)';
+                        optionStatus.planningStatus = 'Capacity Building: Active Opioid Collaborative';
                     }
                 }
 
