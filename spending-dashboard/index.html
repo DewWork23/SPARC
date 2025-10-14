@@ -394,8 +394,9 @@
                 try {
                     const narrativeResponse = await fetch('county-narrative-data.json');
                     narrativeData = await narrativeResponse.json();
+                    console.log('✅ Narrative data loaded successfully:', narrativeData);
                 } catch (narrativeError) {
-                    console.warn('Could not load narrative data:', narrativeError);
+                    console.warn('❌ Could not load narrative data:', narrativeError);
                 }
 
                 // Process data
@@ -783,6 +784,9 @@
 
                 // Get narrative data for this county
                 const countyNarrative = narrativeData?.counties?.[county] || null;
+                if (countyNarrative) {
+                    console.log(`✅ Found narrative data for ${county}:`, countyNarrative);
+                }
 
                 // Determine option from actual spending data (fin_detail + strategies)
                 // Check which strategy exhibit letters the county is funding
