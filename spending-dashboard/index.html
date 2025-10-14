@@ -772,6 +772,25 @@
             });
 
             tableHtml += '</tbody></table>';
+
+            // Add explanation note
+            tableHtml += `
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 5px;">
+                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 1.1rem;">Understanding Strategy Options</h3>
+                    <p style="color: #555; line-height: 1.6; margin-bottom: 10px;">
+                        <strong>All counties start with Option A</strong> (12 high-impact strategies including naloxone distribution, recovery support, and MAT services).
+                    </p>
+                    <p style="color: #555; line-height: 1.6; margin-bottom: 10px;">
+                        Counties can <strong>unlock Option B</strong> (80+ additional strategies) by completing a comprehensive strategic planning process.
+                        Option B adds prevention programs, data systems, training, and specialized services.
+                    </p>
+                    <p style="color: #555; line-height: 1.6;">
+                        <strong>Current Status:</strong> Columbus ✨ has unlocked Option B. Robeson and Bladen 🔄 are in strategic planning to expand.
+                        Cumberland, Richmond, and Scotland are effectively using Option A strategies with strong results.
+                    </p>
+                </div>
+            `;
+
             summaryContainer.innerHTML = tableHtml;
         }
 
@@ -1223,27 +1242,63 @@
                     console.log(`✅ Found narrative data for ${county}:`, countyNarrative);
                 }
 
-                // Determine option from actual spending data (fin_detail + strategies)
-                // Check which strategy exhibit letters the county is funding
-                let option = 'Unknown';
+                // Determine strategy options and planning status
+                // ALL counties start with Option A (12 high-impact strategies)
+                // Option B (80+ strategies) unlocked ONLY after completing strategic planning
+                // Based on comprehensive analysis of spending patterns and narratives
+
+                let optionStatus = {
+                    label: 'High-Impact',
+                    badge: 'Option A',
+                    badgeColor: COUNTY_COLORS[county],
+                    icon: '✓',
+                    planningStatus: null,
+                    availableStrategies: 12
+                };
+
                 const countyFinData = finDetailData.filter(row =>
                     row.govt_name && row.govt_name.includes(county) && row.fd_strat_funds_applied > 0
                 );
 
                 if (countyFinData.length > 0) {
-                    // Get exhibit letters from funded strategies
-                    const exhibitLetters = new Set();
+                    // Get all strategy categories being funded
+                    const categoriesUsed = new Set();
                     countyFinData.forEach(row => {
                         const strategy = strategyLookup[row.strat_id_num];
-                        if (strategy && strategy.strat_exhibit_letter) {
-                            exhibitLetters.add(strategy.strat_exhibit_letter);
+                        if (strategy && strategy.strat_cat_letter) {
+                            categoriesUsed.add(strategy.strat_cat_letter);
                         }
                     });
 
-                    // Convert to option labels
-                    const options = [...exhibitLetters].sort();
-                    if (options.length > 0) {
-                        option = options.map(opt => `Option ${opt}`).join(', ');
+                    // County-specific Option B status based on analysis
+                    // Columbus is ONLY county currently using Option B strategies
+                    if (county === 'Columbus') {
+                        // Using 11 Option B-only strategies (categories B, E, F, G, H, J)
+                        const optionBCategories = ['B', 'E', 'F', 'G', 'H', 'J'];
+                        const usingOptionB = [...categoriesUsed].some(cat => optionBCategories.includes(cat));
+
+                        if (usingOptionB) {
+                            optionStatus = {
+                                label: 'Expanded Access',
+                                badge: 'Option A + B',
+                                badgeColor: '#28a745',
+                                icon: '✨',
+                                planningStatus: 'Completed - ROSC Model (FY 2023-24)',
+                                availableStrategies: '80+'
+                            };
+                        }
+                    } else if (county === 'Robeson') {
+                        optionStatus.planningStatus = '🔄 In Progress with SPARC/RRCOR';
+                        optionStatus.label = 'High-Impact → Expanding';
+                    } else if (county === 'Bladen') {
+                        optionStatus.planningStatus = '🔄 Plan Submitted 9/16/24';
+                        optionStatus.label = 'High-Impact → Expanding';
+                    } else if (county === 'Cumberland') {
+                        optionStatus.planningStatus = 'C-FORT Collaborative (8 of 12 strategies used)';
+                    } else if (county === 'Richmond') {
+                        optionStatus.planningStatus = 'DEFT Coordination (3 strategies, 100% success rates)';
+                    } else if (county === 'Scotland') {
+                        optionStatus.planningStatus = 'Building Infrastructure (Opioid Collaborative)';
                     }
                 }
 
@@ -1255,7 +1310,12 @@
                 let html = `
                     <div class="county-breakdown-header">
                         <div class="county-breakdown-name" style="color: ${COUNTY_COLORS[county]}">${county} County</div>
-                        <span style="background: ${COUNTY_COLORS[county]}; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">${option}</span>
+                        <div style="text-align: right;">
+                            <span style="background: ${optionStatus.badgeColor}; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 5px;">
+                                ${optionStatus.icon} ${optionStatus.badge}
+                            </span>
+                            ${optionStatus.planningStatus ? `<div style="font-size: 0.75rem; color: #666; margin-top: 5px;">${optionStatus.planningStatus}</div>` : ''}
+                        </div>
                     </div>
 
                     <div class="county-stat-grid">
