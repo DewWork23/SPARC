@@ -1924,7 +1924,7 @@
                         <tr>
                             <td>${displayName}</td>
                             <td>${categoryName}</td>
-                            <td>$${(row.fd_strat_funds_applied || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td>$${formatNumber(parseFloat(row.fd_strat_funds_applied) || 0, 2)}</td>
                             <td>${row.fy_str || row.fy_int || 'N/A'}</td>
                         </tr>`;
                 });
