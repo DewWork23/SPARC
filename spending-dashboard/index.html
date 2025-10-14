@@ -504,20 +504,8 @@
 
                 <div class="chart-card full-width">
                     <h2 class="chart-title">Detailed Spending Breakdown</h2>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="detailTable">
-                            <thead>
-                                <tr>
-                                    <th>County</th>
-                                    <th>Strategy</th>
-                                    <th>Category</th>
-                                    <th>Amount</th>
-                                    <th>Fiscal Year</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                    <div id="detailTabsContainer"></div>
+                    <div id="detailTablesContainer"></div>
                 </div>
                 </div>
             </div>
@@ -1868,38 +1856,100 @@
         }
 
         function createDetailTable(data, strategyLookup, categoryLookup) {
-            const tbody = document.querySelector('#detailTable tbody');
+            // Group data by county
+            const countyData = {};
+            FOCUS_COUNTIES.forEach(county => { countyData[county] = []; });
 
-            // Sort by county then amount
-            const sortedData = data
-                .filter(row => row.fd_strat_funds_applied > 0)
-                .sort((a, b) => {
-                    const countyA = extractCountyName(a.govt_name);
-                    const countyB = extractCountyName(b.govt_name);
-                    if (countyA !== countyB) {
-                        return countyA.localeCompare(countyB);
-                    }
-                    return (b.fd_strat_funds_applied || 0) - (a.fd_strat_funds_applied || 0);
+            data.filter(row => row.fd_strat_funds_applied > 0).forEach(row => {
+                const county = extractCountyName(row.govt_name);
+                if (county && countyData[county]) {
+                    countyData[county].push(row);
+                }
+            });
+
+            // Get list of counties that have data
+            const countiesWithData = FOCUS_COUNTIES.filter(county =>
+                countyData[county] && countyData[county].length > 0
+            );
+
+            // Create tabs
+            const tabsContainer = document.getElementById('detailTabsContainer');
+            let tabsHtml = '<div class="narrative-tabs">';
+            countiesWithData.forEach((county, index) => {
+                const isFirst = index === 0;
+                tabsHtml += `<button class="narrative-tab detail-tab ${isFirst ? 'active' : ''}"
+                    style="background-color: ${isFirst ? COUNTY_COLORS[county] : '#f8f9fa'};"
+                    data-county="${county}">${county} County</button>`;
+            });
+            tabsHtml += '</div>';
+            tabsContainer.innerHTML = tabsHtml;
+
+            // Create tables for each county
+            const tablesContainer = document.getElementById('detailTablesContainer');
+            let tablesHtml = '';
+
+            countiesWithData.forEach((county, index) => {
+                const isFirst = index === 0;
+                const sortedCountyData = countyData[county].sort((a, b) =>
+                    (b.fd_strat_funds_applied || 0) - (a.fd_strat_funds_applied || 0)
+                );
+
+                tablesHtml += `
+                    <div class="narrative-content ${isFirst ? 'active' : ''}" data-county="${county}">
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Fiscal Year</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                sortedCountyData.forEach(row => {
+                    const strategy = strategyLookup[row.strat_id_num] || {};
+                    const categoryName = categoryLookup[strategy.strat_cat_letter] || strategy.strat_cat_letter || 'N/A';
+                    const strategyName = strategy.strat_name || strategy.strat_title || '';
+                    const strategyLetter = strategy.strat_exhibit_letter || row.strat_id_num;
+                    const displayName = strategyName ? `${strategyName} (${strategyLetter})` : `Strategy ${strategyLetter}`;
+
+                    tablesHtml += `
+                        <tr>
+                            <td>${displayName}</td>
+                            <td>${categoryName}</td>
+                            <td>$${(row.fd_strat_funds_applied || 0).toLocaleString()}</td>
+                            <td>${row.fy_str || row.fy_int || 'N/A'}</td>
+                        </tr>`;
                 });
 
-            sortedData.slice(0, 50).forEach(row => {
-                const tr = document.createElement('tr');
-                const strategy = strategyLookup[row.strat_id_num] || {};
-                const categoryName = categoryLookup[strategy.strat_cat_letter] || strategy.strat_cat_letter || 'N/A';
+                tablesHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            });
 
-                const strategyName = strategy.strat_name || strategy.strat_title || '';
-                const strategyLetter = strategy.strat_exhibit_letter || row.strat_id_num;
-                const displayName = strategyName ? `${strategyName} (${strategyLetter})` : `Strategy ${strategyLetter}`;
+            tablesContainer.innerHTML = tablesHtml;
 
-                tr.innerHTML = `
-                    <td>${extractCountyName(row.govt_name) || row.govt_name}</td>
-                    <td>${displayName}</td>
-                    <td>${categoryName}</td>
-                    <td>$${(row.fd_strat_funds_applied || 0).toLocaleString()}</td>
-                    <td>${row.fy_str || row.fy_int || 'N/A'}</td>
-                `;
+            // Add click handlers
+            const tabs = document.querySelectorAll('.detail-tab');
+            const contents = document.querySelectorAll('#detailTablesContainer .narrative-content');
 
-                tbody.appendChild(tr);
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const county = tab.dataset.county;
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.style.backgroundColor = '#f8f9fa';
+                    });
+                    tab.classList.add('active');
+                    tab.style.backgroundColor = COUNTY_COLORS[county];
+
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.querySelector(`#detailTablesContainer .narrative-content[data-county="${county}"]`).classList.add('active');
+                });
             });
         }
 
