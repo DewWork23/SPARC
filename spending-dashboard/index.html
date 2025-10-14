@@ -375,6 +375,7 @@
         // Load and process Excel file
         async function loadData() {
             try {
+                // Load Excel data
                 const response = await fetch('CORE-NC Opioid Settlement Public Data Tables.xlsx');
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
@@ -388,8 +389,17 @@
                 const impactSummarySheet = XLSX.utils.sheet_to_json(workbook.Sheets['impact_summary']);
                 const impactDetailSheet = XLSX.utils.sheet_to_json(workbook.Sheets['impact_detail']);
 
+                // Load narrative data from JSON
+                let narrativeData = null;
+                try {
+                    const narrativeResponse = await fetch('county-narrative-data.json');
+                    narrativeData = await narrativeResponse.json();
+                } catch (narrativeError) {
+                    console.warn('Could not load narrative data:', narrativeError);
+                }
+
                 // Process data
-                processData(govtsSheet, strategiesSheet, categoriesSheet, finDetailSheet, paymentsSheet, impactSummarySheet, impactDetailSheet);
+                processData(govtsSheet, strategiesSheet, categoriesSheet, finDetailSheet, paymentsSheet, impactSummarySheet, impactDetailSheet, narrativeData);
 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -400,7 +410,7 @@
             }
         }
 
-        function processData(govts, strategies, categories, finDetail, payments, impactSummary, impactDetail) {
+        function processData(govts, strategies, categories, finDetail, payments, impactSummary, impactDetail, narrativeData) {
             // Filter data for focus counties
             const focusCountyData = finDetail.filter(row => {
                 const govtName = row.govt_name || '';
@@ -478,7 +488,7 @@
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
             // createStrategiesByCountyChart(strategiesByCounty, strategyLookup); // Commented out for now
-            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData);
+            createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, narrativeData);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
             createDetailTable(focusCountyData, strategyLookup, categoryLookup);
 
@@ -757,7 +767,7 @@
             });
         }
 
-        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData) {
+        function createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, finDetailData, narrativeData) {
             const container = document.getElementById('countyBreakdownsContainer');
 
             FOCUS_COUNTIES.forEach(county => {
@@ -770,6 +780,9 @@
                 const totalSpending = spendingByCounty[county];
                 const countyStrategies = strategiesByCounty[county] || {};
                 const strategyCount = Object.keys(countyStrategies).length;
+
+                // Get narrative data for this county
+                const countyNarrative = narrativeData?.counties?.[county] || null;
 
                 // Determine option from actual spending data (fin_detail + strategies)
                 // Check which strategy exhibit letters the county is funding
@@ -817,6 +830,87 @@
                             <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${strategyCount}</div>
                             <div class="county-stat-label">Strategies Funded</div>
                         </div>
+                `;
+
+                // Add narrative metrics if available
+                if (countyNarrative) {
+                    if (countyNarrative.people_served) {
+                        html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.people_served.toLocaleString()}</div>
+                            <div class="county-stat-label">People Served</div>
+                        </div>
+                        `;
+                    }
+                    if (countyNarrative.naloxone_kits) {
+                        html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.naloxone_kits.toLocaleString()}</div>
+                            <div class="county-stat-label">Naloxone Kits Distributed</div>
+                        </div>
+                        `;
+                    }
+                    if (countyNarrative.treatment_days) {
+                        html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.treatment_days.toLocaleString()}</div>
+                            <div class="county-stat-label">Treatment Days</div>
+                        </div>
+                        `;
+                    }
+                    // Add key outcome metrics
+                    if (countyNarrative.outcomes) {
+                        if (countyNarrative.outcomes.treatment_referrals) {
+                            html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.outcomes.treatment_referrals.toLocaleString()}</div>
+                            <div class="county-stat-label">Treatment Referrals</div>
+                        </div>
+                            `;
+                        }
+                        if (countyNarrative.outcomes.total_contacts) {
+                            html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.outcomes.total_contacts.toLocaleString()}</div>
+                            <div class="county-stat-label">Total Contacts</div>
+                        </div>
+                            `;
+                        }
+                    }
+                    // Add treatment metrics for Robeson
+                    if (countyNarrative.treatment) {
+                        const totalTreatment = (countyNarrative.treatment.inpatient || 0) +
+                                              (countyNarrative.treatment.outpatient || 0);
+                        if (totalTreatment > 0) {
+                            html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${totalTreatment}</div>
+                            <div class="county-stat-label">Treatment Services</div>
+                        </div>
+                            `;
+                        }
+                    }
+                    // Add overdose reduction for Robeson
+                    if (countyNarrative.overdose_reduction && countyNarrative.overdose_reduction.reduction_percent) {
+                        html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.overdose_reduction.reduction_percent}%</div>
+                            <div class="county-stat-label">ED Visit Reduction</div>
+                        </div>
+                        `;
+                    }
+                    // Add completion rate for Richmond and Bladen
+                    if (countyNarrative.completion_rate) {
+                        html += `
+                        <div class="county-stat">
+                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${(countyNarrative.completion_rate * 100)}%</div>
+                            <div class="county-stat-label">Completion Rate</div>
+                        </div>
+                        `;
+                    }
+                }
+
+                html += `
                     </div>
 
                     <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1.1rem;">Top Strategies:</h4>

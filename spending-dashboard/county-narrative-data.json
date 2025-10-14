@@ -1,0 +1,329 @@
+{
+  "fiscal_year": "2023-2024",
+  "counties": {
+    "Cumberland": {
+      "people_served": 981,
+      "naloxone_kits": 1492,
+      "naloxone_training_sessions": 812,
+      "people_reached_outreach": 749,
+      "outcomes": {
+        "treatment_referrals": 232,
+        "recovery_connections": 506,
+        "harm_reduction_referrals": 833,
+        "primary_healthcare": 57,
+        "other_service_referrals": 904,
+        "total_contacts": 2840
+      },
+      "programs": {
+        "diversion": {
+          "enrolled": 88,
+          "placements": 17
+        },
+        "detention_mat": {
+          "served": 76,
+          "staff": {
+            "lcsw": 1,
+            "peer_support": 1
+          }
+        },
+        "reentry": {
+          "enrolled": 838,
+          "assessments": 267,
+          "case_management_meetings": 8010
+        },
+        "employment": {
+          "served": 175,
+          "workshops": 12,
+          "transportation_requests": 56
+        },
+        "recovery_housing": {
+          "served": 49,
+          "rent_assistance": 40
+        }
+      },
+      "staff": {
+        "peer_support_specialists": 10
+      },
+      "innovations": [
+        "LEAD Program (Law Enforcement Assisted Diversion)",
+        "Naloxone vending machine at detention center",
+        "Detention Center MAT Program",
+        "Recovery Housing Network"
+      ],
+      "partnerships": [
+        "C-FORT",
+        "NC Harm Reduction Coalition",
+        "Carolina Treatment Center",
+        "Goshen Medical Services",
+        "Myrover-Reese Fellowship Homes",
+        "Cape Fear Valley Health"
+      ],
+      "success_stories": [
+        {
+          "id": "Joey",
+          "summary": "40-year-old homeless man → LEAD Program → warrant resolved → transitional housing → full-time employment → independent housing"
+        },
+        {
+          "id": "Case 7298",
+          "summary": "Domestic violence survivor → hotel living → CTC support → budget training → affordable home → new job → maintains housing and sobriety"
+        },
+        {
+          "id": "Case 2168",
+          "summary": "PTSD sufferer → grant-funded housing deposit → safe environment → active in treatment"
+        },
+        {
+          "id": "Case 6817",
+          "summary": "DV/SUD survivor → recovery journey → became Peer Support Specialist → now helping others"
+        },
+        {
+          "id": "Joseph",
+          "summary": "7+ years on MAT → Myrover-Reese → detox → 12-step → employment → head of household → still volunteers weekly"
+        }
+      ]
+    },
+    "Robeson": {
+      "people_served": 184,
+      "treatment": {
+        "inpatient": 72,
+        "outpatient": 112,
+        "mat_services": 72
+      },
+      "overdose_reduction": {
+        "ed_visits_previous": 65,
+        "ed_visits_current": 48,
+        "reduction_percent": 26
+      },
+      "naloxone_kits": 500,
+      "jail_services": {
+        "detainees_identified": 250,
+        "treatment_referrals": 70,
+        "patients_returned_for_help": 30
+      },
+      "employment_transportation": 128,
+      "innovations": [
+        "Breeches Buoy Hospital Program at UNC Health Southeastern",
+        "Jail Health Care Navigation",
+        "SEATS Transportation",
+        "Post-Overdose Response Team (PORT)"
+      ],
+      "partnerships": [
+        "RRCOR Consortium",
+        "SPARC (Southeastern Prevention & Addiction Recovery Center)",
+        "UNC Health Southeastern"
+      ],
+      "investment_note": "Over $300,000 invested in recovery support services",
+      "success_stories": [
+        {
+          "id": "Hospital Patient",
+          "summary": "Initially declined inpatient → received MAT & outpatient → learned disease progressed → long-term inpatient with MAT → 6+ months clean → healthy, happy, thriving"
+        },
+        {
+          "id": "Jail to Recovery",
+          "summary": "Incarcerated → adult treatment court → residential (Charlotte) → peer support → local facility → Oxford House → ankle monitor removed → full-time employment → maintains recovery"
+        }
+      ]
+    },
+    "Columbus": {
+      "people_served": 86,
+      "treatment_days": 1631,
+      "demographics": {
+        "men": 57,
+        "women": 29
+      },
+      "substance_use_breakdown": {
+        "opioids": "51%",
+        "crack_cocaine": "20%",
+        "alcohol": "17%",
+        "methamphetamine": "10%",
+        "opioids_benzos": "3%"
+      },
+      "outcomes": {
+        "ems_overdose_calls_change": -0.11,
+        "naloxone_admin_change": -0.10,
+        "ed_visits_change": -0.39,
+        "deaths_fy23": 8,
+        "deaths_fy24": 3,
+        "fentanyl_calls_percent": 61
+      },
+      "programs": {
+        "call_center": {
+          "calls_taken": 97
+        },
+        "nas_training": {
+          "participants": 59,
+          "learned_new_info_percent": 100
+        },
+        "prescriber_training": {
+          "participants": 59,
+          "learned_new_info_percent": 100,
+          "sessions_total": 9,
+          "sessions_completed": 5
+        },
+        "school_prevention": {
+          "students_trained": 575,
+          "teachers_trained": 14,
+          "program": "Botkin LifeSkills Training"
+        },
+        "transportation": {
+          "individuals_transported": 2
+        }
+      },
+      "innovations": [
+        "Healing Place Partnership (10-12 beds/day)",
+        "24/7 Crisis Phone Line",
+        "FirstWatch Database (EMS tracking across 5 departments)",
+        "Botkin LifeSkills Training",
+        "Dr. Chasnoff NAS Training",
+        "Prescriber Training Series",
+        "Adult Drug Court Development",
+        "Opioid Steering Committee",
+        "Grants Manager Position"
+      ],
+      "partnerships": [
+        "Healing Place of New Hanover County",
+        "Columbus Regional Healthcare"
+      ],
+      "future_plans": "Columbus Regional Healthcare considering 4th floor conversion to MH/SUD/OUD unit",
+      "success_stories": [
+        {
+          "id": "Physician Quote",
+          "summary": "Great day, learned a lot. Dr. Chasnoff took a complicated subject and was able to make it meaningful"
+        }
+      ]
+    },
+    "Richmond": {
+      "people_served": 30,
+      "completion_rate": 1.00,
+      "employment_rate": 1.00,
+      "treatment_adherence_rate": 1.00,
+      "after_care_transfer_rate": 1.00,
+      "naloxone_kits": 320,
+      "programs": {
+        "samaritan_colony": {
+          "duration_days": 28,
+          "model": "Inpatient residential treatment"
+        },
+        "deft": {
+          "description": "Drug Endangered Family Task Force",
+          "activities": ["Strategic plan", "Online database", "Website", "Monthly meetings"]
+        }
+      },
+      "partnerships": [
+        "Samaritan Colony (Aberdeen, NC)",
+        "DEFT (Drug Endangered Family Task Force)"
+      ],
+      "success_stories": [
+        {
+          "id": "Young African American Male",
+          "summary": "Diagnosed with OUD → transitional house → Samaritan Colony (28 days intensive) → Aberdeen recovery home → 12-step program → employed by previous client's company → continues growth → leads by example"
+        },
+        {
+          "id": "22-year-old Male",
+          "summary": "Relapsed → received naloxone through settlement funds → naloxone saved his life → re-entered treatment → doing well today"
+        }
+      ]
+    },
+    "Bladen": {
+      "people_served": 8,
+      "treatment_days": 1007,
+      "average_length_of_stay_days": 125.87,
+      "stay_range": {
+        "min_days": 6,
+        "max_days": 259
+      },
+      "opioid_primary_drug": 4,
+      "employment_rate": 1.00,
+      "treatment_adherence_rate": 1.00,
+      "after_care_transfer_rate": 1.00,
+      "programs": {
+        "strategic_planning": {
+          "updated": true,
+          "expansion": "Option B strategies",
+          "coverage": "FY2025-2027"
+        },
+        "healing_place": {
+          "services": ["24/7 detox", "Short-term treatment", "Long-term recovery support"],
+          "mat_available": true
+        }
+      },
+      "partnerships": [
+        "Healing Place of New Hanover County",
+        "Trillium Health Resources (MAT grant)"
+      ],
+      "success_stories": [
+        {
+          "id": "32-year-old Woman",
+          "summary": "Using fentanyl → Healing Place → stayed 219 continuous days without relapse → MAT (naltrexone) for 3.5 months → remained in recovery"
+        }
+      ]
+    },
+    "Scotland": {
+      "population": 35000,
+      "phase": "Capacity building and infrastructure development",
+      "spending": 3756,
+      "programs": {
+        "opioid_collaborative": {
+          "frequency": "Bi-monthly (3rd Monday at 2:00 PM)",
+          "access": "Virtual or in-person, open to public",
+          "partners": [
+            "County Health Department",
+            "EMS",
+            "Sheriff's Office",
+            "Department of Social Services",
+            "911",
+            "Board of County Commissioners",
+            "Laurinburg Police Department",
+            "Laurinburg Fire Department",
+            "Scotland County Schools",
+            "Scotland Health Care System",
+            "Scotland County Court System",
+            "Media",
+            "Eastpointe",
+            "Trillium"
+          ],
+          "longevity": "Multiple years with sustained participation"
+        },
+        "programs_being_developed": [
+          "Opioid Outreach Program",
+          "Family Treatment Court",
+          "Naloxone Distribution Program (all first responders equipped)",
+          "Safe Choices Program (PreK-12th grade prevention)"
+        ]
+      },
+      "community_engagement": {
+        "annual_meeting_2023": {
+          "date": "2023-10-16",
+          "description": "Higher attendance than previous years, NC Association of County Commissioners representative participated"
+        }
+      },
+      "success_stories": [
+        {
+          "id": "Opioid Collaborative",
+          "summary": "Sustained collaborative over multiple years despite member turnover, agencies consistently fill gaps, continues to meet and plan together"
+        }
+      ]
+    }
+  },
+  "regional_totals": {
+    "people_served": 2168,
+    "naloxone_kits": 2312,
+    "treatment_days": 2638
+  },
+  "calculated_metrics": {
+    "cost_per_person": {
+      "Cumberland": 262,
+      "Robeson": 3341,
+      "Columbus": 5435,
+      "Richmond": 8991,
+      "Bladen": 20133,
+      "Scotland": "TBD (infrastructure phase)"
+    },
+    "efficiency_ranking": [
+      "Cumberland (most efficient)",
+      "Robeson",
+      "Columbus",
+      "Richmond",
+      "Bladen"
+    ]
+  }
+}
