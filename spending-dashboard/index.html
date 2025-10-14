@@ -275,6 +275,142 @@
             display: block;
         }
 
+        /* Main Tab Navigation */
+        .main-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .main-tab {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-tab:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .main-tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .main-tab-content {
+            display: none;
+        }
+
+        .main-tab-content.active {
+            display: block;
+        }
+
+        /* Overview Tab Styles */
+        .overview-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .metric-sublabel {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Success Stories Gallery */
+        .success-stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .success-story-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .success-story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .success-story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .success-story-id {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .success-story-county {
+            padding: 5px 12px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .success-story-summary {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -283,18 +419,27 @@
             .header h1 {
                 font-size: 2rem;
             }
+
+            .main-tabs {
+                flex-direction: column;
+            }
+
+            .main-tab {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>SPARC Spending & Strategy Dashboard</h1>
-            <p>Opioid Settlement Spending Analysis</p>
+            <h1>Southeastern NC Opioid Response Dashboard</h1>
+            <p>Investment & Impact Analysis</p>
         </div>
 
         <div class="counties-list">
-            Focus Counties: Robeson, Cumberland, Scotland, Richmond, Bladen, Columbus
+            Robeson • Cumberland • Scotland • Richmond • Bladen • Columbus
         </div>
 
         <div id="loading" class="loading">
@@ -304,7 +449,37 @@
         <div id="error" style="display: none;" class="error"></div>
 
         <div id="dashboard" style="display: none;">
-            <div class="dashboard-grid">
+            <!-- Main Tab Navigation -->
+            <div class="main-tabs">
+                <button class="main-tab active" data-tab="overview">
+                    <span>📊</span> Overview
+                </button>
+                <button class="main-tab" data-tab="spending">
+                    <span>💰</span> Spending Analysis
+                </button>
+                <button class="main-tab" data-tab="outcomes">
+                    <span>📈</span> Outcomes & Impact
+                </button>
+                <button class="main-tab" data-tab="stories">
+                    <span>🏆</span> Success Stories
+                </button>
+                <button class="main-tab" data-tab="counties">
+                    <span>📍</span> County Profiles
+                </button>
+            </div>
+
+            <!-- Tab 1: Overview -->
+            <div id="tab-overview" class="main-tab-content active">
+                <div class="overview-metrics" id="overviewMetricsContainer"></div>
+                <div class="chart-card">
+                    <h2 class="chart-title">Regional Impact Summary</h2>
+                    <div id="overviewSummaryContainer"></div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Spending Analysis -->
+            <div id="tab-spending" class="main-tab-content">
+                <div class="dashboard-grid">
                 <div class="chart-card">
                     <h2 class="chart-title">Total Spending by County</h2>
                     <div class="chart-container">
@@ -328,16 +503,6 @@
                 -->
 
                 <div class="chart-card full-width">
-                    <h2 class="chart-title">County Spending Breakdowns</h2>
-                    <div class="county-breakdown-grid" id="countyBreakdownsContainer"></div>
-                </div>
-
-                <div class="chart-card full-width">
-                    <h2 class="chart-title">County Narratives & Strategy Progress</h2>
-                    <div id="narrativesContainer"></div>
-                </div>
-
-                <div class="chart-card full-width">
                     <h2 class="chart-title">Detailed Spending Breakdown</h2>
                     <div style="overflow-x: auto;">
                         <table class="data-table" id="detailTable">
@@ -353,6 +518,39 @@
                             <tbody></tbody>
                         </table>
                     </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Outcomes & Impact -->
+            <div id="tab-outcomes" class="main-tab-content">
+                <div class="chart-card full-width">
+                    <h2 class="chart-title">People Served & Naloxone Distribution</h2>
+                    <div id="outcomesChartsContainer" class="dashboard-grid"></div>
+                </div>
+                <div class="chart-card full-width">
+                    <h2 class="chart-title">Treatment Outcomes by County</h2>
+                    <div id="treatmentOutcomesContainer"></div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Success Stories -->
+            <div id="tab-stories" class="main-tab-content">
+                <div class="chart-card full-width">
+                    <h2 class="chart-title">Success Stories Gallery</h2>
+                    <div class="success-stories-grid" id="successStoriesContainer"></div>
+                </div>
+            </div>
+
+            <!-- Tab 5: County Profiles -->
+            <div id="tab-counties" class="main-tab-content">
+                <div class="chart-card full-width">
+                    <h2 class="chart-title">County Deep Dive Profiles</h2>
+                    <div class="county-breakdown-grid" id="countyBreakdownsContainer"></div>
+                </div>
+                <div class="chart-card full-width">
+                    <h2 class="chart-title">County Narratives & Strategy Progress</h2>
+                    <div id="narrativesContainer"></div>
                 </div>
             </div>
         </div>
@@ -485,17 +683,254 @@
                 return FOCUS_COUNTIES.some(county => govtName.includes(county));
             });
 
-            // Create visualizations
+            // Create visualizations for all tabs
+            createOverviewTab(spendingByCounty, narrativeData);
             createSpendingByCountyChart(spendingByCounty);
             createStrategyCategoryChart(spendingByCategory, categoryLookup);
-            // createStrategiesByCountyChart(strategiesByCounty, strategyLookup); // Commented out for now
+            createDetailTable(focusCountyData, strategyLookup, categoryLookup);
+            createOutcomesTab(narrativeData);
+            createSuccessStoriesGallery(narrativeData);
             createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, narrativeData);
             createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
-            createDetailTable(focusCountyData, strategyLookup, categoryLookup);
+
+            // Setup tab navigation
+            setupTabNavigation();
 
             // Hide loading, show dashboard
             document.getElementById('loading').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function setupTabNavigation() {
+            const tabs = document.querySelectorAll('.main-tab');
+            const tabContents = document.querySelectorAll('.main-tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    document.getElementById(`tab-${targetTab}`).classList.add('active');
+                });
+            });
+        }
+
+        function createOverviewTab(spendingByCounty, narrativeData) {
+            // Calculate regional totals
+            const totalSpending = Object.values(spendingByCounty).reduce((sum, val) => sum + val, 0);
+            const totalPeopleServed = narrativeData?.regional_totals?.people_served || 0;
+            const totalNaloxoneKits = narrativeData?.regional_totals?.naloxone_kits || 0;
+            const totalTreatmentDays = narrativeData?.regional_totals?.treatment_days || 0;
+            const countiesServing = Object.keys(spendingByCounty).length;
+
+            // Create metric cards
+            const container = document.getElementById('overviewMetricsContainer');
+            const metrics = [
+                { number: `$${(totalSpending / 1000000).toFixed(2)}M`, label: 'Total Investment', sublabel: 'Opioid Settlement Funds' },
+                { number: totalPeopleServed.toLocaleString() + '+', label: 'People Served', sublabel: 'Across all counties' },
+                { number: totalNaloxoneKits.toLocaleString() + '+', label: 'Naloxone Kits', sublabel: 'Distributed to community' },
+                { number: totalTreatmentDays.toLocaleString() + '+', label: 'Treatment Days', sublabel: 'Provided to residents' },
+                { number: countiesServing, label: 'Counties Active', sublabel: 'Implementing programs' }
+            ];
+
+            container.innerHTML = metrics.map(metric => `
+                <div class="metric-card">
+                    <div class="metric-number">${metric.number}</div>
+                    <div class="metric-label">${metric.label}</div>
+                    <div class="metric-sublabel">${metric.sublabel}</div>
+                </div>
+            `).join('');
+
+            // Create summary table
+            const summaryContainer = document.getElementById('overviewSummaryContainer');
+            const sortedCounties = Object.entries(spendingByCounty).sort((a, b) => b[1] - a[1]);
+
+            let tableHtml = '<table class="data-table"><thead><tr><th>Rank</th><th>County</th><th>Investment</th><th>People Served</th><th>Naloxone Kits</th><th>Cost/Person</th></tr></thead><tbody>';
+
+            sortedCounties.forEach(([county, spending], index) => {
+                const countyData = narrativeData?.counties?.[county];
+                const peopleServed = countyData?.people_served || 'N/A';
+                const naloxoneKits = countyData?.naloxone_kits || 'N/A';
+                const costPerPerson = peopleServed && peopleServed !== 'N/A' ?
+                    `$${Math.round(spending / peopleServed).toLocaleString()}` : 'N/A';
+
+                tableHtml += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td style="font-weight: 600; color: ${COUNTY_COLORS[county]}">${county}</td>
+                        <td>$${spending.toLocaleString()}</td>
+                        <td>${typeof peopleServed === 'number' ? peopleServed.toLocaleString() : peopleServed}</td>
+                        <td>${typeof naloxoneKits === 'number' ? naloxoneKits.toLocaleString() : naloxoneKits}</td>
+                        <td>${costPerPerson}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += '</tbody></table>';
+            summaryContainer.innerHTML = tableHtml;
+        }
+
+        function createSuccessStoriesGallery(narrativeData) {
+            const container = document.getElementById('successStoriesContainer');
+            if (!narrativeData?.counties) return;
+
+            let storiesHtml = '';
+            Object.entries(narrativeData.counties).forEach(([county, data]) => {
+                if (data.success_stories && data.success_stories.length > 0) {
+                    data.success_stories.forEach(story => {
+                        storiesHtml += `
+                            <div class="success-story-card" style="border-left-color: ${COUNTY_COLORS[county]}">
+                                <div class="success-story-header">
+                                    <div class="success-story-id">${story.id}</div>
+                                    <div class="success-story-county" style="background: ${COUNTY_COLORS[county]}">${county}</div>
+                                </div>
+                                <div class="success-story-summary">${story.summary}</div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            container.innerHTML = storiesHtml || '<p style="text-align: center; color: #666;">No success stories available.</p>';
+        }
+
+        function createOutcomesTab(narrativeData) {
+            if (!narrativeData?.counties) return;
+
+            // Create charts for people served and naloxone distribution
+            const chartsContainer = document.getElementById('outcomesChartsContainer');
+            chartsContainer.innerHTML = `
+                <div class="chart-card">
+                    <h2 class="chart-title">People Served by County</h2>
+                    <div class="chart-container">
+                        <canvas id="peopleServedChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2 class="chart-title">Naloxone Kits Distributed</h2>
+                    <div class="chart-container">
+                        <canvas id="naloxoneChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            // People served chart
+            const peopleServedData = {};
+            const naloxoneData = {};
+
+            Object.entries(narrativeData.counties).forEach(([county, data]) => {
+                if (data.people_served) peopleServedData[county] = data.people_served;
+                if (data.naloxone_kits) naloxoneData[county] = data.naloxone_kits;
+            });
+
+            // Create people served chart
+            if (Object.keys(peopleServedData).length > 0) {
+                const ctx = document.getElementById('peopleServedChart').getContext('2d');
+                const counties = Object.keys(peopleServedData);
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: counties,
+                        datasets: [{
+                            label: 'People Served',
+                            data: counties.map(c => peopleServedData[c]),
+                            backgroundColor: counties.map(c => COUNTY_COLORS[c] + '80'),
+                            borderColor: counties.map(c => COUNTY_COLORS[c]),
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: (value) => value.toLocaleString(),
+                                font: { weight: 'bold', size: 12 },
+                                color: (context) => COUNTY_COLORS[counties[context.dataIndex]]
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // Create naloxone chart
+            if (Object.keys(naloxoneData).length > 0) {
+                const ctx = document.getElementById('naloxoneChart').getContext('2d');
+                const counties = Object.keys(naloxoneData);
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: counties,
+                        datasets: [{
+                            label: 'Naloxone Kits',
+                            data: counties.map(c => naloxoneData[c]),
+                            backgroundColor: counties.map(c => COUNTY_COLORS[c] + '80'),
+                            borderColor: counties.map(c => COUNTY_COLORS[c]),
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: (value) => value.toLocaleString(),
+                                font: { weight: 'bold', size: 12 },
+                                color: (context) => COUNTY_COLORS[counties[context.dataIndex]]
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // Treatment outcomes table
+            const outcomesContainer = document.getElementById('treatmentOutcomesContainer');
+            let tableHtml = '<table class="data-table"><thead><tr><th>County</th><th>Key Outcomes</th></tr></thead><tbody>';
+
+            Object.entries(narrativeData.counties).forEach(([county, data]) => {
+                let outcomes = [];
+                if (data.outcomes) {
+                    if (data.outcomes.treatment_referrals) outcomes.push(`${data.outcomes.treatment_referrals} Treatment Referrals`);
+                    if (data.outcomes.total_contacts) outcomes.push(`${data.outcomes.total_contacts.toLocaleString()} Total Contacts`);
+                }
+                if (data.overdose_reduction?.reduction_percent) {
+                    outcomes.push(`${data.overdose_reduction.reduction_percent}% ED Visit Reduction`);
+                }
+                if (data.completion_rate) {
+                    outcomes.push(`${(data.completion_rate * 100)}% Completion Rate`);
+                }
+
+                if (outcomes.length > 0) {
+                    tableHtml += `
+                        <tr>
+                            <td style="font-weight: 600; color: ${COUNTY_COLORS[county]}">${county}</td>
+                            <td>${outcomes.join(' • ')}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            tableHtml += '</tbody></table>';
+            outcomesContainer.innerHTML = tableHtml;
         }
 
         function extractCountyName(govtName) {
