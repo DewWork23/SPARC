@@ -921,35 +921,325 @@
                 });
             }
 
-            // Treatment outcomes table
+            // Treatment outcomes - detailed county cards
             const outcomesContainer = document.getElementById('treatmentOutcomesContainer');
-            let tableHtml = '<table class="data-table"><thead><tr><th>County</th><th>Key Outcomes</th></tr></thead><tbody>';
+            let outcomesHtml = '<div class="county-breakdown-grid" style="margin-top: 0;">';
 
             Object.entries(narrativeData.counties).forEach(([county, data]) => {
-                let outcomes = [];
-                if (data.outcomes) {
-                    if (data.outcomes.treatment_referrals) outcomes.push(`${data.outcomes.treatment_referrals} Treatment Referrals`);
-                    if (data.outcomes.total_contacts) outcomes.push(`${data.outcomes.total_contacts.toLocaleString()} Total Contacts`);
-                }
-                if (data.overdose_reduction?.reduction_percent) {
-                    outcomes.push(`${data.overdose_reduction.reduction_percent}% ED Visit Reduction`);
-                }
-                if (data.completion_rate) {
-                    outcomes.push(`${(data.completion_rate * 100)}% Completion Rate`);
+                outcomesHtml += `
+                    <div class="county-breakdown-card" style="border-top-color: ${COUNTY_COLORS[county]}">
+                        <div class="county-breakdown-header">
+                            <div class="county-breakdown-name" style="color: ${COUNTY_COLORS[county]}">${county} County</div>
+                        </div>
+                `;
+
+                // Build outcome sections based on what data is available
+                let sections = [];
+
+                // Cumberland - detailed outcomes
+                if (county === 'Cumberland' && data.outcomes) {
+                    sections.push(`
+                        <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Service Connections</h4>
+                        <div class="county-stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+                            ${data.outcomes.treatment_referrals ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.treatment_referrals}</div>
+                                <div class="county-stat-label">Treatment Referrals</div>
+                            </div>` : ''}
+                            ${data.outcomes.recovery_connections ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.recovery_connections}</div>
+                                <div class="county-stat-label">Recovery Connections</div>
+                            </div>` : ''}
+                            ${data.outcomes.harm_reduction_referrals ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.harm_reduction_referrals}</div>
+                                <div class="county-stat-label">Harm Reduction</div>
+                            </div>` : ''}
+                            ${data.outcomes.primary_healthcare ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.primary_healthcare}</div>
+                                <div class="county-stat-label">Primary Healthcare</div>
+                            </div>` : ''}
+                            ${data.outcomes.other_service_referrals ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.other_service_referrals}</div>
+                                <div class="county-stat-label">Other Services</div>
+                            </div>` : ''}
+                            ${data.outcomes.total_contacts ? `<div class="county-stat">
+                                <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.outcomes.total_contacts.toLocaleString()}</div>
+                                <div class="county-stat-label">Total Contacts</div>
+                            </div>` : ''}
+                        </div>
+                    `);
+
+                    if (data.programs) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Outcomes</h4>
+                            <div class="strategy-list">
+                                ${data.programs.diversion ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">LEAD Diversion</span>
+                                    <span class="strategy-amount">${data.programs.diversion.enrolled} enrolled, ${data.programs.diversion.placements} placements</span>
+                                </div>` : ''}
+                                ${data.programs.detention_mat ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">Detention Center MAT</span>
+                                    <span class="strategy-amount">${data.programs.detention_mat.served} served</span>
+                                </div>` : ''}
+                                ${data.programs.reentry ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">Reentry Program</span>
+                                    <span class="strategy-amount">${data.programs.reentry.enrolled} enrolled, ${data.programs.reentry.case_management_meetings.toLocaleString()} meetings</span>
+                                </div>` : ''}
+                                ${data.programs.employment ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">Employment Support</span>
+                                    <span class="strategy-amount">${data.programs.employment.served} served, ${data.programs.employment.workshops} workshops</span>
+                                </div>` : ''}
+                                ${data.programs.recovery_housing ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">Recovery Housing</span>
+                                    <span class="strategy-amount">${data.programs.recovery_housing.served} served, ${data.programs.recovery_housing.rent_assistance} rent assistance</span>
+                                </div>` : ''}
+                            </div>
+                        `);
+                    }
                 }
 
-                if (outcomes.length > 0) {
-                    tableHtml += `
-                        <tr>
-                            <td style="font-weight: 600; color: ${COUNTY_COLORS[county]}">${county}</td>
-                            <td>${outcomes.join(' • ')}</td>
-                        </tr>
-                    `;
+                // Robeson - treatment and overdose reduction
+                if (county === 'Robeson') {
+                    if (data.treatment) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Treatment Services</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.treatment.inpatient}</div>
+                                    <div class="county-stat-label">Inpatient</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.treatment.outpatient}</div>
+                                    <div class="county-stat-label">Outpatient</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.treatment.mat_services}</div>
+                                    <div class="county-stat-label">MAT Services</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.overdose_reduction) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Overdose Reduction</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.overdose_reduction.reduction_percent}%</div>
+                                    <div class="county-stat-label">ED Visit Reduction</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: #999; font-size: 1.1rem;">${data.overdose_reduction.ed_visits_previous} → ${data.overdose_reduction.ed_visits_current}</div>
+                                    <div class="county-stat-label">ED Visits Change</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.jail_services) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Jail Health Navigation</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.jail_services.detainees_identified}</div>
+                                    <div class="county-stat-label">Detainees Identified</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.jail_services.treatment_referrals}</div>
+                                    <div class="county-stat-label">Treatment Referrals</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.jail_services.patients_returned_for_help}</div>
+                                    <div class="county-stat-label">Returned for Help</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.employment_transportation) {
+                        sections.push(`
+                            <div class="strategy-list">
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">SEATS Transportation</span>
+                                    <span class="strategy-amount">${data.employment_transportation} rides provided</span>
+                                </div>
+                            </div>
+                        `);
+                    }
                 }
+
+                // Columbus - detailed outcomes and demographics
+                if (county === 'Columbus') {
+                    if (data.demographics) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Demographics</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.demographics.men}</div>
+                                    <div class="county-stat-label">Men</div>
+                                </div>
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${data.demographics.women}</div>
+                                    <div class="county-stat-label">Women</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.substance_use_breakdown) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Primary Substance Use</h4>
+                            <div class="strategy-list">
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Opioids</span>
+                                    <span class="strategy-amount">${data.substance_use_breakdown.opioids}</span>
+                                </div>
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Crack Cocaine</span>
+                                    <span class="strategy-amount">${data.substance_use_breakdown.crack_cocaine}</span>
+                                </div>
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Alcohol</span>
+                                    <span class="strategy-amount">${data.substance_use_breakdown.alcohol}</span>
+                                </div>
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Methamphetamine</span>
+                                    <span class="strategy-amount">${data.substance_use_breakdown.methamphetamine}</span>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.outcomes) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Harm Reduction Outcomes</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat" style="background: ${data.outcomes.ems_overdose_calls_change < 0 ? '#e8f5e9' : '#fff3e0'};">
+                                    <div class="county-stat-number" style="color: ${data.outcomes.ems_overdose_calls_change < 0 ? '#388e3c' : '#f57c00'}; font-size: 1.4rem;">${Math.round(data.outcomes.ems_overdose_calls_change * 100)}%</div>
+                                    <div class="county-stat-label">EMS Overdose Calls</div>
+                                </div>
+                                <div class="county-stat" style="background: ${data.outcomes.naloxone_admin_change < 0 ? '#e8f5e9' : '#fff3e0'};">
+                                    <div class="county-stat-number" style="color: ${data.outcomes.naloxone_admin_change < 0 ? '#388e3c' : '#f57c00'}; font-size: 1.4rem;">${Math.round(data.outcomes.naloxone_admin_change * 100)}%</div>
+                                    <div class="county-stat-label">Naloxone Admin</div>
+                                </div>
+                                <div class="county-stat" style="background: ${data.outcomes.ed_visits_change < 0 ? '#e8f5e9' : '#fff3e0'};">
+                                    <div class="county-stat-number" style="color: ${data.outcomes.ed_visits_change < 0 ? '#388e3c' : '#f57c00'}; font-size: 1.4rem;">${Math.round(data.outcomes.ed_visits_change * 100)}%</div>
+                                    <div class="county-stat-label">ED Visits</div>
+                                </div>
+                                <div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.1rem;">${data.outcomes.deaths_fy23} → ${data.outcomes.deaths_fy24}</div>
+                                    <div class="county-stat-label">Deaths (FY23→FY24)</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if (data.programs) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Reach</h4>
+                            <div class="strategy-list">
+                                ${data.programs.call_center ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">24/7 Crisis Line</span>
+                                    <span class="strategy-amount">${data.programs.call_center.calls_taken} calls</span>
+                                </div>` : ''}
+                                ${data.programs.nas_training ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">NAS Training</span>
+                                    <span class="strategy-amount">${data.programs.nas_training.participants} participants</span>
+                                </div>` : ''}
+                                ${data.programs.prescriber_training ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">Prescriber Training</span>
+                                    <span class="strategy-amount">${data.programs.prescriber_training.sessions_completed}/${data.programs.prescriber_training.sessions_total} sessions</span>
+                                </div>` : ''}
+                                ${data.programs.school_prevention ? `<div class="strategy-list-item">
+                                    <span class="strategy-name">School Prevention</span>
+                                    <span class="strategy-amount">${data.programs.school_prevention.students_trained} students trained</span>
+                                </div>` : ''}
+                            </div>
+                        `);
+                    }
+                }
+
+                // Richmond & Bladen - high success rates
+                if (county === 'Richmond' || county === 'Bladen') {
+                    if (data.completion_rate || data.employment_rate) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Success Rates</h4>
+                            <div class="county-stat-grid">
+                                ${data.completion_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.completion_rate * 100)}%</div>
+                                    <div class="county-stat-label">Completion</div>
+                                </div>` : ''}
+                                ${data.employment_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.employment_rate * 100)}%</div>
+                                    <div class="county-stat-label">Employment</div>
+                                </div>` : ''}
+                                ${data.treatment_adherence_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.treatment_adherence_rate * 100)}%</div>
+                                    <div class="county-stat-label">Treatment Adherence</div>
+                                </div>` : ''}
+                                ${data.after_care_transfer_rate ? `<div class="county-stat" style="background: #e8f5e9;">
+                                    <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.after_care_transfer_rate * 100)}%</div>
+                                    <div class="county-stat-label">Aftercare Transfer</div>
+                                </div>` : ''}
+                            </div>
+                        `);
+                    }
+
+                    if (county === 'Bladen' && data.average_length_of_stay_days) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Treatment Duration</h4>
+                            <div class="county-stat-grid">
+                                <div class="county-stat">
+                                    <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}; font-size: 1.4rem;">${Math.round(data.average_length_of_stay_days)}</div>
+                                    <div class="county-stat-label">Avg Days in Treatment</div>
+                                </div>
+                                ${data.stay_range ? `<div class="county-stat">
+                                    <div class="county-stat-number" style="color: #999; font-size: 1.1rem;">${data.stay_range.min_days} - ${data.stay_range.max_days}</div>
+                                    <div class="county-stat-label">Stay Range (Days)</div>
+                                </div>` : ''}
+                            </div>
+                        `);
+                    }
+                }
+
+                // Scotland - collaborative approach
+                if (county === 'Scotland') {
+                    if (data.phase) {
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Current Phase</h4>
+                            <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px;">
+                                <p style="color: #555; line-height: 1.6;">${data.phase}</p>
+                            </div>
+                        `);
+                    }
+
+                    if (data.programs?.opioid_collaborative) {
+                        const collab = data.programs.opioid_collaborative;
+                        sections.push(`
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Opioid Collaborative</h4>
+                            <div class="strategy-list">
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Meeting Schedule</span>
+                                    <span class="strategy-amount">${collab.frequency}</span>
+                                </div>
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Partners</span>
+                                    <span class="strategy-amount">${collab.partners.length} agencies</span>
+                                </div>
+                                <div class="strategy-list-item">
+                                    <span class="strategy-name">Status</span>
+                                    <span class="strategy-amount">${collab.longevity}</span>
+                                </div>
+                            </div>
+                        `);
+                    }
+                }
+
+                outcomesHtml += sections.join('');
+                outcomesHtml += '</div>';
             });
 
-            tableHtml += '</tbody></table>';
-            outcomesContainer.innerHTML = tableHtml;
+            outcomesHtml += '</div>';
+            outcomesContainer.innerHTML = outcomesHtml;
         }
 
         function extractCountyName(govtName) {
