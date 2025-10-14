@@ -558,6 +558,11 @@
             'Scotland': '#27ae60'
         };
 
+        // Helper function to format numbers with commas
+        function formatNumber(num, decimals = 0) {
+            return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
         // Load and process Excel file
         async function loadData() {
             try {
@@ -719,7 +724,7 @@
             // Create metric cards
             const container = document.getElementById('overviewMetricsContainer');
             const metrics = [
-                { number: `$${(totalSpending / 1000000).toFixed(2)}M`, label: 'Total Investment', sublabel: 'Opioid Settlement Funds' },
+                { number: `$${formatNumber(totalSpending / 1000000, 2)}M`, label: 'Total Investment', sublabel: 'Opioid Settlement Funds' },
                 { number: totalPeopleServed.toLocaleString() + '+', label: 'People Served', sublabel: 'Across all counties' },
                 { number: totalNaloxoneKits.toLocaleString() + '+', label: 'Naloxone Kits', sublabel: 'Distributed to community' },
                 { number: totalTreatmentDays.toLocaleString() + '+', label: 'Treatment Days', sublabel: 'Provided to residents' },
@@ -1304,7 +1309,7 @@
                                     return context[0].label + ' County';
                                 },
                                 label: function(context) {
-                                    return 'Total Spending: $' + (context.parsed.y / 1000000).toFixed(2) + 'M';
+                                    return 'Total Spending: $' + formatNumber(context.parsed.y / 1000000, 2) + 'M';
                                 }
                             }
                         },
@@ -1312,7 +1317,7 @@
                             anchor: 'end',
                             align: 'top',
                             formatter: function(value) {
-                                return '$' + (value / 1000000).toFixed(2) + 'M';
+                                return '$' + formatNumber(value / 1000000, 2) + 'M';
                             },
                             font: {
                                 weight: 'bold',
@@ -1328,7 +1333,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '$' + (value / 1000000).toFixed(1) + 'M';
+                                    return '$' + formatNumber(value / 1000000, 1) + 'M';
                                 }
                             }
                         }
@@ -1375,7 +1380,7 @@
                                 label: function(context) {
                                     const value = context.parsed;
                                     const percentage = ((value / total) * 100).toFixed(1);
-                                    return context.label + ': $' + (value / 1000000).toFixed(2) + 'M (' + percentage + '%)';
+                                    return context.label + ': $' + formatNumber(value / 1000000, 2) + 'M (' + percentage + '%)';
                                 }
                             }
                         },
@@ -1482,7 +1487,7 @@
                                 anchor: 'end',
                                 align: 'right',
                                 formatter: function(value) {
-                                    return '$' + (value / 1000).toFixed(0) + 'K';
+                                    return '$' + formatNumber(value / 1000, 0) + 'K';
                                 },
                                 font: {
                                     weight: 'bold',
@@ -1496,7 +1501,7 @@
                                 beginAtZero: true,
                                 ticks: {
                                     callback: function(value) {
-                                        return '$' + (value / 1000).toFixed(0) + 'K';
+                                        return '$' + formatNumber(value / 1000, 0) + 'K';
                                     }
                                 }
                             }
@@ -1738,7 +1743,7 @@
                     html += `
                         <div class="strategy-list-item">
                             <span class="strategy-name">${strategyName} (${stratLetter})</span>
-                            <span class="strategy-amount">$${(amount / 1000).toFixed(1)}K</span>
+                            <span class="strategy-amount">$${formatNumber(amount / 1000, 1)}K</span>
                         </div>
                     `;
                 });
