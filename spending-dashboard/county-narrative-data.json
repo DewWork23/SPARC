@@ -213,7 +213,7 @@
         "women": 29
       },
       "substance_use_breakdown": {
-        "opioids": "51%",
+        "opioids": "50%",
         "crack_cocaine": "20%",
         "alcohol": "17%",
         "methamphetamine": "10%",
@@ -405,23 +405,8 @@
     "naloxone_kits": 2312,
     "treatment_days": 2638
   },
-  "calculated_metrics": {
-    "cost_per_person": {
-      "Cumberland": 262,
-      "Robeson": 3341,
-      "Columbus": 5435,
-      "Richmond": 8991,
-      "Bladen": 20133,
-      "Scotland": "TBD (infrastructure phase)"
-    },
-    "cost_per_person_note": "These metrics should be interpreted with caution due to different definitions of 'people served' across counties",
-    "efficiency_ranking": [
-      "Cumberland (most efficient)",
-      "Robeson",
-      "Columbus",
-      "Richmond",
-      "Bladen"
-    ],
-    "efficiency_ranking_note": "Ranking assumes comparable definitions, which is not the case. Cumberland serves broader population through recovery supports; Richmond only counts successful program graduates."
+  "data_quality_notes": {
+    "comparability_warning": "Counties use different service models and definitions for 'people served', making direct cost or efficiency comparisons inappropriate. Cumberland provides broad recovery support services, Robeson offers hospital-based treatment placements, Columbus/Bladen provide residential treatment, Richmond counts program completers only, and Scotland is in capacity building phase.",
+    "removed_metrics": "Cost per person and efficiency rankings were removed as misleading due to incomparable service definitions across counties."
   }
 }
