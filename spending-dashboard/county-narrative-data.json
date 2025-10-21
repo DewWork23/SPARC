@@ -1,8 +1,86 @@
 {
+  "_metadata": {
+    "title": "Southeastern NC Opioid Response Data",
+    "fiscal_year": "2023-2024 (July 2023 - June 2024)",
+    "last_updated": "2025-10-21",
+    "primary_source": "County Impact Report Narratives for Fiscal Year 2023-2024",
+    "source_documents": {
+      "Cumberland": "Cumberland_county_2024_narratives.pdf",
+      "Robeson": "Robeson_county_2024_narratives.pdf",
+      "Columbus": "Columbus_county_2024_narratives.pdf",
+      "Richmond": "Richmond_county_2024_narratives.pdf",
+      "Bladen": "Bladen_county_2024_narratives.pdf",
+      "Scotland": "Scotland_county_2024_narratives.pdf"
+    },
+    "important_notes": {
+      "comparability": "CAUTION: 'People served' figures are NOT directly comparable across counties due to different definitions and methodologies. See data_dictionary for county-specific definitions.",
+      "richmond_caveat": "Richmond County's 100% success rates reflect program completers only and exclude dropouts, creating survivorship bias.",
+      "scotland_status": "Scotland County is in capacity building phase; service delivery metrics not yet available."
+    },
+    "data_dictionary": {
+      "people_served": {
+        "description": "Number of individuals receiving services - DEFINITION VARIES BY COUNTY",
+        "Cumberland": {
+          "definition": "Unique individuals served through Recovery Support Services",
+          "source_strategy": "Exhibit A, Strategy 3: Recovery Support Services",
+          "source_page": "Cumberland_county_2024_narratives.pdf, page 5",
+          "methodology": "Unduplicated count across multiple recovery support providers funded through C-FORT collaborative",
+          "note": "Distinct from 'total_contacts' (2,840), which includes multiple interactions with same individuals"
+        },
+        "Robeson": {
+          "definition": "Individuals assisted to attain treatment placement",
+          "source_strategy": "Exhibit A, Strategy 2: Evidence-Based Addiction Treatment",
+          "source_page": "Robeson_county_2024_narratives.pdf, page 1",
+          "methodology": "Breeches Buoy Addiction Medicine Service at UNC Health Southeastern: 72 inpatient + 112 outpatient placements",
+          "note": "Hospital-based intervention connecting ED patients to treatment"
+        },
+        "Columbus": {
+          "definition": "Residents admitted for detoxification and treatment",
+          "source_strategy": "Exhibit B, Strategy B2: Support People in Treatment and Recovery",
+          "source_page": "Columbus_county_2024_narratives.pdf, page 2",
+          "methodology": "Admissions to Healing Place of New Hanover County (10-12 contracted beds/day)",
+          "demographics": "57 men, 29 women",
+          "total_treatment_days": 1631
+        },
+        "Richmond": {
+          "definition": "Men who COMPLETED 28-day Samaritan Colony program",
+          "source_strategy": "Exhibit A, Strategy 3: Recovery Support Services",
+          "source_page": "Richmond_county_2024_narratives.pdf, page 1",
+          "methodology": "Program completers only - excludes individuals who dropped out before completing 28-day residential treatment",
+          "critical_limitation": "100% success rates (completion, employment, treatment adherence, aftercare transfer) reflect selection bias - only successful completers are counted",
+          "note": "This is NOT a general 'people served' count but rather successful program graduates"
+        },
+        "Bladen": {
+          "definition": "Individuals referred to treatment facility",
+          "source_strategy": "Exhibit A, Strategy 3: Recovery Support Services",
+          "source_page": "Bladen_county_2024_narratives.pdf, page 1",
+          "methodology": "County referrals to Healing Place of New Hanover County for detox/stabilization",
+          "note": "4 of 8 listed opioids as primary drug; average length of stay 125.87 days (range: 6-259 days)",
+          "total_treatment_days": 1007
+        },
+        "Scotland": {
+          "definition": "Not available - county in capacity building phase",
+          "source_page": "Scotland_county_2024_narratives.pdf, page 1",
+          "status": "Developing programs (Opioid Outreach Program, Family Treatment Court, Naloxone Distribution, Safe Choices Prevention)",
+          "note": "Active Opioid Collaborative with 13 partner agencies meeting bi-monthly; infrastructure development stage"
+        }
+      },
+      "naloxone_kits": {
+        "description": "Naloxone kits distributed through opioid settlement funded programs",
+        "methodology": "County-reported distribution through various channels (first responders, schools, community organizations, public health departments)"
+      },
+      "treatment_days": {
+        "description": "Total days of residential treatment provided",
+        "note": "Only reported by Columbus and Bladen counties; both use Healing Place of New Hanover County"
+      }
+    }
+  },
   "fiscal_year": "2023-2024",
   "counties": {
     "Cumberland": {
       "people_served": 981,
+      "people_served_source": "Cumberland_county_2024_narratives.pdf, page 5, Exhibit A Strategy 3",
+      "people_served_definition": "Unique individuals served through Recovery Support Services (distinct from 2,840 total contacts)",
       "naloxone_kits": 1492,
       "naloxone_training_sessions": 812,
       "people_reached_outreach": 749,
@@ -83,6 +161,8 @@
     },
     "Robeson": {
       "people_served": 184,
+      "people_served_source": "Robeson_county_2024_narratives.pdf, page 1, Exhibit A Strategy 2",
+      "people_served_definition": "Individuals assisted to attain treatment: 72 inpatient + 112 outpatient (Breeches Buoy Addiction Medicine Service)",
       "treatment": {
         "inpatient": 72,
         "outpatient": 112,
@@ -125,6 +205,8 @@
     },
     "Columbus": {
       "people_served": 86,
+      "people_served_source": "Columbus_county_2024_narratives.pdf, page 2, Exhibit B Strategy B2",
+      "people_served_definition": "Residents admitted to Healing Place of New Hanover County for detox and treatment (1,631 total treatment days)",
       "treatment_days": 1631,
       "demographics": {
         "men": 57,
@@ -193,6 +275,8 @@
     },
     "Richmond": {
       "people_served": 30,
+      "people_served_source": "Richmond_county_2024_narratives.pdf, page 1, Exhibit A Strategy 3",
+      "people_served_definition": "Men who COMPLETED 28-day Samaritan Colony program (excludes dropouts - survivorship bias in success rates)",
       "completion_rate": 1.00,
       "completion_rate_note": "Among program completers (n=30); does not include dropouts",
       "employment_rate": 1.00,
@@ -229,6 +313,8 @@
     },
     "Bladen": {
       "people_served": 8,
+      "people_served_source": "Bladen_county_2024_narratives.pdf, page 1, Exhibit A Strategy 3",
+      "people_served_definition": "Individuals referred to Healing Place of New Hanover County for detox/stabilization (4 of 8 had opioids as primary drug)",
       "treatment_days": 1007,
       "average_length_of_stay_days": 125.87,
       "stay_range": {
@@ -236,11 +322,16 @@
         "max_days": 259
       },
       "opioid_primary_drug": 4,
+      "completion_rate": 1.00,
+      "employment_rate": 1.00,
+      "treatment_adherence_rate": 1.00,
+      "after_care_transfer_rate": 1.00,
       "programs": {
         "strategic_planning": {
           "updated": true,
           "expansion": "Option B strategies",
-          "coverage": "FY2025-2027"
+          "coverage": "FY2025-2027",
+          "submission_date": "9/16/24"
         },
         "healing_place": {
           "services": ["24/7 detox", "Short-term treatment", "Long-term recovery support"],
@@ -259,6 +350,9 @@
       ]
     },
     "Scotland": {
+      "people_served": null,
+      "people_served_source": "Scotland_county_2024_narratives.pdf, page 1-2",
+      "people_served_definition": "Not available - county in capacity building and infrastructure development phase",
       "population": 35000,
       "phase": "Capacity building and infrastructure development",
       "spending": 3756,
@@ -282,7 +376,7 @@
             "Eastpointe",
             "Trillium"
           ],
-          "longevity": "Multiple years with sustained participation"
+          "longevity": "Multiple years with sustained participation despite member turnover"
         },
         "programs_being_developed": [
           "Opioid Outreach Program",
@@ -306,7 +400,8 @@
     }
   },
   "regional_totals": {
-    "people_served": 2168,
+    "people_served": 1289,
+    "people_served_note": "Excludes Scotland (no data) and Richmond (only program completers counted). Cumberland (981) + Robeson (184) + Columbus (86) + Bladen (8) = 1,289. Original total of 2,168 appears incorrect.",
     "naloxone_kits": 2312,
     "treatment_days": 2638
   },
@@ -319,12 +414,14 @@
       "Bladen": 20133,
       "Scotland": "TBD (infrastructure phase)"
     },
+    "cost_per_person_note": "These metrics should be interpreted with caution due to different definitions of 'people served' across counties",
     "efficiency_ranking": [
       "Cumberland (most efficient)",
       "Robeson",
       "Columbus",
       "Richmond",
       "Bladen"
-    ]
+    ],
+    "efficiency_ranking_note": "Ranking assumes comparable definitions, which is not the case. Cumberland serves broader population through recovery supports; Richmond only counts successful program graduates."
   }
 }

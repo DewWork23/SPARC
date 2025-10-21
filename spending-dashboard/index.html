@@ -814,15 +814,98 @@
         function createOutcomesTab(narrativeData) {
             if (!narrativeData?.counties) return;
 
-            // Create charts for people served and naloxone distribution
+            // Create people served cards and naloxone chart
             const chartsContainer = document.getElementById('outcomesChartsContainer');
-            chartsContainer.innerHTML = `
-                <div class="chart-card">
-                    <h2 class="chart-title">People Served by County</h2>
-                    <div class="chart-container">
-                        <canvas id="peopleServedChart"></canvas>
+
+            // Build people served cards
+            let peopleServedCardsHTML = '<div class="chart-card full-width"><h2 class="chart-title">People Served by County</h2>';
+            peopleServedCardsHTML += '<p style="color: #666; font-size: 0.95rem; margin: 10px 0 20px 0; max-width: 900px;">Each county measures "people served" differently based on their funded programs and service models. Numbers reflect the scope and type of services provided in FY 2023-2024.</p>';
+            peopleServedCardsHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">';
+
+            // Define card content for each county
+            const countyCards = {
+                'Cumberland': {
+                    number: narrativeData.counties.Cumberland?.people_served,
+                    label: 'Recovery Support Services',
+                    description: 'Individuals served through comprehensive recovery supports including peer counseling, case management, and service referrals',
+                    note: 'Broad recovery support network'
+                },
+                'Robeson': {
+                    number: narrativeData.counties.Robeson?.people_served,
+                    label: 'Treatment Placements',
+                    description: 'Hospital-based program connecting patients to inpatient and outpatient treatment',
+                    note: 'Breeches Buoy Addiction Medicine'
+                },
+                'Columbus': {
+                    number: narrativeData.counties.Columbus?.people_served,
+                    label: 'Residential Admissions',
+                    description: 'Residents admitted to Healing Place for detox and treatment (1,631 total treatment days)',
+                    note: '24/7 access to crisis stabilization'
+                },
+                'Richmond': {
+                    number: narrativeData.counties.Richmond?.people_served,
+                    label: 'Program Completers',
+                    description: '28-day residential treatment program graduates (excludes dropouts)',
+                    note: '100% completion rate for graduates'
+                },
+                'Bladen': {
+                    number: narrativeData.counties.Bladen?.people_served,
+                    label: 'Treatment Referrals',
+                    description: 'Individuals referred to residential treatment (average 126 days in treatment)',
+                    note: 'Healing Place partnership'
+                },
+                'Scotland': {
+                    number: null,
+                    label: 'Capacity Building Phase',
+                    description: 'Developing Opioid Outreach Program, Family Treatment Court, and prevention programs',
+                    note: 'Active planning with 13 partner agencies'
+                }
+            };
+
+            // Create cards for each county
+            Object.entries(countyCards).forEach(([county, info]) => {
+                const color = COUNTY_COLORS[county];
+                const displayNumber = info.number !== null && info.number !== undefined
+                    ? info.number.toLocaleString()
+                    : 'Coming Soon';
+
+                peopleServedCardsHTML += `
+                    <div class="people-served-card" style="background: linear-gradient(135deg, white 0%, ${color}08 100%);
+                                border-left: 4px solid ${color};
+                                border-radius: 12px;
+                                padding: 20px;
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                                transition: transform 0.2s, box-shadow 0.2s;"
+                         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';"
+                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">
+                        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                            <h3 style="margin: 0; color: ${color}; font-size: 1.2rem;">${county} County</h3>
+                        </div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: ${color}; margin: 15px 0 8px 0;">
+                            ${displayNumber}
+                        </div>
+                        <div style="font-size: 0.95rem; font-weight: 600; color: #2c3e50; margin-bottom: 10px;">
+                            ${info.label}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; line-height: 1.5; margin-bottom: 12px;">
+                            ${info.description}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #999; font-style: italic; border-top: 1px solid #eee; padding-top: 10px;">
+                            ${info.note}
+                        </div>
                     </div>
-                </div>
+                `;
+            });
+
+            peopleServedCardsHTML += '</div></div>';
+
+            // Add naloxone chart
+            const naloxoneData = {};
+            Object.entries(narrativeData.counties).forEach(([county, data]) => {
+                if (data.naloxone_kits) naloxoneData[county] = data.naloxone_kits;
+            });
+
+            chartsContainer.innerHTML = peopleServedCardsHTML + `
                 <div class="chart-card">
                     <h2 class="chart-title">Naloxone Kits Distributed</h2>
                     <div class="chart-container">
@@ -830,52 +913,6 @@
                     </div>
                 </div>
             `;
-
-            // People served chart
-            const peopleServedData = {};
-            const naloxoneData = {};
-
-            Object.entries(narrativeData.counties).forEach(([county, data]) => {
-                if (data.people_served) peopleServedData[county] = data.people_served;
-                if (data.naloxone_kits) naloxoneData[county] = data.naloxone_kits;
-            });
-
-            // Create people served chart
-            if (Object.keys(peopleServedData).length > 0) {
-                const ctx = document.getElementById('peopleServedChart').getContext('2d');
-                const counties = Object.keys(peopleServedData);
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: counties,
-                        datasets: [{
-                            label: 'People Served',
-                            data: counties.map(c => peopleServedData[c]),
-                            backgroundColor: counties.map(c => COUNTY_COLORS[c] + '80'),
-                            borderColor: counties.map(c => COUNTY_COLORS[c]),
-                            borderWidth: 2,
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                formatter: (value) => value.toLocaleString(),
-                                font: { weight: 'bold', size: 12 },
-                                color: (context) => COUNTY_COLORS[counties[context.dataIndex]]
-                            }
-                        },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
 
             // Create naloxone chart
             if (Object.keys(naloxoneData).length > 0) {
