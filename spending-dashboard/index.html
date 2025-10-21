@@ -1203,9 +1203,24 @@
 
                 // Richmond & Bladen - high success rates
                 if (county === 'Richmond') {
+                    // Add program description first
+                    sections.push(`
+                        <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Service Model</h4>
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px;">
+                            <p style="color: #555; line-height: 1.6; margin: 0 0 10px 0;">
+                                <strong>Samaritan Colony Partnership:</strong> Richmond County funds residential treatment at Samaritan Colony in Aberdeen, NC,
+                                providing intensive 28-day inpatient treatment for men with opioid use disorder.
+                            </p>
+                            <p style="color: #555; line-height: 1.6; margin: 0;">
+                                <strong>DEFT Coordination:</strong> Drug Endangered Family Task Force coordinates strategic planning, case management database,
+                                and monthly collaborative meetings across service providers.
+                            </p>
+                        </div>
+                    `);
+
                     if (data.completion_rate || data.employment_rate) {
                         sections.push(`
-                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Program Success Rates (n=30)</h4>
+                            <h4 style="margin: 15px 0 10px 0; color: #2c3e50; font-size: 1rem; font-weight: 600;">Outcomes for Program Completers (n=30)</h4>
                             <div class="county-stat-grid">
                                 ${data.completion_rate ? `<div class="county-stat" style="background: #e8f5e9;">
                                     <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.completion_rate * 100)}%</div>
@@ -1213,7 +1228,7 @@
                                 </div>` : ''}
                                 ${data.employment_rate ? `<div class="county-stat" style="background: #e8f5e9;">
                                     <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.employment_rate * 100)}%</div>
-                                    <div class="county-stat-label">Employment</div>
+                                    <div class="county-stat-label">Employment at Discharge</div>
                                 </div>` : ''}
                                 ${data.treatment_adherence_rate ? `<div class="county-stat" style="background: #e8f5e9;">
                                     <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.treatment_adherence_rate * 100)}%</div>
@@ -1221,13 +1236,17 @@
                                 </div>` : ''}
                                 ${data.after_care_transfer_rate ? `<div class="county-stat" style="background: #e8f5e9;">
                                     <div class="county-stat-number" style="color: #388e3c; font-size: 1.4rem;">${(data.after_care_transfer_rate * 100)}%</div>
-                                    <div class="county-stat-label">Aftercare Transfer</div>
+                                    <div class="county-stat-label">Transferred to Aftercare</div>
                                 </div>` : ''}
                             </div>
                             <div style="padding: 12px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px; margin-top: 10px;">
+                                <p style="color: #856404; font-size: 0.85rem; line-height: 1.5; margin: 0 0 8px 0;">
+                                    <strong>Important Limitation:</strong> These rates represent the 30 men who successfully completed the full 28-day residential program.
+                                    Data does not include individuals who enrolled but left treatment early.
+                                </p>
                                 <p style="color: #856404; font-size: 0.85rem; line-height: 1.5; margin: 0;">
-                                    <strong>Note:</strong> Success rates measured for 30 men who completed Samaritan Colony's 28-day program.
-                                    Rates reflect outcomes at discharge and do not include individuals who dropped out before completion.
+                                    <strong>What this means:</strong> 100% rates show that completers had positive outcomes at discharge, but we cannot determine
+                                    what percentage of total enrollees completed the program or long-term recovery rates.
                                 </p>
                             </div>
                         `);
