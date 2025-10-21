@@ -685,7 +685,7 @@
             createTreatmentOutcomesTab(narrativeData);
             createSuccessStoriesGallery(narrativeData);
             createCountyBreakdowns(spendingByCounty, strategiesByCounty, strategyLookup, categoryLookup, focusCountyData, narrativeData);
-            createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup);
+            createNarrativesSection(focusImpactSummary, focusImpactDetail, strategyLookup, focusCountyData);
 
             // Setup tab navigation
             setupTabNavigation();
@@ -1722,8 +1722,24 @@
             });
         }
 
-        function createNarrativesSection(impactSummary, impactDetail, strategyLookup) {
+        function createNarrativesSection(impactSummary, impactDetail, strategyLookup, finDetailData) {
             const container = document.getElementById('narrativesContainer');
+
+            // Calculate spending by county and strategy
+            const spendingByCountyAndStrategy = {};
+            finDetailData.forEach(row => {
+                const county = extractCountyName(row.govt_name);
+                const stratId = row.strat_id_num;
+                const amount = parseFloat(row.fd_strat_funds_applied) || 0;
+
+                if (county && stratId && amount > 0) {
+                    if (!spendingByCountyAndStrategy[county]) {
+                        spendingByCountyAndStrategy[county] = {};
+                    }
+                    spendingByCountyAndStrategy[county][stratId] =
+                        (spendingByCountyAndStrategy[county][stratId] || 0) + amount;
+                }
+            });
 
             // Group by county
             const countyData = {};
@@ -1743,12 +1759,17 @@
                 if (county && countyData[county] && row.id_strat_progress_full) {
                     const strategy = strategyLookup[row.strat_id_num] || {};
                     const strategyName = strategy.strat_name || strategy.strat_title || '';
-                    const strategyLetter = strategy.strat_exhibit_letter || row.strat_id_num;
+                    // Use the actual exhibit letter from the row data, not from lookup
+                    const strategyLetter = row.strat_exhibit_letter || row.strat_id_num;
                     const displayName = strategyName ? `${strategyName} (${strategyLetter})` : `Strategy ${strategyLetter}`;
+
+                    // Get spending amount for this strategy
+                    const spending = spendingByCountyAndStrategy[county]?.[row.strat_id_num] || 0;
 
                     countyData[county].progress.push({
                         strategy: displayName,
-                        progress: row.id_strat_progress_full
+                        progress: row.id_strat_progress_full,
+                        spending: spending
                     });
                 }
             });
@@ -1789,7 +1810,10 @@
                     countyData[county].progress.forEach(item => {
                         contentHtml += `
                             <div class="progress-item">
-                                <div class="progress-strategy">${item.strategy}</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                    <div class="progress-strategy">${item.strategy}</div>
+                                    <div style="font-weight: bold; color: ${COUNTY_COLORS[county]}; font-size: 1.1rem;">$${formatNumber(item.spending, 2)}</div>
+                                </div>
                                 <div class="progress-detail">${item.progress}</div>
                             </div>
                         `;
