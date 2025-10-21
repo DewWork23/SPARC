@@ -1579,9 +1579,9 @@
                         optionStatus.label = 'Expansion Plan Submitted';
                         optionStatus.planningStatus = 'Option B plan submitted 9/16/24, pending approval for FY25';
                     } else if (county === 'Cumberland') {
-                        optionStatus.planningStatus = 'C-FORT Collaborative: 8 of 12 Option A strategies';
+                        optionStatus.planningStatus = 'C-FORT (Cumberland-Fayetteville Opioid Response Team): 8 of 12 Option A strategies';
                     } else if (county === 'Richmond') {
-                        optionStatus.planningStatus = 'DEFT Coordination: 3 strategies with 100% success rates';
+                        optionStatus.planningStatus = 'DEFT (Drug Endangered Family Task Force): Strategic planning & case coordination';
                     } else if (county === 'Scotland') {
                         optionStatus.planningStatus = 'Capacity Building: Active Opioid Collaborative';
                     }
@@ -1733,35 +1733,66 @@
                 }
             });
 
+            // Group narratives by strategy to consolidate duplicates
+            const narrativesByStrategy = {};
+
             impactDetail.forEach(row => {
                 const county = extractCountyName(row.govt_name);
                 if (county && countyData[county] && row.id_strat_progress_full) {
-                    const strategy = strategyLookup[row.strat_id_num] || {};
+                    if (!narrativesByStrategy[county]) {
+                        narrativesByStrategy[county] = {};
+                    }
+
+                    const stratId = row.strat_id_num;
+                    if (!narrativesByStrategy[county][stratId]) {
+                        narrativesByStrategy[county][stratId] = [];
+                    }
+
+                    narrativesByStrategy[county][stratId].push(row.id_strat_progress_full);
+                }
+            });
+
+            // Build consolidated progress items sorted by strategy ID
+            Object.keys(narrativesByStrategy).forEach(county => {
+                const strategies = narrativesByStrategy[county];
+
+                // Sort strategy IDs numerically
+                const sortedStratIds = Object.keys(strategies).map(id => parseInt(id)).sort((a, b) => a - b);
+
+                sortedStratIds.forEach(stratId => {
+                    const strategy = strategyLookup[stratId] || {};
                     const strategyName = strategy.strat_name || strategy.strat_title || '';
-                    // Use the actual exhibit letter from the row data, not from lookup
-                    const strategyLetter = row.strat_exhibit_letter || row.strat_id_num;
+
+                    // Get exhibit letter from first matching row
+                    const firstRow = impactDetail.find(r =>
+                        extractCountyName(r.govt_name) === county && r.strat_id_num === stratId
+                    );
+                    const strategyLetter = firstRow?.strat_exhibit_letter || stratId;
                     const displayName = strategyName ? `${strategyName} (${strategyLetter})` : `Strategy ${strategyLetter}`;
 
-                    // Get spending amount for this strategy and fiscal years
-                    const spending = spendingByCountyAndStrategy[county]?.[row.strat_id_num] || 0;
-
-                    // Get fiscal years for this strategy
+                    // Get spending amount and fiscal years
+                    const spending = spendingByCountyAndStrategy[county]?.[stratId] || 0;
                     const fiscalYears = finDetailData
                         .filter(fd => {
                             const fdCounty = extractCountyName(fd.govt_name);
-                            return fdCounty === county && fd.strat_id_num === row.strat_id_num && fd.fd_strat_funds_applied > 0;
+                            return fdCounty === county && fd.strat_id_num === stratId && fd.fd_strat_funds_applied > 0;
                         })
                         .map(fd => fd.fy_str || fd.fy_int)
                         .filter((fy, index, self) => fy && self.indexOf(fy) === index)
                         .sort();
 
+                    // Combine multiple narratives with separator
+                    const combinedProgress = strategies[stratId].join('\n\n---\n\n');
+
                     countyData[county].progress.push({
                         strategy: displayName,
-                        progress: row.id_strat_progress_full,
+                        strategyId: stratId,
+                        progress: combinedProgress,
                         spending: spending,
-                        fiscalYears: fiscalYears
+                        fiscalYears: fiscalYears,
+                        narrativeCount: strategies[stratId].length
                     });
-                }
+                });
             });
 
             // Filter counties that have data
@@ -1818,10 +1849,19 @@
                         const fyDisplay = item.fiscalYears && item.fiscalYears.length > 0
                             ? `<div style="font-size: 0.8rem; color: #666; margin-top: 2px;">FY ${item.fiscalYears.join(', ')}</div>`
                             : '';
+
+                        // Show indicator if multiple narratives were combined
+                        const multiNarrativeNote = item.narrativeCount > 1
+                            ? `<div style="font-size: 0.75rem; color: #666; margin-top: 4px; font-style: italic;">${item.narrativeCount} program narratives combined</div>`
+                            : '';
+
                         contentHtml += `
                             <div class="progress-item">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
-                                    <div class="progress-strategy">${item.strategy}</div>
+                                    <div>
+                                        <div class="progress-strategy">${item.strategy}</div>
+                                        ${multiNarrativeNote}
+                                    </div>
                                     <div style="text-align: right;">
                                         <div style="font-weight: bold; color: ${COUNTY_COLORS[county]}; font-size: 1.1rem;">$${formatNumber(item.spending, 2)}</div>
                                         ${fyDisplay}
