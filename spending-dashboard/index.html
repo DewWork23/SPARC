@@ -749,28 +749,35 @@
             const summaryContainer = document.getElementById('overviewSummaryContainer');
             const sortedCounties = Object.entries(spendingByCounty).sort((a, b) => b[1] - a[1]);
 
-            let tableHtml = '<table class="data-table"><thead><tr><th>Rank</th><th>County</th><th>Investment</th><th>People Served</th><th>Naloxone Kits</th><th>Cost/Person</th></tr></thead><tbody>';
+            let tableHtml = '<table class="data-table"><thead><tr><th>Rank</th><th>County</th><th>Investment</th><th>People Served*</th><th>Naloxone Kits</th></tr></thead><tbody>';
 
             sortedCounties.forEach(([county, spending], index) => {
                 const countyData = narrativeData?.counties?.[county];
                 const peopleServed = countyData?.people_served || 'N/A';
                 const naloxoneKits = countyData?.naloxone_kits || 'N/A';
-                const costPerPerson = peopleServed && peopleServed !== 'N/A' ?
-                    `$${Math.round(spending / peopleServed).toLocaleString()}` : 'N/A';
 
                 tableHtml += `
                     <tr>
                         <td>${index + 1}</td>
                         <td style="font-weight: 600; color: ${COUNTY_COLORS[county]}">${county}</td>
-                        <td>$${spending.toLocaleString()}</td>
+                        <td>$${formatNumber(spending, 2)}</td>
                         <td>${typeof peopleServed === 'number' ? peopleServed.toLocaleString() : peopleServed}</td>
                         <td>${typeof naloxoneKits === 'number' ? naloxoneKits.toLocaleString() : naloxoneKits}</td>
-                        <td>${costPerPerson}</td>
                     </tr>
                 `;
             });
 
             tableHtml += '</tbody></table>';
+
+            // Add disclaimer about People Served
+            tableHtml += `
+                <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                    <p style="color: #856404; margin: 0; font-size: 0.9rem; line-height: 1.5;">
+                        <strong>*Note on "People Served":</strong> Counties measure this differently based on their service models.
+                        Numbers are not directly comparable. See the Outcomes & Impact tab for detailed context on each county's methodology.
+                    </p>
+                </div>
+            `;
 
             // Add explanation note
             tableHtml += `
