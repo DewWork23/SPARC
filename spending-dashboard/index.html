@@ -1309,7 +1309,7 @@
                                     return context[0].label + ' County';
                                 },
                                 label: function(context) {
-                                    return 'Total Spending: $' + formatNumber(context.parsed.y / 1000000, 2) + 'M';
+                                    return 'Total Spending: $' + formatNumber(context.parsed.y, 0);
                                 }
                             }
                         },
@@ -1317,7 +1317,7 @@
                             anchor: 'end',
                             align: 'top',
                             formatter: function(value) {
-                                return '$' + formatNumber(value / 1000000, 2) + 'M';
+                                return '$' + formatNumber(value, 0);
                             },
                             font: {
                                 weight: 'bold',
@@ -1333,7 +1333,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '$' + formatNumber(value / 1000000, 1) + 'M';
+                                    return '$' + formatNumber(value, 0);
                                 }
                             }
                         }
