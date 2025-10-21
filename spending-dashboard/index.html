@@ -1982,6 +1982,9 @@
                                 </thead>
                                 <tbody>`;
 
+                // Calculate county total
+                let countyTotal = 0;
+
                 sortedCountyData.forEach(row => {
                     const strategy = strategyLookup[row.strat_id_num] || {};
                     const categoryName = categoryLookup[strategy.strat_cat_letter] || strategy.strat_cat_letter || 'N/A';
@@ -1990,18 +1993,28 @@
                     const exhibitLetter = row.strat_exhibit_letter || 'N/A';
                     const strategyId = row.strat_id_num || 'N/A';
                     const displayName = strategyName ? `${strategyName}` : `Strategy ${strategyId}`;
+                    const amount = parseFloat(row.fd_strat_funds_applied) || 0;
+
+                    countyTotal += amount;
 
                     tablesHtml += `
                         <tr>
                             <td>${displayName}</td>
                             <td>${categoryName} (Exhibit ${exhibitLetter})</td>
-                            <td>$${formatNumber(parseFloat(row.fd_strat_funds_applied) || 0, 2)}</td>
+                            <td>$${formatNumber(amount, 2)}</td>
                             <td>${row.fy_str || row.fy_int || 'N/A'}</td>
                         </tr>`;
                 });
 
                 tablesHtml += `
                                 </tbody>
+                                <tfoot>
+                                    <tr style="background-color: ${COUNTY_COLORS[county]}15; font-weight: 700; border-top: 2px solid ${COUNTY_COLORS[county]};">
+                                        <td colspan="2" style="text-align: right; padding: 12px;">TOTAL ${county.toUpperCase()} COUNTY:</td>
+                                        <td style="color: ${COUNTY_COLORS[county]}; font-size: 1.1rem;">$${formatNumber(countyTotal, 2)}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>`;
