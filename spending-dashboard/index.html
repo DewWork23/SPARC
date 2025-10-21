@@ -504,6 +504,12 @@
 
                 <div class="chart-card full-width">
                     <h2 class="chart-title">Detailed Spending Breakdown</h2>
+                    <p style="color: #666; margin: 0 0 20px 0; line-height: 1.6;">
+                        Counties are funding strategies from the <strong>NC Opioid Settlement Agreement</strong>.
+                        Most counties are using <strong>Exhibit A</strong> strategies (core abatement activities), while Columbus County
+                        is primarily using <strong>Exhibit B</strong> strategies (expanded treatment and harm reduction programs).
+                        The table below shows each specific strategy funded, organized by category and fiscal year.
+                    </p>
                     <div id="detailTabsContainer"></div>
                     <div id="detailTablesContainer"></div>
                 </div>
@@ -1954,13 +1960,15 @@
                     const strategy = strategyLookup[row.strat_id_num] || {};
                     const categoryName = categoryLookup[strategy.strat_cat_letter] || strategy.strat_cat_letter || 'N/A';
                     const strategyName = strategy.strat_name || strategy.strat_title || '';
-                    const strategyLetter = strategy.strat_exhibit_letter || row.strat_id_num;
-                    const displayName = strategyName ? `${strategyName} (${strategyLetter})` : `Strategy ${strategyLetter}`;
+                    // Use the actual exhibit letter from the row data, not from lookup
+                    const exhibitLetter = row.strat_exhibit_letter || 'N/A';
+                    const strategyId = row.strat_id_num || 'N/A';
+                    const displayName = strategyName ? `${strategyName}` : `Strategy ${strategyId}`;
 
                     tablesHtml += `
                         <tr>
                             <td>${displayName}</td>
-                            <td>${categoryName}</td>
+                            <td>${categoryName} (Exhibit ${exhibitLetter})</td>
                             <td>$${formatNumber(parseFloat(row.fd_strat_funds_applied) || 0, 2)}</td>
                             <td>${row.fy_str || row.fy_int || 'N/A'}</td>
                         </tr>`;
