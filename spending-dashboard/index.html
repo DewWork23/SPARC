@@ -1618,14 +1618,6 @@
 
                 // Add narrative metrics if available
                 if (countyNarrative) {
-                    if (countyNarrative.people_served) {
-                        html += `
-                        <div class="county-stat">
-                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.people_served.toLocaleString()}</div>
-                            <div class="county-stat-label">People Served</div>
-                        </div>
-                        `;
-                    }
                     if (countyNarrative.naloxone_kits) {
                         html += `
                         <div class="county-stat">
@@ -1657,19 +1649,6 @@
                         <div class="county-stat">
                             <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${countyNarrative.outcomes.total_contacts.toLocaleString()}</div>
                             <div class="county-stat-label">Total Contacts</div>
-                        </div>
-                            `;
-                        }
-                    }
-                    // Add treatment metrics for Robeson
-                    if (countyNarrative.treatment) {
-                        const totalTreatment = (countyNarrative.treatment.inpatient || 0) +
-                                              (countyNarrative.treatment.outpatient || 0);
-                        if (totalTreatment > 0) {
-                            html += `
-                        <div class="county-stat">
-                            <div class="county-stat-number" style="color: ${COUNTY_COLORS[county]}">${totalTreatment}</div>
-                            <div class="county-stat-label">Treatment Services</div>
                         </div>
                             `;
                         }
