@@ -656,13 +656,12 @@
                         spendingByCategory[category] = (spendingByCategory[category] || 0) + amount;
                     }
 
-                    // Strategies by county
+                    // Strategies by county (use actual strategy ID, not just exhibit letter)
                     if (!strategiesByCounty[county]) {
                         strategiesByCounty[county] = {};
                     }
-                    if (strategy && strategy.strat_exhibit_letter) {
-                        const stratName = `${strategy.strat_exhibit_letter}`;
-                        strategiesByCounty[county][stratName] = (strategiesByCounty[county][stratName] || 0) + amount;
+                    if (stratId) {
+                        strategiesByCounty[county][stratId] = (strategiesByCounty[county][stratId] || 0) + amount;
                     }
                 }
             });
@@ -1702,15 +1701,16 @@
                     <div class="strategy-list">
                 `;
 
-                topStrategies.forEach(([stratLetter, amount]) => {
-                    // Find the full strategy name
-                    const strategy = Object.values(strategyLookup).find(s => s.strat_exhibit_letter === stratLetter);
-                    const strategyName = strategy?.strat_name || strategy?.strat_title || `Strategy ${stratLetter}`;
+                topStrategies.forEach(([stratId, amount]) => {
+                    // Get the actual strategy details
+                    const strategy = strategyLookup[stratId];
+                    const strategyName = strategy?.strat_name || strategy?.strat_title || `Strategy ${stratId}`;
+                    const exhibitLetter = strategy?.strat_exhibit_letter || '';
 
                     html += `
                         <div class="strategy-list-item">
-                            <span class="strategy-name">${strategyName} (${stratLetter})</span>
-                            <span class="strategy-amount">$${formatNumber(amount / 1000, 1)}K</span>
+                            <span class="strategy-name">${strategyName}${exhibitLetter ? ` (Exhibit ${exhibitLetter})` : ''}</span>
+                            <span class="strategy-amount">$${formatNumber(amount, 2)}</span>
                         </div>
                     `;
                 });
