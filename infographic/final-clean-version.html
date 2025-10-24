@@ -58,8 +58,9 @@
         .hub-spoke-container {
             position: relative;
             width: 100%;
+            max-width: 1400px;
             height: 900px;
-            margin: 20px 0;
+            margin: 20px auto;
             overflow: visible;
         }
 
@@ -108,19 +109,9 @@
             border-bottom: 8px solid transparent;
         }
 
-        .spoke.developing {
-            background: #000;
-            border: 2px dashed #ffd700;
-            height: 6px;
-            opacity: 0.8;
-        }
-
-        .spoke.developing::after {
-            display: none; /* No arrowhead for developing partnerships */
-        }
-
-        .spoke-robeson::after {
-            display: none; /* No arrowhead for Robeson */
+        .spoke-robeson::after,
+        .spoke-bladen::after {
+            display: none; /* No arrowhead for Robeson and Bladen - they connect directly to SPARC vertically */
         }
 
         /* Spoke lengths - Extended to reach card borders */
@@ -297,6 +288,52 @@
             color: #000;
             font-size: 0.8em;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .hub-spoke-container {
+                height: 700px;
+            }
+
+            .county-card {
+                width: 260px;
+                padding: 15px;
+            }
+
+            .spoke-robeson { width: 190px; }
+            .spoke-cumberland { width: 230px; }
+            .spoke-richmond { width: 230px; }
+            .spoke-scotland { width: 230px; }
+            .spoke-columbus { width: 230px; }
+            .spoke-bladen { width: 170px; }
+        }
+
+        @media (max-width: 768px) {
+            .hub-spoke-container {
+                height: 600px;
+            }
+
+            .county-card {
+                width: 180px;
+                padding: 12px;
+            }
+
+            .county-seal {
+                width: 45px;
+                height: 45px;
+            }
+
+            .county-name {
+                font-size: 1em;
+            }
+
+            .spoke-robeson { width: 140px; }
+            .spoke-cumberland { width: 180px; }
+            .spoke-richmond { width: 180px; }
+            .spoke-scotland { width: 180px; }
+            .spoke-columbus { width: 180px; }
+            .spoke-bladen { width: 120px; }
+        }
     </style>
 </head>
 <body>
@@ -316,7 +353,7 @@
             <div class="spoke spoke-richmond"></div>
             <div class="spoke spoke-scotland"></div>
             <div class="spoke spoke-columbus"></div>
-            <div class="spoke spoke-bladen developing"></div>
+            <div class="spoke spoke-bladen"></div>
 
             <!-- Central Hub -->
             <div class="central-hub">
