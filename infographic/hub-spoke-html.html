@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPARC Hub & Spoke Partnership Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(87.41% 87.41% at 50% 12.59%, #302613 0%, #000 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #947843 0%, #ddb672 100%);
+            padding: 40px;
+            text-align: center;
+            border-bottom: 4px solid #947843;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.95);
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .hub-spoke-section {
+            padding: 60px 40px;
+            background: #f6f3ef;
+            position: relative;
+        }
+
+        .hub-spoke-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 600px;
+        }
+
+        /* Central Hub */
+        .hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 160px;
+            background: linear-gradient(135deg, #947843 0%, #ddb672 100%);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(148, 120, 67, 0.4);
+            border: 4px solid #947843;
+            z-index: 10;
+        }
+
+        .hub h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hub p {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        /* County Spokes */
+        .spoke {
+            position: absolute;
+            width: 220px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border: 3px solid #947843;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .spoke:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(148, 120, 67, 0.3);
+        }
+
+        .spoke h3 {
+            color: #302613;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .spoke-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #ddb672 0%, #947843 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            background: #947843;
+            z-index: 1;
+        }
+
+        /* Position Spokes */
+        .spoke-top {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .spoke-top-left {
+            top: 80px;
+            left: 50px;
+        }
+
+        .spoke-top-right {
+            top: 80px;
+            right: 50px;
+        }
+
+        .spoke-bottom-left {
+            bottom: 80px;
+            left: 50px;
+        }
+
+        .spoke-bottom-right {
+            bottom: 80px;
+            right: 50px;
+        }
+
+        .spoke-bottom {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Connection lines positioning */
+        .line-top {
+            width: 4px;
+            height: 80px;
+            left: 50%;
+            top: 120px;
+            transform: translateX(-50%);
+        }
+
+        .line-top-left {
+            width: 180px;
+            height: 4px;
+            left: 270px;
+            top: 180px;
+            transform: rotate(-35deg);
+            transform-origin: left center;
+        }
+
+        .line-top-right {
+            width: 180px;
+            height: 4px;
+            right: 270px;
+            top: 180px;
+            transform: rotate(35deg);
+            transform-origin: right center;
+        }
+
+        .line-bottom-left {
+            width: 180px;
+            height: 4px;
+            left: 270px;
+            bottom: 180px;
+            transform: rotate(35deg);
+            transform-origin: left center;
+        }
+
+        .line-bottom-right {
+            width: 180px;
+            height: 4px;
+            right: 270px;
+            bottom: 180px;
+            transform: rotate(-35deg);
+            transform-origin: right center;
+        }
+
+        .line-bottom {
+            width: 4px;
+            height: 80px;
+            left: 50%;
+            bottom: 120px;
+            transform: translateX(-50%);
+        }
+
+        /* Bottom Panels */
+        .bottom-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+            background: white;
+        }
+
+        .panel {
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .panel-gold {
+            background: linear-gradient(135deg, #ddb672 0%, #f2c039 100%);
+            border: 3px solid #947843;
+        }
+
+        .panel-white {
+            background: white;
+            border: 3px solid #ddb672;
+        }
+
+        .panel h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #302613;
+        }
+
+        .panel ul {
+            list-style: none;
+        }
+
+        .panel li {
+            padding: 8px 0;
+            color: #2c3e50;
+            font-size: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .panel li::before {
+            content: "▶";
+            margin-right: 12px;
+            color: #947843;
+            font-weight: bold;
+        }
+
+        @media (max-width: 1200px) {
+            .hub-spoke-container {
+                min-height: 500px;
+            }
+
+            .spoke {
+                width: 180px;
+                padding: 15px;
+            }
+
+            .hub {
+                width: 220px;
+                height: 140px;
+            }
+
+            .hub h2 {
+                font-size: 1.4rem;
+            }
+
+            .spoke h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bottom-panels {
+                grid-template-columns: 1fr;
+            }
+
+            .hub-spoke-section {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hub-spoke-container {
+                min-height: 800px;
+            }
+
+            .spoke {
+                width: 150px;
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .hub {
+                width: 180px;
+                height: 120px;
+            }
+
+            .hub h2 {
+                font-size: 1.2rem;
+            }
+
+            .spoke h3 {
+                font-size: 1rem;
+            }
+
+            .connection-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>SPARC Regional Hub & Spoke Partnership Model</h1>
+            <p>Southeastern Prevention and Addiction Recovery Resource Center</p>
+            <p class="subtitle">University of North Carolina at Pembroke • Systems Change Through Evidence-Based Partnerships</p>
+        </div>
+
+        <!-- Hub and Spoke Section -->
+        <div class="hub-spoke-section">
+            <div class="hub-spoke-container">
+                <!-- Connection Lines -->
+                <div class="connection-line line-top"></div>
+                <div class="connection-line line-top-left"></div>
+                <div class="connection-line line-top-right"></div>
+                <div class="connection-line line-bottom-left"></div>
+                <div class="connection-line line-bottom-right"></div>
+                <div class="connection-line line-bottom"></div>
+
+                <!-- Central Hub -->
+                <div class="hub">
+                    <h2>SPARC</h2>
+                    <p>Regional Resource Center</p>
+                </div>
+
+                <!-- County Spokes -->
+                <div class="spoke spoke-top">
+                    <div class="spoke-icon">R</div>
+                    <h3>Robeson County</h3>
+                </div>
+
+                <div class="spoke spoke-top-left">
+                    <div class="spoke-icon">C</div>
+                    <h3>Cumberland County</h3>
+                </div>
+
+                <div class="spoke spoke-top-right">
+                    <div class="spoke-icon">R</div>
+                    <h3>Richmond County</h3>
+                </div>
+
+                <div class="spoke spoke-bottom-left">
+                    <div class="spoke-icon">C</div>
+                    <h3>Columbus County</h3>
+                </div>
+
+                <div class="spoke spoke-bottom-right">
+                    <div class="spoke-icon">S</div>
+                    <h3>Scotland County</h3>
+                </div>
+
+                <div class="spoke spoke-bottom">
+                    <div class="spoke-icon">B</div>
+                    <h3>Bladen County</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Information Panels -->
+        <div class="bottom-panels">
+            <div class="panel panel-gold">
+                <h3>Systems Change Model: Core Principles</h3>
+                <ul>
+                    <li>Upstream Focus: Address root causes rather than symptoms</li>
+                    <li>Infrastructure Investment: Build sustainable systems</li>
+                    <li>Evidence-Based Approach: Data-driven decision making</li>
+                    <li>Regional Coordination: Leverage cross-county resources</li>
+                </ul>
+            </div>
+
+            <div class="panel panel-white">
+                <h3>Partnership Model Outcomes & Metrics</h3>
+                <ul>
+                    <li>Grassroots engagement</li>
+                    <li>Systems & policy change</li>
+                    <li>Workforce & capacity building</li>
+                    <li>Prevention & recovery supports</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
