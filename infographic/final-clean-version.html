@@ -54,12 +54,12 @@
             margin-bottom: 2px;
         }
 
-        /* LARGE HUB AREA */
+        /* HUB AREA */
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 900px;
-            margin: 20px 0;
+            height: 480px;
+            margin: 15px 0;
             overflow: visible;
         }
 
@@ -69,110 +69,53 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 250px;
+            width: 200px;
             height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 100;
-            background: white;
-            border-radius: 15px;
-            border: 3px solid #000;
-            padding: 20px;
         }
 
         .central-hub img {
-            width: 100%;
+            width: 150px;
             height: auto;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         /* Spoke Lines */
         .spoke {
             position: absolute;
-            background: #947843;
-            height: 4px;
+            background: #000;
+            height: 3px;
             transform-origin: 0 50%;
             z-index: 1;
             left: 50%;
             top: 50%;
         }
 
-        .spoke::after {
-            content: '';
-            position: absolute;
-            right: -15px;
-            top: -8px;
-            width: 0;
-            height: 0;
-            border-left: 18px solid #947843;
-            border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent;
-        }
+        /* Spoke lengths - Calculated to stop at card edges */
+        .spoke-robeson { width: 155px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 250px; transform: rotate(-140deg); }
+        .spoke-richmond { width: 250px; transform: rotate(-40deg); }
+        .spoke-scotland { width: 250px; transform: rotate(40deg); }
+        .spoke-columbus { width: 250px; transform: rotate(140deg); }
+        .spoke-bladen { width: 155px; transform: rotate(90deg); }
 
-        .spoke.developing {
-            background: #947843;
-            border: 2px dashed #ddb672;
-            height: 6px;
-            opacity: 0.8;
-        }
-
-        .spoke.developing::after {
-            display: none; /* No arrowhead for developing partnerships */
-        }
-
-        .spoke-robeson::after,
-        .spoke-bladen::after {
-            display: none; /* No arrowhead for Robeson and Bladen - they connect directly to SPARC */
-        }
-
-        /* Spoke lengths - Extended from hub edges to reach card borders */
-        .spoke-robeson {
-            width: 140px;
-            transform: rotate(-90deg);
-            margin-top: -100px;
-        }
-        .spoke-cumberland {
-            width: 280px;
-            transform: rotate(-155deg);
-            margin-left: -80px;
-            margin-top: -50px;
-        }
-        .spoke-richmond {
-            width: 280px;
-            transform: rotate(-25deg);
-            margin-left: 80px;
-            margin-top: -70px;
-        }
-        .spoke-scotland {
-            width: 280px;
-            transform: rotate(25deg);
-            margin-left: 80px;
-            margin-top: 70px;
-        }
-        .spoke-columbus {
-            width: 280px;
-            transform: rotate(155deg);
-            margin-left: -80px;
-            margin-top: 50px;
-        }
-        .spoke-bladen {
-            width: 160px;
-            transform: rotate(90deg);
-            margin-top: 100px;
-        }
-
-        /* County Cards - LARGER */
+        /* County Cards */
         .county-card {
             position: absolute;
             background: white;
-            border-radius: 15px;
-            padding: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            width: 320px;
-            border: 3px solid #947843;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            width: 190px;
+            border: 3px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .county-card:hover {
@@ -196,7 +139,9 @@
         .county-header {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
         }
 
         .county-seal {
@@ -204,14 +149,14 @@
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 12px;
-            border: 2px solid #947843;
+            margin-bottom: 8px;
+            border: 2px solid #000;
         }
 
         .county-name {
-            font-size: 1.3em;
+            font-size: 1em;
             font-weight: bold;
-            color: #302613;
+            color: #000;
         }
 
         .county-badge {
@@ -239,37 +184,37 @@
             padding-left: 15px;
         }
 
-        /* PRECISION POSITIONING - Cards positioned for perfect arrow alignment */
+        /* PRECISION POSITIONING - Cards in fixed positions */
         .robeson {
-            top: 50px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 40%;
-            left: 80px;
+            top: 50%;
+            left: 40px;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 40%;
-            right: 80px;
+            top: 50%;
+            right: 40px;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 160px;
+            bottom: 130px;
             right: 100px;
         }
 
         .columbus {
-            bottom: 160px;
+            bottom: 130px;
             left: 100px;
         }
 
         .bladen {
-            bottom: 70px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
         }
