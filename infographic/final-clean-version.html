@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(87.41% 87.41% at 50% 12.59%, #302613 0%, #000 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             margin: 0;
             padding: 10px;
             display: flex;
@@ -33,13 +33,13 @@
 
         /* COMPACT HEADER */
         .header {
-            background: #000;
+            background: linear-gradient(90deg, #000000 0%, #333333 50%, #ffd700 100%);
             color: white;
             padding: 12px 18px;
             border-radius: 10px;
             text-align: center;
             margin-bottom: 18px;
-            border: 2px solid #ddb672;
+            border: 2px solid #ffd700;
         }
 
         .header h1 {
@@ -50,16 +50,16 @@
 
         .header p {
             font-size: 0.85em;
-            color: #ddb672;
+            color: #ffd700;
             margin-bottom: 2px;
         }
 
-        /* HUB AREA */
+        /* LARGE HUB AREA */
         .hub-spoke-container {
             position: relative;
             width: 100%;
-            height: 480px;
-            margin: 15px 0;
+            height: 900px;
+            margin: 20px 0;
             overflow: visible;
         }
 
@@ -78,7 +78,7 @@
         }
 
         .central-hub img {
-            width: 150px;
+            width: 250px;
             height: auto;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
@@ -87,46 +87,72 @@
         .spoke {
             position: absolute;
             background: #000;
-            height: 3px;
+            height: 4px;
             transform-origin: 0 50%;
             z-index: 1;
             left: 50%;
             top: 50%;
+            margin-left: -2px;
+            margin-top: -2px;
         }
 
-        /* Spoke lengths - Calculated to stop at card edges */
-        .spoke-robeson { width: 155px; transform: rotate(-90deg); }
-        .spoke-cumberland { width: 250px; transform: rotate(-140deg); }
-        .spoke-richmond { width: 250px; transform: rotate(-40deg); }
-        .spoke-scotland { width: 250px; transform: rotate(40deg); }
-        .spoke-columbus { width: 250px; transform: rotate(140deg); }
-        .spoke-bladen { width: 155px; transform: rotate(90deg); }
+        .spoke::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 18px solid #000;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
 
-        /* County Cards */
+        .spoke.developing {
+            background: #000;
+            border: 2px dashed #ffd700;
+            height: 6px;
+            opacity: 0.8;
+        }
+
+        .spoke.developing::after {
+            display: none; /* No arrowhead for developing partnerships */
+        }
+
+        .spoke-robeson::after {
+            display: none; /* No arrowhead for Robeson */
+        }
+
+        /* Spoke lengths - Extended to reach card borders */
+        .spoke-robeson { width: 240px; transform: rotate(-90deg); }
+        .spoke-cumberland { width: 280px; transform: rotate(-160deg); }
+        .spoke-richmond { width: 280px; transform: rotate(-20deg); }
+        .spoke-scotland { width: 280px; transform: rotate(45deg); }
+        .spoke-columbus { width: 280px; transform: rotate(135deg); }
+        .spoke-bladen { width: 210px; transform: rotate(90deg); }
+
+        /* County Cards - LARGER */
         .county-card {
             position: absolute;
             background: white;
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            width: 190px;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            width: 320px;
             border: 3px solid #000;
             transition: all 0.3s ease;
             z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .county-card:hover {
             transform: scale(1.02);
-            box-shadow: 0 12px 30px rgba(148, 120, 67, 0.3);
-            border-color: #ddb672;
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
         }
 
         .county-card.priority {
-            background: linear-gradient(135deg, #fff 0%, #ddb672 100%);
-            border-color: #947843;
+            background: linear-gradient(135deg, #fff 0%, #ffd700 100%);
+            border-color: #ffd700;
             border-width: 4px;
         }
 
@@ -139,9 +165,7 @@
         .county-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
+            margin-bottom: 12px;
         }
 
         .county-seal {
@@ -149,12 +173,12 @@
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 8px;
+            margin-right: 12px;
             border: 2px solid #000;
         }
 
         .county-name {
-            font-size: 1em;
+            font-size: 1.3em;
             font-weight: bold;
             color: #000;
         }
@@ -167,8 +191,8 @@
             font-size: 0.7em;
             font-weight: bold;
             margin-top: 4px;
-            background: #947843;
-            border: 2px solid #ddb672;
+            background: #000;
+            border: 2px solid #ffd700;
         }
 
         .county-details {
@@ -184,37 +208,37 @@
             padding-left: 15px;
         }
 
-        /* PRECISION POSITIONING - Cards in fixed positions */
+        /* PRECISION POSITIONING - Cards positioned for perfect arrow alignment */
         .robeson {
-            top: 15px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .cumberland {
-            top: 50%;
-            left: 40px;
+            top: 40%;
+            left: 80px;
             transform: translateY(-50%);
         }
 
         .richmond {
-            top: 50%;
-            right: 40px;
+            top: 40%;
+            right: 80px;
             transform: translateY(-50%);
         }
 
         .scotland {
-            bottom: 130px;
+            bottom: 160px;
             right: 100px;
         }
 
         .columbus {
-            bottom: 130px;
+            bottom: 160px;
             left: 100px;
         }
 
         .bladen {
-            bottom: 15px;
+            bottom: 70px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -231,21 +255,21 @@
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 2px solid #947843;
+            border: 2px solid #000;
         }
 
         .panel.systems {
-            background: linear-gradient(135deg, #ddb672 0%, #f2c039 100%);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
         }
 
         .panel.outcomes {
             background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
-            border-color: #ddb672;
+            border-color: #ffd700;
         }
 
         .panel h3 {
             margin-bottom: 10px;
-            color: #302613;
+            color: #000;
             font-size: 1.1em;
         }
 
@@ -267,7 +291,7 @@
             content: "▶";
             position: absolute;
             left: 0;
-            color: #947843;
+            color: #000;
             font-size: 0.8em;
         }
     </style>
@@ -289,7 +313,7 @@
             <div class="spoke spoke-richmond"></div>
             <div class="spoke spoke-scotland"></div>
             <div class="spoke spoke-columbus"></div>
-            <div class="spoke spoke-bladen"></div>
+            <div class="spoke spoke-bladen developing"></div>
 
             <!-- Central Hub -->
             <div class="central-hub">
@@ -297,13 +321,19 @@
             </div>
 
             <!-- County Cards - PROPERLY POSITIONED -->
-            <div class="county-card robeson">
+            <div class="county-card priority robeson">
                 <div class="county-header">
                     <img src="Robeson.png" alt="Robeson County Seal" class="county-seal">
                     <div>
                         <div class="county-name">Robeson County</div>
+                        <span class="county-badge">ESTABLISHED PARTNER</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>✓ Agency stipend program with measurable impact</li>
+                    <li>✓ Transportation infrastructure development</li>
+                    <li>✓ Strong community partnerships</li>
+                </ul>
             </div>
 
             <div class="county-card cumberland">
@@ -311,8 +341,15 @@
                     <img src="Cumberland-County.gif" alt="Cumberland County Seal" class="county-seal">
                     <div>
                         <div class="county-name">Cumberland County</div>
+                        <span class="county-badge">TECHNICAL HUB</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>• Opioid reporting technical assistance</li>
+                    <li>• Best practices documentation</li>
+                    <li>• Cross-county process improvement</li>
+                    <li style="color: #059669; font-weight: bold;">• Regional training coordination</li>
+                </ul>
             </div>
 
             <div class="county-card richmond">
@@ -320,8 +357,15 @@
                     <img src="richmond seal.png" alt="Richmond County Seal" class="county-seal">
                     <div>
                         <div class="county-name">Richmond County</div>
+                        <span class="county-badge">EDUCATION</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>• RCC workforce recruitment programs</li>
+                    <li>• Internship capacity building</li>
+                    <li>• BSW/MSW scholarship pathways</li>
+                    <li style="color: #dc2626;">⚠ Master's internship site barriers</li>
+                </ul>
             </div>
 
             <div class="county-card scotland">
@@ -329,8 +373,15 @@
                     <img src="scotland.jpg" alt="Scotland County Seal" class="county-seal">
                     <div>
                         <div class="county-name">Scotland County</div>
+                        <span class="county-badge">JUSTICE</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>• Drug Treatment Court assistance</li>
+                    <li>• Grant writing capacity building</li>
+                    <li>• Intern supervision systems</li>
+                    <li style="color: #dc2626;">⚠ Severe workforce shortage</li>
+                </ul>
             </div>
 
             <div class="county-card columbus">
@@ -338,17 +389,29 @@
                     <img src="columbus county nc.jpg" alt="Columbus County Seal" class="county-seal">
                     <div>
                         <div class="county-name">Columbus County</div>
+                        <span class="county-badge">PLANNING</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>• 4-Year strategic planning (Active)</li>
+                    <li>• Evidence-based drug court launched</li>
+                    <li>• Prevention programming initiated</li>
+                    <li>• Strategic Narcan distribution</li>
+                </ul>
             </div>
 
-            <div class="county-card bladen">
+            <div class="county-card developing bladen">
                 <div class="county-header">
                     <img src="bladen.jpg" alt="Bladen County Seal" class="county-seal">
                     <div>
-                        <div class="county-name">Bladen County</div>
+                        <div class="county-name" style="color: #666;">Bladen County</div>
+                        <span class="county-badge" style="background: #666; border-color: #999;">DEVELOPING</span>
                     </div>
                 </div>
+                <ul class="county-details">
+                    <li>• Invited to opioid meetings</li>
+                    <li>• Initial stakeholder engagement</li>
+                </ul>
             </div>
         </div>
 
