@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(87.41% 87.41% at 50% 12.59%, #302613 0%, #000 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -109,7 +109,7 @@
         }
 
         .data-table th {
-            background: #667eea;
+            background: #947843;
             color: white;
             padding: 12px;
             text-align: left;
@@ -134,7 +134,7 @@
         }
 
         .narrative-card h3 {
-            color: #667eea;
+            color: #947843;
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
@@ -149,7 +149,7 @@
             background: #f8f9fa;
             padding: 12px;
             margin: 8px 0;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #947843;
             border-radius: 4px;
         }
 
@@ -238,7 +238,7 @@
 
         .strategy-amount {
             font-weight: bold;
-            color: #667eea;
+            color: #947843;
         }
 
         .narrative-tabs {
@@ -310,8 +310,8 @@
 
         .main-tab.active {
             background: white;
-            color: #667eea;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+            color: #947843;
+            box-shadow: 0 5px 20px rgba(148, 120, 67, 0.3);
         }
 
         .main-tab-content {
@@ -347,7 +347,7 @@
         .metric-number {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #947843;
             margin-bottom: 10px;
         }
 
@@ -375,7 +375,7 @@
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #947843;
             transition: all 0.3s ease;
         }
 
@@ -776,8 +776,8 @@
 
             // Add explanation note
             tableHtml += `
-                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 5px;">
-                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 1.1rem;">Understanding Strategy Options</h3>
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-left: 4px solid #947843; border-radius: 5px;">
+                    <h3 style="color: #947843; margin-bottom: 10px; font-size: 1.1rem;">Understanding Strategy Options</h3>
                     <p style="color: #555; line-height: 1.6; margin-bottom: 10px;">
                         <strong>All counties start with Option A</strong> (12 high-impact strategies including naloxone distribution, recovery support, and MAT services).
                     </p>
@@ -1321,7 +1321,7 @@
                     datasets: [{
                         data: sortedCategories.map(cat => data[cat]),
                         backgroundColor: [
-                            '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                            '#947843', '#ddb672', '#f093fb', '#4facfe',
                             '#43e97b', '#fa709a', '#fee140', '#30cfd0'
                         ]
                     }]
