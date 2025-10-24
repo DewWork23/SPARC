@@ -33,7 +33,7 @@
 
         /* COMPACT HEADER */
         .header {
-            background: linear-gradient(90deg, #302613 0%, #947843 50%, #ddb672 100%);
+            background: #000;
             color: white;
             padding: 12px 18px;
             border-radius: 10px;
@@ -69,18 +69,22 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
+            width: 250px;
             height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            background: #000;
+            border-radius: 15px;
+            border: 3px solid #ddb672;
+            padding: 20px;
         }
 
         .central-hub img {
-            width: 250px;
+            width: 100%;
             height: auto;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            filter: brightness(1.2);
         }
 
         /* Spoke Lines */
@@ -119,8 +123,9 @@
             display: none; /* No arrowhead for developing partnerships */
         }
 
-        .spoke-robeson::after {
-            display: none; /* No arrowhead for Robeson */
+        .spoke-robeson::after,
+        .spoke-bladen::after {
+            display: none; /* No arrowhead for Robeson and Bladen - they connect directly to SPARC */
         }
 
         /* Spoke lengths - Extended to reach card borders */
